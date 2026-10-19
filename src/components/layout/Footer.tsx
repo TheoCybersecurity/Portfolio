@@ -52,12 +52,24 @@ export default function Footer() {
           <p className="font-mono text-xs text-text-muted/50 text-center">
             Built with Next.js · Self-hosted · Raspberry Pi
           </p>
-          <Link
-            href="/confidentialite"
-            className="font-mono text-xs text-text-muted/60 underline decoration-dotted underline-offset-2 hover:text-accent transition-colors"
-          >
-            Confidentialité
-          </Link>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/TheoCybersecurity/Portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted/60 underline decoration-dotted underline-offset-2 hover:text-accent transition-colors"
+            >
+              <Github size={12} />
+              Code source du site
+            </a>
+            <span className="text-text-muted/30" aria-hidden>·</span>
+            <Link
+              href="/confidentialite"
+              className="font-mono text-xs text-text-muted/60 underline decoration-dotted underline-offset-2 hover:text-accent transition-colors"
+            >
+              Confidentialité
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
