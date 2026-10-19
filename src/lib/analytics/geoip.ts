@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
 import { Readable } from 'node:stream'
@@ -51,7 +52,8 @@ async function download(db: DbName): Promise<boolean> {
       signal: AbortSignal.timeout(10 * 60 * 1000),
     }).catch(() => null)
     if (!res?.ok || !res.body) continue
-    const tmp = `${fileOf(db)}.tmp`
+    // Nom unique : plusieurs parties du serveur (routes, pages) peuvent lancer le téléchargement en même temps.
+    const tmp = `${fileOf(db)}.${process.pid}-${randomUUID()}.tmp`
     try {
       await pipeline(Readable.fromWeb(res.body as import('node:stream/web').ReadableStream), createGunzip(), fs.createWriteStream(tmp))
       new Reader(fs.readFileSync(tmp)) // valide le fichier avant de remplacer l'ancien

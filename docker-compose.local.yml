@@ -1,0 +1,29 @@
+# Lancement en local (sur n'importe quel ordinateur) :
+#   docker compose -f docker-compose.local.yml up -d --build
+# puis ouvrir http://localhost:3000
+#
+# docker-compose.yml est celui de la production (réseau du reverse proxy, données hors du projet) :
+# il ne fonctionne pas tel quel sur une autre machine.
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - ADMIN_IPS=${ADMIN_IPS:-}
+      - ANALYTICS_DB_PATH=/app/data/analytics.db
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+      - SMTP_FROM=${SMTP_FROM:-}
+      - SMTP_TO=${SMTP_TO:-}
+    # Volume Docker nommé : la base de statistiques survit aux redémarrages et aux reconstructions.
+    volumes:
+      - portfolio-data:/app/data
+
+volumes:
+  portfolio-data:

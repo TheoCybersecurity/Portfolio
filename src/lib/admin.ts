@@ -8,7 +8,10 @@
  */
 export function getClientIp(headers: Headers): string | null {
   const ip = headers.get('x-real-ip')?.trim()
-  return ip || null
+  if (ip) return ip
+  // `npm run dev` n'a pas de reverse proxy : la requête vient forcément de la machine locale.
+  // Jamais en production, où l'absence d'en-tête doit rester « IP inconnue ».
+  return process.env.NODE_ENV === 'development' ? '127.0.0.1' : null
 }
 
 /** Adresse → suite de bits sous forme de BigInt, avec sa taille (32 ou 128). */

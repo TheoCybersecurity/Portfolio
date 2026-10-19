@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT ?? 587),
+      port: Number(process.env.SMTP_PORT || 587),
       secure: Number(process.env.SMTP_PORT) === 465,
       auth: {
         user: process.env.SMTP_USER,
@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
     })
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM ?? 'Portfolio <theo@marescal.fr>',
-      to: process.env.SMTP_TO ?? 'theo@marescal.fr',
+      from: process.env.SMTP_FROM || 'Portfolio <theo@marescal.fr>',
+      to: process.env.SMTP_TO || 'theo@marescal.fr',
       replyTo: email,
       subject: `[Portfolio] Message de ${name}`,
       text: `Nom : ${name}\nEmail : ${email}\n\n${message}`,

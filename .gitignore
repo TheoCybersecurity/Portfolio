@@ -11,6 +11,9 @@ out/
 .env
 .env*.local
 
+# base de statistiques et bases de géolocalisation créées en local (npm run dev)
+/data/
+
 # misc
 .DS_Store
 *.pem
