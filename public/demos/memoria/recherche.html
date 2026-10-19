@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Recherche — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+<script src="js/demo-api.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Recherche</h1>
+        <div class="page-subtitle">Recherchez dans toutes vos missions par mots-clés, unité, département ou période.</div>
+    </div>
+</div>
+
+<!-- Formulaire de recherche -->
+<div class="card">
+    <div class="card-body">
+        <form id="search-form" style="display:flex;flex-direction:column;gap:14px">
+            <!-- Barre principale -->
+            <div style="display:flex;gap:10px">
+                <input type="text" name="q" id="f-q" value=""
+                       placeholder="Rechercher dans le contenu, l'unité…"
+                       style="flex:1;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+                <button type="submit" class="btn btn-primary" style="padding:10px 22px">Rechercher</button>
+                <a href="recherche.html" class="btn btn-ghost" style="padding:10px 16px">Réinitialiser</a>
+            </div>
+            <!-- Filtres avancés -->
+            <details style="font-size:13px">
+                <summary style="cursor:pointer;color:var(--gris-500);list-style:none;user-select:none">
+                    ⚙ Filtres avancés
+                </summary>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:12px">
+                    <div class="form-field" style="min-width:200px">
+                        <label for="f-type">Type d'unité</label>
+                        <select name="type" id="f-type">
+                            <option value="">Tous les types</option>
+                            <option value="ggd">GGD</option>
+                            <option value="srj">SRJ</option>
+                            <option value="pghm">PGHM</option>
+                            <option value="edcf">EDCF</option>
+                            <option value="pmo_bmo">PMO/BMO</option>
+                            <option value="bn">BN</option>
+                            <option value="cgd">CGD</option>
+                            <option value="brigade">BP</option>
+                            <option value="psig">PSIG</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="min-width:180px">
+                        <label for="f-stype">Type de mission</label>
+                        <select name="stype" id="f-stype">
+                            <option value="">Tous les types</option>
+                            <option value="Renfort">Renfort</option>
+                            <option value="Formation">Formation</option>
+                            <option value="Cérémonie">Cérémonie</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="min-width:220px">
+                        <label for="f-dept">Département</label>
+                        <select name="dept" id="f-dept">
+                            <option value="">Tous les départements</option>
+                            <option value="11">11 — Aude</option>
+                            <option value="34">34 — Hérault</option>
+                            <option value="66">66 — Pyrénées-Orientales</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-from">Du</label>
+                        <input type="date" name="from" id="f-from" value="">
+                    </div>
+                    <div class="form-field">
+                        <label for="f-to">Au</label>
+                        <input type="date" name="to" id="f-to" value="">
+                    </div>
+                </div>
+            </details>
+        </form>
+    </div>
+</div>
+
+<!-- Résultats -->
+<div id="results-zone">
+<div class="card"><div class="card-body">
+    <div class="empty-state">
+        <div class="empty-state-title">Commencez votre recherche</div>
+        <div>Entrez un mot-clé dans la barre ci-dessus pour rechercher dans toutes vos missions.</div>
+    </div>
+</div></div>
+</div>
+
+<!-- Modale détail service -->
+<div class="modal-overlay" id="mission-modal">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">Détail du service</div>
+            <button class="modal-close" type="button"
+                    onclick="document.getElementById('mission-modal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" id="mission-modal-body">…</div>
+        <div class="modal-footer">
+            <a id="modal-edit-link" class="btn btn-primary" href="#">Modifier</a>
+            <button class="btn" onclick="document.getElementById('mission-modal').classList.remove('open')">Fermer</button>
+        </div>
+    </div>
+</div>
+</main>
+<script>
+function esc(s) { return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function parseDT(s) { return new Date(s.replace(' ','T')); }
+function pad(n) { return String(n).padStart(2,'0'); }
+function fmtTime(d) { return pad(d.getHours())+'h'+pad(d.getMinutes()); }
+function sameDay(a,b) { return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
+async function openMissionModal(id) {
+    const r = await fetch('/api/missions?id='+id);
+    const m = await r.json();
+    if (!m || !m.id) return;
+    const d = parseDT(m.debut), f = parseDT(m.fin);
+    const dur = (f-d)/60000, dh = Math.floor(dur/60), dm = dur%60;
+    document.getElementById('mission-modal-body').innerHTML = `
+        <p style="margin-bottom:8px"><strong>Unité :</strong> ${esc(m.lieu_nom)} <span class="badge badge-bleu">${esc(m.lieu_type)}</span></p>
+        <p style="margin-bottom:8px"><strong>Département :</strong> ${esc(m.dept_code)} — ${esc(m.dept_nom)}</p>
+        <p style="margin-bottom:8px"><strong>Type :</strong> <span class="badge" style="background:${esc(m.type_couleur||'#22c55e')};color:#fff">${esc(m.type_nom||'Renfort')}</span></p>
+        <p style="margin-bottom:8px"><strong>Début :</strong> ${d.toLocaleDateString('fr-FR')} à ${fmtTime(d)}</p>
+        <p style="margin-bottom:8px"><strong>Fin :</strong> ${f.toLocaleDateString('fr-FR')} à ${fmtTime(f)}</p>
+        <p style="margin-bottom:12px"><strong>Durée :</strong> ${dh}h${dm?String(dm).padStart(2,'0'):''}</p>
+        <p style="margin-bottom:4px"><strong>Contenu :</strong></p>
+        <p style="white-space:pre-wrap;background:var(--gris-50);padding:12px;border-radius:8px;font-size:14px">${m.contenu?esc(m.contenu):'<em>Aucun contenu renseigné</em>'}</p>
+    `;
+    document.getElementById('modal-edit-link').href = 'missions.html?action=edit&id='+m.mission_id+'#service-'+m.id;
+    document.getElementById('mission-modal').classList.add('open');
+}
+document.getElementById('mission-modal').addEventListener('click', e => {
+    if (e.target===e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+/* DÉMO : sur le site réel, le formulaire est envoyé en GET et la requête SQL
+   filtre les services. Ici, le même filtrage est fait côté client sur le jeu
+   fictif, et le rendu produit exactement le même markup. */
+(function () {
+    var form = document.getElementById('search-form');
+    var zone = document.getElementById('results-zone');
+
+    function duree(mn) {
+        if (mn <= 0) return '0 min';
+        if (mn < 60) return mn + ' min';
+        var h = Math.floor(mn / 60), m = mn % 60;
+        return m === 0 ? h + 'h' : h + 'h' + String(m).padStart(2, '0');
+    }
+    function frDate(d) { return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); }
+    function strim(s, n) { s = String(s).replace(/\n/g,' '); return s.length <= n ? s : s.slice(0,n) + '…'; }
+
+    function unitTypeOf(s) {
+        var map = { BP:'brigade', BTA:'brigade', COB:'brigade', SRJ:'srj', PMO:'pmo_bmo',
+                    PSIG:'psig', GGD:'ggd', CGD:'cgd', EDCF:'edcf', BN:'bn' };
+        return map[s.lieu_type] || 'brigade';
+    }
+
+    function run() {
+        var q     = document.getElementById('f-q').value.trim();
+        var type  = document.getElementById('f-type').value;
+        var stype = document.getElementById('f-stype').value;
+        var dept  = document.getElementById('f-dept').value;
+        var from  = document.getElementById('f-from').value;
+        var to    = document.getElementById('f-to').value;
+
+        var hasFilter = q || type || stype || dept || from || to;
+        if (!hasFilter) {
+            zone.innerHTML = '<div class="card"><div class="card-body">'
+                + '<div class="empty-state"><div class="empty-state-title">Commencez votre recherche</div>'
+                + '<div>Entrez un mot-clé dans la barre ci-dessus pour rechercher dans toutes vos missions.</div>'
+                + '</div></div></div>';
+            return;
+        }
+
+        var ql = q.toLowerCase();
+        var results = window.GN_DEMO.services.filter(function (s) {
+            if (ql && (s.contenu + ' ' + s.lieu_nom).toLowerCase().indexOf(ql) === -1) return false;
+            if (type && unitTypeOf(s) !== type) return false;
+            if (stype && s.type_nom !== stype) return false;
+            if (dept && s.dept_code !== dept) return false;
+            if (from && s.debut.slice(0,10) < from) return false;
+            if (to && s.debut.slice(0,10) > to) return false;
+            return true;
+        }).sort(function (a, b) { return a.debut < b.debut ? 1 : -1; });
+
+        var rows = results.map(function (m) {
+            var d = parseDT(m.debut), f = parseDT(m.fin);
+            var cross = !sameDay(d, f);
+            var mins = Math.round((f - d) / 60000);
+            return '<tr onclick="openMissionModal(' + m.id + ')" style="cursor:pointer">'
+                + '<td><strong>' + frDate(d) + '</strong>' + (cross ? '<br><small style="color:var(--gris-400)">→ ' + frDate(f) + '</small>' : '') + '</td>'
+                + '<td>' + fmtTime(d) + ' – ' + fmtTime(f) + '</td>'
+                + '<td><span class="hl-target">' + esc(m.lieu_nom) + '</span><br><span class="badge badge-bleu">' + esc(m.lieu_type) + '</span></td>'
+                + '<td>' + esc(m.dept_code) + '</td>'
+                + '<td>' + duree(mins) + '</td>'
+                + '<td><span class="badge" style="background:' + esc(m.type_couleur) + ';color:#fff">' + esc(m.type_nom) + '</span></td>'
+                + '<td style="max-width:260px;font-size:12px;color:var(--gris-600)" class="hl-target">' + esc(strim(m.contenu, 120)) + '</td>'
+                + '<td class="actions" onclick="event.stopPropagation()">'
+                + '<a class="btn btn-sm btn-ghost" href="missions.html?action=edit&id=' + m.mission_id + '">Modifier</a></td>'
+                + '</tr>';
+        }).join('');
+
+        var body = results.length
+            ? '<div class="table-wrap"><table class="data-table"><thead><tr>'
+              + '<th>Date</th><th>Horaires</th><th>Unité</th><th>Dépt</th><th>Durée</th><th>Type</th><th>Contenu</th><th class="actions">Action</th>'
+              + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
+            : '<div class="empty-state"><div class="empty-state-title">Aucun résultat</div>'
+              + "<div>Essayez d'autres mots-clés ou modifiez les filtres.</div></div>";
+
+        zone.innerHTML = '<div class="card"><div class="card-head">'
+            + '<div class="card-title">' + results.length + ' résultat' + (results.length > 1 ? 's' : '') + '</div>'
+            + (q ? '<span style="font-size:13px;color:var(--gris-500)">pour « ' + esc(q) + ' »</span>' : '')
+            + '</div><div class="card-body">' + body + '</div></div>';
+
+        if (window.gnCardifyTables) gnCardifyTables(zone);
+        highlight(q);
+    }
+
+    // Surlignage côté client via DOM API (copie conforme de recherche.php)
+    function highlight(q) {
+        if (!q) return;
+        var re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        function highlightNode(el) {
+            var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            var nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            nodes.forEach(function (node) {
+                var text = node.textContent;
+                re.lastIndex = 0;
+                if (!re.test(text)) return;
+                re.lastIndex = 0;
+                var frag = document.createDocumentFragment();
+                var last = 0, m;
+                while ((m = re.exec(text)) !== null) {
+                    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+                    var mark = document.createElement('mark');
+                    mark.style.cssText = 'background:#fef08a;border-radius:2px';
+                    mark.textContent = m[0];
+                    frag.appendChild(mark);
+                    last = m.index + m[0].length;
+                }
+                if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+                node.parentNode.replaceChild(frag, node);
+            });
+        }
+        document.querySelectorAll('.hl-target').forEach(highlightNode);
+    }
+
+    form.addEventListener('submit', function (e) { e.preventDefault(); run(); });
+    ['f-type','f-stype','f-dept','f-from','f-to'].forEach(function (id) {
+        document.getElementById(id).addEventListener('change', run);
+    });
+    document.getElementById('f-q').addEventListener('input', function () {
+        clearTimeout(window.__t); window.__t = setTimeout(run, 200);
+    });
+})();
+</script>
+</body>
+</html>

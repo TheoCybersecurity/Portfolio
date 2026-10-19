@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Easter Eggs — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<style>
+.egg-card {
+    border: 1px solid var(--gris-200); border-radius: var(--radius-lg);
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 4px;
+}
+.egg-card.locked { background: var(--gris-50); opacity: .75; }
+.egg-card.unlocked { background: #f0fdf4; border-color: #bbf7d0; }
+.egg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+</style>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">🥚 Easter Eggs</h1>
+        <div class="page-subtitle">
+            <span id="egg-count">0</span> / 49 découverts —
+            page volontairement absente de la navigation, comme il se doit.
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+    <div class="card-body">
+        <div style="background:var(--gris-100);height:10px;border-radius:5px;overflow:hidden">
+            <div id="egg-bar" style="background:var(--bleu);height:100%;width:0%;transition:width .4s"></div>
+        </div>
+    </div>
+</div>
+
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Général
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="konami"
+         data-nom="Code Konami" data-desc="Le code Konami (↑↑↓↓←→←→BA) déclenche une pluie de confettis tricolores.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Une célèbre suite de touches de jeu vidéo (flèches + deux lettres)…</div>
+    </div>
+    <div class="egg-card locked" data-egg="console_message"
+         data-nom="Message de développeur" data-desc="Un message stylé s&#39;affiche dans la console (F12) au chargement de chaque page.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Les développeurs curieux ouvrent souvent un certain outil du navigateur…</div>
+    </div>
+    <div class="egg-card locked" data-egg="mot_cle_gendarme"
+         data-nom="Le mot magique" data-desc="Taper « gendarme » au clavier affiche une blague aléatoire.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Tape le nom de métier de tous les utilisateurs de cette appli…</div>
+    </div>
+    <div class="egg-card locked" data-egg="gyrophare_blason"
+         data-nom="Gyrophare" data-desc="7 clics rapides sur le blason du bandeau déclenchent un effet gyrophare bleu/rouge.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le blason en haut à gauche a peut-être un secret si on s&#39;acharne dessus…</div>
+    </div>
+    <div class="egg-card locked" data-egg="promotion_badge"
+         data-nom="Promotion express" data-desc="5 clics rapides sur le badge &quot;Réserviste&quot; affichent un grade honorifique temporaire.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le badge &quot;Réserviste&quot; en haut à droite rêve peut-être d&#39;un grade supérieur…</div>
+    </div>
+    <div class="egg-card locked" data-egg="inactivite_prolongee"
+         data-nom="Toujours là ?" data-desc="Après 3 minutes sans la moindre interaction, un message discret apparaît.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Reste immobile un long moment, sans toucher à rien…</div>
+    </div>
+    <div class="egg-card locked" data-egg="mot_cle_1789"
+         data-nom="Une date qui compte" data-desc="Taper « 1789 » affiche un repère historique sur les origines de la Gendarmerie.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Tape une année qui a changé la France…</div>
+    </div>
+    <div class="egg-card locked" data-egg="mode_sombre"
+         data-nom="Faux mode sombre" data-desc="Ctrl+Maj+D inverse les couleurs de la page pendant quelques secondes, pour rire.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un raccourci clavier classique pour un thème sombre… mais pas tout à fait.</div>
+    </div>
+    <div class="egg-card locked" data-egg="triple_clic_feedback"
+         data-nom="Chasseur de bugs" data-desc="Triple-clic sur le bouton feedback flottant avant l&#39;ouverture du formulaire.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le bouton de feedback en bas à droite cache peut-être autre chose…</div>
+    </div>
+    <div class="egg-card locked" data-egg="triple_clic_titre"
+         data-nom="Fun fact" data-desc="Triple-clic sur le titre du bandeau affiche un fun fact sur la Gendarmerie.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le titre du bandeau en haut de page a une histoire à raconter, si on insiste…</div>
+    </div>
+    <div class="egg-card locked" data-egg="triple_clic_drapeau"
+         data-nom="Le drapeau tourne" data-desc="Triple-clic sur le drapeau du pied de page le fait tourner sur lui-même.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le petit drapeau tricolore du pied de page peut peut-être tourner sur lui-même…</div>
+    </div>
+    <div class="egg-card locked" data-egg="compteur_visites"
+         data-nom="Habitué des lieux" data-desc="À la 10ᵉ, 50ᵉ ou 100ᵉ visite, un message de fidélité s&#39;affiche.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Reviens souvent — la fidélité finit par être remarquée…</div>
+    </div>
+    <div class="egg-card locked" data-egg="marathonien"
+         data-nom="Marathonien" data-desc="Passer plus de 30 minutes d&#39;affilée sur le site sans fermer l&#39;onglet.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Reste connecté sans fermer l&#39;onglet... longtemps.</div>
+    </div>
+    <div class="egg-card locked" data-egg="oiseau_de_nuit"
+         data-nom="Oiseau de nuit" data-desc="Utiliser le site entre 2h et 5h du matin.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Certaines heures de la nuit sont propices aux découvertes…</div>
+    </div>
+    <div class="egg-card locked" data-egg="minuit"
+         data-nom="Minuit pile" data-desc="Charger une page pile à minuit (00h00–00h04) affiche un message discret.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Une certaine heure ronde, à la limite entre deux jours…</div>
+    </div>
+    <div class="egg-card locked" data-egg="fete_travail"
+         data-nom="Jour férié" data-desc="Utiliser le site le 1er mai.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un jour férié bien connu du 1er mois du calendrier… non, du 5ᵉ mois.</div>
+    </div>
+    <div class="egg-card locked" data-egg="mode_mobile_extreme"
+         data-nom="Écran étroit" data-desc="Réduire la fenêtre à moins de 400px de large.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Rétrécis vraiment beaucoup la fenêtre du navigateur…</div>
+    </div>
+    <div class="egg-card locked" data-egg="zoom_navigateur"
+         data-nom="Zoom avant" data-desc="Zoomer la page du navigateur à 150% ou plus.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Ctrl et + font parfois bon ménage, en excès…</div>
+    </div>
+    <div class="egg-card locked" data-egg="copieur"
+         data-nom="Copieur" data-desc="Copier du texte n&#39;importe où sur le site (Ctrl+C).">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Sélectionner du texte ne sert pas qu&#39;à lire…</div>
+    </div>
+    <div class="egg-card locked" data-egg="clic_droit_curieux"
+         data-nom="Curieux" data-desc="Faire un clic droit n&#39;importe où sur le site.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le clic droit ouvre parfois plus qu&#39;un simple menu…</div>
+    </div>
+    <div class="egg-card locked" data-egg="rafraichisseur_impatient"
+         data-nom="Impatient" data-desc="Recharger la même page 5 fois de suite en moins de 10 secondes.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Rafraîchir la page une fois ne suffit pas toujours…</div>
+    </div>
+    <div class="egg-card locked" data-egg="explorateur_scroll"
+         data-nom="Explorateur" data-desc="Faire défiler une longue page jusqu&#39;à tout en bas.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Certaines pages méritent d&#39;être lues jusqu&#39;au bout…</div>
+    </div>
+    <div class="egg-card locked" data-egg="curieux_du_departement"
+         data-nom="Curieux du département" data-desc="Triple-clic sur le sous-titre du bandeau (nom du département).">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le nom de ton département dans le bandeau cache peut-être un secret…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Tableau de bord
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="banniere_14_juillet"
+         data-nom="Fête nationale" data-desc="Le 14 juillet, le tableau de bord affiche une bannière tricolore.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Une date bien connue de juillet...</div>
+    </div>
+    <div class="egg-card locked" data-egg="banniere_noel"
+         data-nom="Joyeux Noël" data-desc="Le 25 décembre, le tableau de bord affiche une bannière de Noël.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un certain 25 décembre...</div>
+    </div>
+    <div class="egg-card locked" data-egg="banniere_nouvel_an"
+         data-nom="Bonne année" data-desc="Le 1er janvier, le tableau de bord affiche une bannière de Nouvel An.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le tout premier jour de l&#39;année...</div>
+    </div>
+    <div class="egg-card locked" data-egg="cap_symbolique_services"
+         data-nom="Cap symbolique" data-desc="Atteindre 100, 250, 500, 750, 1000, 1500 ou 2000 services enregistrés.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Ton total de services franchira un jour un chiffre rond…</div>
+    </div>
+    <div class="egg-card locked" data-egg="halloween"
+         data-nom="Halloween" data-desc="Le 31 octobre, un message d&#39;Halloween apparaît.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Une soirée du 31 octobre...</div>
+    </div>
+    <div class="egg-card locked" data-egg="vendredi_13"
+         data-nom="Vendredi 13" data-desc="Se connecter un vendredi 13 porte-bonheur (dans l&#39;appli en tout cas).">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un jour de la semaine réputé porter malchance, combiné à un chiffre précis…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Missions
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="premiere_mission"
+         data-nom="Premier pas" data-desc="Créer sa toute première mission.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Tout commence par une première fois…</div>
+    </div>
+    <div class="egg-card locked" data-egg="premiere_ceremonie"
+         data-nom="Grande tenue" data-desc="Créer une mission de type Cérémonie.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un type de mission plus solennel que les autres…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Calendrier
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="grande_plage"
+         data-nom="Vue sur le long terme" data-desc="Choisir une plage personnalisée de plus d&#39;un an dans le calendrier.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">La vue personnalisée du calendrier accepte de très grandes plages…</div>
+    </div>
+    <div class="egg-card locked" data-egg="voyage_futur"
+         data-nom="Voyage dans le temps" data-desc="Naviguer dans le calendrier plus de 10 ans dans le futur.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">La vue Jour du calendrier ne s&#39;arrête pas à l&#39;année en cours…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Carte
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="geolocalisation_activee"
+         data-nom="Te voilà repéré" data-desc="Activer la géolocalisation temps réel sur la carte.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un bouton de la carte sait où tu te trouves…</div>
+    </div>
+    <div class="egg-card locked" data-egg="zoom_max"
+         data-nom="Zoom maximal" data-desc="Zoomer la carte au maximum (niveau 19).">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">La carte a une limite de zoom — l&#39;as-tu déjà atteinte ?</div>
+    </div>
+    <div class="egg-card locked" data-egg="explorateur_carte"
+         data-nom="Explorateur de la carte" data-desc="Cliquer sur 10 unités différentes sur la carte au cours d&#39;une même session.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Clique sur plusieurs unités différentes sur la carte…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Unités
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="chercheur_acharne"
+         data-nom="Chercheur acharné" data-desc="Faire 5 recherches sans aucun résultat dans la page Unités.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">La recherche d&#39;unités ne trouve pas toujours ce qu&#39;on cherche…</div>
+    </div>
+    <div class="egg-card locked" data-egg="duo_cob_bp"
+         data-nom="Duo COB/BP" data-desc="Consulter la fiche d&#39;une COB puis celle de sa BP physique juste après.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Une COB et sa brigade physique sont liées — regarde les deux à la suite…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Statistiques
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="stats_dimanche"
+         data-nom="Dimanche studieux" data-desc="Consulter les statistiques un dimanche.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un jour de repos, mais pas pour consulter ses statistiques…</div>
+    </div>
+    <div class="egg-card locked" data-egg="graphique_secret"
+         data-nom="Graphique secret" data-desc="Triple-clic sur le titre d&#39;un des graphiques de la page Statistiques.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Les titres des graphiques ne sont peut-être pas si inertes…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Recherche
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="meta_recherche"
+         data-nom="Méta" data-desc="Rechercher le mot « easter » dans la page Recherche.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Que se passe-t-il si on cherche l&#39;appli elle-même dans sa propre recherche ?</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Profil
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="veteran"
+         data-nom="Vétéran" data-desc="Avoir une ancienneté de plus de 20 ans dans la réserve.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">L&#39;ancienneté affichée sur ton profil peut devenir très grande…</div>
+    </div>
+    <div class="egg-card locked" data-egg="fierte_du_grade"
+         data-nom="Fierté du grade" data-desc="Triple-clic sur le grade actuel affiché sur la page Profil.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Ton grade actuel, affiché sur ton profil, mérite peut-être plus d&#39;attention…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Département
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="globe_trotter"
+         data-nom="Globe-trotter" data-desc="Avoir un historique de 3 affectations ou plus.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Certains réservistes changent souvent d&#39;affectation…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Feedback
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="feedback_easter"
+         data-nom="Feedback malicieux" data-desc="Envoyer un feedback contenant le mot « easter » ou « œuf ».">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Un retour d&#39;expérience peut aussi parler d&#39;easter eggs…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Feedback (admin)
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="kanban_maitre"
+         data-nom="Maître du Kanban" data-desc="Déplacer 5 cartes par glisser-déposer dans le Kanban feedback (admin).">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le tableau Kanban du suivi feedback aime le glisser-déposer…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Documents
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="document_mysterieux"
+         data-nom="Document mystérieux" data-desc="Uploader un document dont le nom de fichier contient « secret » ou « easter ».">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le nom d&#39;un fichier uploadé peut receler un indice…</div>
+    </div>
+</div>
+<h3 style="margin:20px 0 10px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Administration (admin)
+</h3>
+<div class="egg-grid" style="margin-bottom:16px">
+    <div class="egg-card locked" data-egg="createur_types"
+         data-nom="Créateur de types" data-desc="Créer un 4ᵉ type de mission personnalisé (au-delà de Renfort/Formation/Cérémonie).">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">La liste des types de mission n&#39;est pas figée à 3…</div>
+    </div>
+    <div class="egg-card locked" data-egg="indecis"
+         data-nom="Indécis" data-desc="Basculer le filtre COB/BTA/Tout 10 fois de suite dans la section BP.">
+        <div style="font-size:20px">🔒</div>
+        <strong style="color:var(--gris-500)">???</strong>
+        <div style="font-size:13px;color:var(--gris-400);font-style:italic">Le filtre COB/BTA/Tout peut être basculé... beaucoup de fois...</div>
+    </div>
+</div>
+</main>
+<script>
+/* DÉMO : le site réel lit les découvertes en base (api/easter_egg.php).
+   Ici, gnRegisterEggFound() pose un drapeau localStorage — cette galerie
+   le relit, les eggs se débloquent donc réellement pendant la visite. */
+(function () {
+    var total = 0, found = 0;
+    document.querySelectorAll('.egg-card').forEach(function (card) {
+        total++;
+        var key = card.dataset.egg;
+        var ok = false;
+        try { ok = !!localStorage.getItem('gn_egg_registered_' + key); } catch (e) {}
+        if (!ok) return;
+        found++;
+        card.classList.remove('locked');
+        card.classList.add('unlocked');
+        card.innerHTML = '<div style="font-size:20px">✅</div>'
+            + '<strong>' + card.dataset.nom + '</strong>'
+            + '<div style="font-size:13px;color:var(--gris-600)">' + card.dataset.desc + '</div>'
+            + '<div style="font-size:11px;color:var(--gris-400);margin-top:4px">Trouvé pendant cette démonstration</div>';
+    });
+    document.getElementById('egg-count').textContent = found;
+    document.getElementById('egg-bar').style.width = total ? Math.round(found / total * 100) + '%' : '0%';
+})();
+</script>
+</body>
+</html>

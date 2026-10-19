@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Documents — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Documents</h1>
+        <div class="page-subtitle">Convocations et bulletins de solde · Fichiers chiffrés AES-256</div>
+    </div>
+</div>
+
+<!-- =====================================================================
+     CONVOCATIONS
+====================================================================== -->
+<h2 style="font-size:16px;font-weight:700;color:var(--gris-700);text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">
+    Convocations
+</h2>
+<p style="font-size:13px;color:var(--gris-500);margin-bottom:18px">
+    Une convocation peut couvrir plusieurs jours et donc plusieurs missions. Après téléversement, rattachez-y les missions correspondantes.
+</p>
+
+<!-- Upload convocation -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-head"><div class="card-title">Téléverser une convocation</div></div>
+    <div class="card-body">
+        <form onsubmit="return gnDemoBlock('Téléversement de convocation')">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="conv_label">Libellé <span style="color:var(--gris-400)">(facultatif)</span></label>
+                    <input type="text" id="conv_label" name="label"
+                           placeholder="Ex : Convocation nuit du 14-15 mars 2026"
+                           maxlength="200">
+                </div>
+                <div class="form-field">
+                    <label for="conv_file">Fichier PDF <span style="color:var(--rouge)">*</span></label>
+                    <input type="file" id="conv_file" name="file" accept=".pdf,application/pdf">
+                    <span class="form-help">Taille max : 10 Mo · PDF uniquement · Chiffré AES-256 avant stockage</span>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Téléverser</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Liste des convocations -->
+<div class="card" style="margin-bottom:32px">
+    <div class="card-head"><div class="card-title">Mes convocations (2)</div></div>
+    <div class="card-body" style="padding:0">
+    <div class="doc-item">
+        <div class="doc-item-head">
+            <div class="doc-item-main">
+                <div class="doc-item-title">Convocation — 14 au 16 septembre 2026</div>
+                <div class="doc-item-meta">
+                    <span class="doc-file-pill">📄&nbsp;convocation_sept2026.pdf</span>
+                    <span>Téléversé le 28/08/2026 à 21h47</span>
+                    <span>· 1 mission rattachée</span>
+                </div>
+            </div>
+            <div class="doc-actions">
+                <a href="documents/convocation_sept2026.pdf" class="btn btn-sm btn-primary" target="_blank">⤓ Télécharger</a>
+                <button class="btn btn-sm" type="button"
+                        onclick="gnOpenPdfPreview('convocation',1,&quot;Convocation — 14 au 16 septembre 2026&quot;)">👁 Aperçu</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('conv-1')">✎ Libellé</button>
+                <form onsubmit="return gnDemoBlock('Suppression de document')">
+                    <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="label-conv-1" class="doc-label-edit" hidden>
+            <form onsubmit="return gnDemoBlock('Modification du libellé')">
+                <input type="text" name="label" value="Convocation — 14 au 16 septembre 2026"
+                       placeholder="convocation_sept2026.pdf" maxlength="200">
+                <button class="btn btn-sm btn-primary" type="submit">Enregistrer</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('conv-1')">Annuler</button>
+            </form>
+            <p style="font-size:12px;color:var(--gris-400);margin-top:6px">Laisser vide pour utiliser le nom du fichier.</p>
+        </div>
+
+        <details class="doc-missions">
+            <summary>Gérer les missions rattachées <span class="badge badge-bleu">1</span></summary>
+            <div style="margin-top:12px">
+                <form onsubmit="return gnDemoBlock('Rattachement des missions')" class="doc-missions-form"
+                      data-checked="101">
+                    <div class="doc-missions-slot"></div>
+                    <button class="btn btn-sm btn-primary" type="submit">Enregistrer les rattachements</button>
+                </form>
+            </div>
+        </details>
+    </div>
+    <div class="doc-item">
+        <div class="doc-item-head">
+            <div class="doc-item-main">
+                <div class="doc-item-title">Convocation — renfort estival juillet 2026</div>
+                <div class="doc-item-meta">
+                    <span class="doc-file-pill">📄&nbsp;convocation_juillet2026.pdf</span>
+                    <span>Téléversé le 26/06/2026 à 18h12</span>
+                    <span>· 1 mission rattachée</span>
+                </div>
+            </div>
+            <div class="doc-actions">
+                <a href="documents/convocation_juillet2026.pdf" class="btn btn-sm btn-primary" target="_blank">⤓ Télécharger</a>
+                <button class="btn btn-sm" type="button"
+                        onclick="gnOpenPdfPreview('convocation',2,&quot;Convocation — renfort estival juillet 2026&quot;)">👁 Aperçu</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('conv-2')">✎ Libellé</button>
+                <form onsubmit="return gnDemoBlock('Suppression de document')">
+                    <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="label-conv-2" class="doc-label-edit" hidden>
+            <form onsubmit="return gnDemoBlock('Modification du libellé')">
+                <input type="text" name="label" value="Convocation — renfort estival juillet 2026"
+                       placeholder="convocation_juillet2026.pdf" maxlength="200">
+                <button class="btn btn-sm btn-primary" type="submit">Enregistrer</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('conv-2')">Annuler</button>
+            </form>
+            <p style="font-size:12px;color:var(--gris-400);margin-top:6px">Laisser vide pour utiliser le nom du fichier.</p>
+        </div>
+
+        <details class="doc-missions">
+            <summary>Gérer les missions rattachées <span class="badge badge-bleu">1</span></summary>
+            <div style="margin-top:12px">
+                <form onsubmit="return gnDemoBlock('Rattachement des missions')" class="doc-missions-form"
+                      data-checked="204">
+                    <div class="doc-missions-slot"></div>
+                    <button class="btn btn-sm btn-primary" type="submit">Enregistrer les rattachements</button>
+                </form>
+            </div>
+        </details>
+    </div>
+    </div>
+</div>
+
+<!-- =====================================================================
+     BULLETINS DE SOLDE
+====================================================================== -->
+<h2 style="font-size:16px;font-weight:700;color:var(--gris-700);text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">
+    Bulletins de solde
+</h2>
+<p style="font-size:13px;color:var(--gris-500);margin-bottom:18px">
+    Un bulletin de solde est établi par mois et peut couvrir de nombreuses missions. Rattachez-y toutes les missions du mois correspondant.
+</p>
+
+<!-- Upload bulletin -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-head"><div class="card-title">Téléverser un bulletin de solde</div></div>
+    <div class="card-body">
+        <form onsubmit="return gnDemoBlock('Téléversement de bulletin')">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="bull_label">Libellé <span style="color:var(--gris-400)">(facultatif)</span></label>
+                    <input type="text" id="bull_label" name="label"
+                           placeholder="Ex : Bulletin de solde — mars 2026"
+                           maxlength="200">
+                </div>
+                <div class="form-field">
+                    <label for="bull_file">Fichier PDF <span style="color:var(--rouge)">*</span></label>
+                    <input type="file" id="bull_file" name="file" accept=".pdf,application/pdf">
+                    <span class="form-help">Taille max : 10 Mo · PDF uniquement · Chiffré AES-256 avant stockage</span>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Téléverser</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Liste des bulletins -->
+<div class="card">
+    <div class="card-head"><div class="card-title">Mes bulletins de solde (2)</div></div>
+    <div class="card-body" style="padding:0">
+    <div class="doc-item">
+        <div class="doc-item-head">
+            <div class="doc-item-main">
+                <div class="doc-item-title">Bulletin de solde — juillet 2026</div>
+                <div class="doc-item-meta">
+                    <span class="doc-file-pill">📄&nbsp;bulletin_solde_juillet2026.pdf</span>
+                    <span>Téléversé le 12/08/2026 à 09h30</span>
+                    <span>· 2 missions rattachées</span>
+                </div>
+            </div>
+            <div class="doc-actions">
+                <a href="documents/bulletin_solde_juillet2026.pdf" class="btn btn-sm btn-primary" target="_blank">⤓ Télécharger</a>
+                <button class="btn btn-sm" type="button"
+                        onclick="gnOpenPdfPreview('bulletin',1,&quot;Bulletin de solde — juillet 2026&quot;)">👁 Aperçu</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('bull-1')">✎ Libellé</button>
+                <form onsubmit="return gnDemoBlock('Suppression de document')">
+                    <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="label-bull-1" class="doc-label-edit" hidden>
+            <form onsubmit="return gnDemoBlock('Modification du libellé')">
+                <input type="text" name="label" value="Bulletin de solde — juillet 2026"
+                       placeholder="bulletin_solde_juillet2026.pdf" maxlength="200">
+                <button class="btn btn-sm btn-primary" type="submit">Enregistrer</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('bull-1')">Annuler</button>
+            </form>
+            <p style="font-size:12px;color:var(--gris-400);margin-top:6px">Laisser vide pour utiliser le nom du fichier.</p>
+        </div>
+
+        <details class="doc-missions">
+            <summary>Gérer les missions rattachées <span class="badge badge-bleu">2</span></summary>
+            <div style="margin-top:12px">
+                <form onsubmit="return gnDemoBlock('Rattachement des missions')" class="doc-missions-form"
+                      data-checked="202,204">
+                    <div class="doc-missions-slot"></div>
+                    <button class="btn btn-sm btn-primary" type="submit">Enregistrer les rattachements</button>
+                </form>
+            </div>
+        </details>
+    </div>
+    <div class="doc-item">
+        <div class="doc-item-head">
+            <div class="doc-item-main">
+                <div class="doc-item-title">Bulletin de solde — avril 2026</div>
+                <div class="doc-item-meta">
+                    <span class="doc-file-pill">📄&nbsp;bulletin_solde_avril2026.pdf</span>
+                    <span>Téléversé le 14/05/2026 à 08h05</span>
+                    <span>· 2 missions rattachées</span>
+                </div>
+            </div>
+            <div class="doc-actions">
+                <a href="documents/bulletin_solde_avril2026.pdf" class="btn btn-sm btn-primary" target="_blank">⤓ Télécharger</a>
+                <button class="btn btn-sm" type="button"
+                        onclick="gnOpenPdfPreview('bulletin',2,&quot;Bulletin de solde — avril 2026&quot;)">👁 Aperçu</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('bull-2')">✎ Libellé</button>
+                <form onsubmit="return gnDemoBlock('Suppression de document')">
+                    <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="label-bull-2" class="doc-label-edit" hidden>
+            <form onsubmit="return gnDemoBlock('Modification du libellé')">
+                <input type="text" name="label" value="Bulletin de solde — avril 2026"
+                       placeholder="bulletin_solde_avril2026.pdf" maxlength="200">
+                <button class="btn btn-sm btn-primary" type="submit">Enregistrer</button>
+                <button class="btn btn-sm" type="button" onclick="gnToggleLabel('bull-2')">Annuler</button>
+            </form>
+            <p style="font-size:12px;color:var(--gris-400);margin-top:6px">Laisser vide pour utiliser le nom du fichier.</p>
+        </div>
+
+        <details class="doc-missions">
+            <summary>Gérer les missions rattachées <span class="badge badge-bleu">2</span></summary>
+            <div style="margin-top:12px">
+                <form onsubmit="return gnDemoBlock('Rattachement des missions')" class="doc-missions-form"
+                      data-checked="205,206">
+                    <div class="doc-missions-slot"></div>
+                    <button class="btn btn-sm btn-primary" type="submit">Enregistrer les rattachements</button>
+                </form>
+            </div>
+        </details>
+    </div>
+    </div>
+</div>
+
+<template id="doc-missions-tpl">    <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--gris-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">2026</div>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="103">
+            <span>03/10/2026 → 04/10/2026 — Castelnaudary [BTA] 🗓️</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="102">
+            <span>21/09/2026 — Service Réserve Jeunesse de Carcassonne [SRJ] 🗓️</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="101">
+            <span>14/09/2026 → 16/09/2026 — Carcassonne [BP] 🗓️</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="201">
+            <span>21/08/2026 → 22/08/2026 — Narbonne [BP]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="202">
+            <span>19/07/2026 — Trèbes [BP]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="203">
+            <span>14/07/2026 — Service Réserve Jeunesse de Carcassonne [SRJ]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="204">
+            <span>03/07/2026 → 05/07/2026 — Narbonne [BP]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="205">
+            <span>21/04/2026 → 25/04/2026 — Peloton motorisé de Narbonne [PMO]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="206">
+            <span>02/04/2026 — Service Réserve Jeunesse de Carcassonne [SRJ]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="207">
+            <span>14/03/2026 → 16/03/2026 — Quillan [BP]</span>
+        </label>
+        <label class="doc-mission-check">
+            <input type="checkbox" name="mission_ids[]" value="208">
+            <span>01/02/2026 → 02/02/2026 — PSIG de Carcassonne [PSIG]</span>
+        </label>
+    </div>
+</template>
+
+<!-- Modale aperçu PDF -->
+<div class="modal-overlay pdf-preview-overlay" id="pdf-preview-modal">
+    <div class="modal pdf-preview-modal" style="max-width:900px;width:95vw;height:88vh;max-height:88vh;display:flex;flex-direction:column;overflow:hidden">
+        <div class="modal-head">
+            <span class="modal-title" id="pdf-preview-title">Aperçu</span>
+            <button class="modal-close" onclick="gnClosePdfPreview()" type="button">×</button>
+        </div>
+        <div style="flex:1;overflow:hidden;background:#525659">
+            <iframe id="pdf-preview-iframe" src="" style="width:100%;height:100%;border:none;display:block"></iframe>
+        </div>
+        <div class="modal-footer">
+            <a id="pdf-preview-dl" href="#" class="btn btn-primary btn-sm">⤓ Télécharger</a>
+            <button class="btn btn-sm" onclick="gnClosePdfPreview()" type="button">Fermer</button>
+        </div>
+    </div>
+</div>
+</main>
+<script>
+function gnToggleLabel(key) {
+    const el = document.getElementById('label-' + key);
+    if (el) el.hidden = !el.hidden;
+}
+(function () {
+    var tpl = document.getElementById('doc-missions-tpl');
+    if (!tpl) return;
+    document.querySelectorAll('details.doc-missions').forEach(function (d) {
+        d.addEventListener('toggle', function () {
+            if (!d.open) return;
+            var form = d.querySelector('form.doc-missions-form');
+            var slot = form && form.querySelector('.doc-missions-slot');
+            if (!slot || slot.dataset.filled) return;
+            slot.appendChild(tpl.content.cloneNode(true));
+            var checked = (form.dataset.checked || '').split(',').filter(Boolean);
+            if (checked.length) {
+                var set = new Set(checked);
+                slot.querySelectorAll('input[type=checkbox]').forEach(function (cb) {
+                    if (set.has(cb.value)) { cb.checked = true; cb.closest('.doc-mission-check').style.background = '#eff6ff'; }
+                });
+            }
+            slot.dataset.filled = '1';
+        });
+    });
+})();
+
+/* DÉMO : le site réel sert les PDF déchiffrés à la volée via
+   /api/document_download. Ici, les PDF fictifs sont des fichiers statiques. */
+var GN_DOC_FILES = {"convocation:1": "documents/convocation_sept2026.pdf", "convocation:2": "documents/convocation_juillet2026.pdf", "bulletin:1": "documents/bulletin_solde_juillet2026.pdf", "bulletin:2": "documents/bulletin_solde_avril2026.pdf"};
+
+function gnOpenPdfPreview(type, id, title) {
+    document.getElementById('pdf-preview-title').textContent = title;
+    var f = GN_DOC_FILES[type + ':' + id];
+    document.getElementById('pdf-preview-iframe').src = f + '#view=Fit&zoom=page-fit';
+    document.getElementById('pdf-preview-dl').href    = f;
+    document.getElementById('pdf-preview-modal').classList.add('open');
+}
+function gnClosePdfPreview() {
+    document.getElementById('pdf-preview-modal').classList.remove('open');
+    document.getElementById('pdf-preview-iframe').src = '';
+}
+document.getElementById('pdf-preview-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) gnClosePdfPreview();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Administration — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<style>
+.admin-sidebar { min-width:230px;flex-shrink:0;position:sticky;top:80px }
+.admin-sidebar .card { padding:0;overflow:hidden }
+.admin-nav-level {
+    padding:10px 18px 5px;
+    font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--gris-400);
+    border-top:1px solid var(--gris-100)
+}
+.admin-nav-level:first-child { border-top:none }
+.admin-nav-link {
+    display:flex;align-items:center;gap:10px;
+    padding:10px 18px;
+    font-size:13px;font-weight:500;
+    color:var(--gris-700);
+    text-decoration:none;
+    border-left:3px solid transparent;
+    transition:background .12s,color .12s
+}
+.admin-nav-link:hover { background:var(--gris-50);color:var(--gris-900) }
+.admin-nav-link.active {
+    background:var(--gris-50);
+    color:var(--bleu-texte);
+    font-weight:700;
+    border-left-color:var(--bleu)
+}
+.admin-nav-badge {
+    font-size:10px;font-weight:700;color:#fff;
+    padding:2px 6px;border-radius:4px;
+    flex-shrink:0;letter-spacing:.02em
+}
+.admin-nav-label { line-height:1.3 }
+
+/* Sélecteur de section — remplace la sidebar sur mobile (refonte sept. 2026 :
+   la sidebar sticky à 230px était inutilisable sous 720px). Rendu hors de
+   #admin-content, il survit aux swaps AJAX de section. */
+.admin-section-select { display:none }
+@media (max-width: 720px) {
+    .admin-layout { flex-direction:column; gap:12px }
+    .admin-sidebar { display:none }
+    .admin-layout > #admin-content { width:100%; flex:1 1 100% }
+    .admin-section-select {
+        display:block; width:100%;
+        padding:11px 12px;
+        font-size:14px; font-family:Inter,sans-serif;
+        border:1px solid var(--gris-300); border-radius:var(--radius);
+        background:var(--surface); color:var(--gris-800)
+    }
+}
+</style>
+
+
+<div class="admin-layout" style="display:flex;gap:24px;align-items:flex-start">
+
+    <select class="admin-section-select" aria-label="Section d'administration"
+            onchange="gnShowSection(this.value)">
+        <optgroup label="Import global">
+            <option value="import_intranet">Import intranet</option>
+            <option value="sans_localisation">Unités sans localisation</option>
+            <option value="unit_history">Archives &amp; historique</option>
+        </optgroup>
+        <optgroup label="Niveau 1">
+            <option value="ggd">Groupements (GGD)</option>
+        </optgroup>
+        <optgroup label="Niveau 2">
+            <option value="cgd">Compagnies (CGD)</option>
+            <option value="edcf">EDCF</option>
+            <option value="pghm">PGHM</option>
+            <option value="srj">SRJ</option>
+        </optgroup>
+        <optgroup label="Niveau 3">
+            <option value="brigade">BP (COB / BTA / filles)</option>
+            <option value="pmo_bmo">PMO / BMO</option>
+            <option value="bn">Brigades Nautiques (BN)</option>
+            <option value="psig">PSIG</option>
+        </optgroup>
+        <optgroup label="Référentiels">
+            <option value="intervention_types">Types d&#39;intervention</option>
+            <option value="mission_types">Types de mission</option>
+        </optgroup>
+        <optgroup label="Supervision">
+            <option value="users">Utilisateurs</option>
+            <option value="audit_log">Journal d&#39;activité</option>
+        </optgroup>
+    </select>
+
+    <!-- Sidebar navigation -->
+    <aside class="admin-sidebar">
+        <div class="card">
+            <div class="admin-nav-level">Import global</div>
+            <a href="#import_intranet" data-section="import_intranet" class="admin-nav-link active">
+                <span class="admin-nav-badge" style="background:#166534">CSV</span>
+                <span class="admin-nav-label">Import intranet (hiérarchie complète)</span>
+            </a>
+            <a href="#sans_localisation" data-section="sans_localisation" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#b45309">GPS</span>
+                <span class="admin-nav-label">Unités sans localisation</span>
+            </a>
+            <a href="#unit_history" data-section="unit_history" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#7c3aed">HIST</span>
+                <span class="admin-nav-label">Archives &amp; historique des unités</span>
+            </a>
+            <div class="admin-nav-level">Niveau 1</div>
+            <a href="#ggd" data-section="ggd" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#002395">GGD</span>
+                <span class="admin-nav-label">Groupements (GGD)</span>
+            </a>
+            <div class="admin-nav-level">Niveau 2</div>
+            <a href="#cgd" data-section="cgd" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#1d4ed8">CGD</span>
+                <span class="admin-nav-label">Compagnies (CGD)</span>
+            </a>
+            <a href="#edcf" data-section="edcf" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#7c3aed">EDCF</span>
+                <span class="admin-nav-label">EDCF</span>
+            </a>
+            <a href="#pghm" data-section="pghm" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#78350f">PGHM</span>
+                <span class="admin-nav-label">PGHM</span>
+            </a>
+            <a href="#srj" data-section="srj" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#4338ca">SRJ</span>
+                <span class="admin-nav-label">SRJ</span>
+            </a>
+            <div class="admin-nav-level">Niveau 3</div>
+            <a href="#brigade" data-section="brigade" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#15803d">BP</span>
+                <span class="admin-nav-label">BP (COB / BTA / filles)</span>
+            </a>
+            <a href="#pmo_bmo" data-section="pmo_bmo" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#c2410c">PMO</span>
+                <span class="admin-nav-label">PMO / BMO</span>
+            </a>
+            <a href="#bn" data-section="bn" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#0e7490">BN</span>
+                <span class="admin-nav-label">Brigades Nautiques (BN)</span>
+            </a>
+            <a href="#psig" data-section="psig" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#b45309">PSIG</span>
+                <span class="admin-nav-label">PSIG</span>
+            </a>
+            <div class="admin-nav-level">Référentiels</div>
+            <a href="#intervention_types" data-section="intervention_types" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#9333ea">INTERV.</span>
+                <span class="admin-nav-label">Types d'intervention</span>
+            </a>
+            <a href="#mission_types" data-section="mission_types" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#ca8a04">MISSION</span>
+                <span class="admin-nav-label">Types de mission</span>
+            </a>
+            <div class="admin-nav-level">Supervision</div>
+            <a href="#users" data-section="users" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#0f172a">USERS</span>
+                <span class="admin-nav-label">Utilisateurs</span>
+            </a>
+            <a href="#audit_log" data-section="audit_log" class="admin-nav-link">
+                <span class="admin-nav-badge" style="background:#475569">LOG</span>
+                <span class="admin-nav-label">Journal d'activité</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <div style="flex:1;min-width:0" id="admin-content">
+<div class="admin-section" data-section="import_intranet" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Import intranet — Hiérarchie complète</h1>
+            <div class="page-subtitle">GGD/COMGEND → CGD/EDCF → COB/BTA/BP/PSIG/BN/PMO/BMO/PGHM/SRJ — <strong>tous les départements du fichier en une fois</strong></div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-head">
+            <div class="card-title">1. Téléverser l'export CSV</div>
+            <span style="font-size:12px;color:var(--gris-500)">Plusieurs fichiers peuvent être déposés en même temps — supprimables à tout moment</span>
+        </div>
+        <div class="card-body">
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <input type="file" id="import-file" accept=".csv">
+                <button onclick="return gnDemoBlock('Téléversement du CSV')" class="btn btn-ghost">Téléverser</button>
+                <span id="import-upload-status" style="font-size:12px;color:var(--gris-500)"></span>
+            </div>
+            <div id="import-files-list" style="margin-top:14px">
+                <div class="table-wrap"><table class="data-table">
+                    <thead><tr><th>Fichier</th><th>Déposé le</th><th>Taille</th><th class="actions">Actions</th></tr></thead>
+                    <tbody>
+                        <tr><td>annuaire_national_2026-08.csv</td><td>14/08/2026 09h12</td><td>3,4 Mo</td>
+                            <td class="actions"><button class="btn btn-sm btn-danger" onclick="return gnDemoBlock('Suppression du fichier')">Suppr.</button></td></tr>
+                        <tr><td>annuaire_national_2026-05.csv</td><td>03/05/2026 17h40</td><td>3,3 Mo</td>
+                            <td class="actions"><button class="btn btn-sm btn-danger" onclick="return gnDemoBlock('Suppression du fichier')">Suppr.</button></td></tr>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="import-step2-card" style="margin-bottom:12px">
+        <div class="card-head">
+            <div class="card-title">2. Choisir le fichier à importer</div>
+            <span style="font-size:12px;color:var(--gris-500)">Tous les départements présents dans le fichier sont importés</span>
+        </div>
+        <div class="card-body">
+            <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+                <div class="form-field" style="margin:0;min-width:260px">
+                    <label for="import-file-select" style="font-size:12px">Fichier (le plus récent présélectionné)</label>
+                    <select id="import-file-select" class="select-inline">
+                        <option>annuaire_national_2026-08.csv</option>
+                        <option>annuaire_national_2026-05.csv</option>
+                    </select>
+                </div>
+                <button onclick="gnImportPreviewDemo()" class="btn btn-ghost">Analyser</button>
+            </div>
+            <div id="import-preview" style="margin-top:14px"></div>
+        </div>
+    </div>
+
+    <div class="card" id="import-fix-card" style="margin-bottom:12px">
+        <div class="card-head">
+            <div class="card-title">Réparer les rattachements manquants</div>
+            <span style="font-size:12px;color:var(--gris-500)">D'après le fichier sélectionné ci-dessus — ne touche que les unités actuellement sans parent, jamais une unité déjà rattachée</span>
+        </div>
+        <div class="card-body">
+            <button onclick="return gnDemoBlock('Réparation des rattachements')" class="btn btn-ghost" id="import-fix-btn">Analyser et rattacher les unités orphelines</button>
+            <div id="import-fix-result" style="margin-top:12px;font-size:13px"></div>
+        </div>
+    </div>
+</div>
+<div class="admin-section" data-section="users" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Utilisateurs</h1>
+            <div class="page-subtitle">4 utilisateurs ayant accès au projet</div>
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body" style="padding:0">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Utilisateur</th><th>Nom</th><th>Prénom</th><th>NIGEND</th><th>Mail</th><th>Mail pro</th><th>Mail contact</th><th>Admin</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr>
+                <td>tmarescal</td><td>MARESCAL</td><td>Théo</td>
+                <td style="font-family:monospace">123456</td>
+                <td>theo@exemple.fr</td>
+                <td>prenom.nom@gendarmerie.interieur.gouv.fr</td>
+                <td>contact@exemple.fr</td>
+                <td><span class="badge badge-bleu">Admin</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Export des données')">⬇ Exporter</a>
+                </td>
+            </tr>
+            <tr>
+                <td>jdurand</td><td>DURAND</td><td>Julien</td>
+                <td style="font-family:monospace">301774</td>
+                <td>j.durand@exemple.fr</td>
+                <td>julien.durand@gendarmerie.exemple.fr</td>
+                <td><span style="color:var(--gris-300)">—</span></td>
+                <td>
+                    <form onsubmit="return gnDemoBlock('Modification des droits')" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-ghost">Rendre admin</button>
+                    </form>
+                </td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Export des données')">⬇ Exporter</a>
+                    <form onsubmit="return gnDemoBlock('Suppression utilisateur')" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>cmartin</td><td>MARTIN</td><td>Camille</td>
+                <td style="font-family:monospace">288902</td>
+                <td>c.martin@exemple.fr</td>
+                <td>camille.martin@gendarmerie.exemple.fr</td>
+                <td>camille@exemple.fr</td>
+                <td>
+                    <form onsubmit="return gnDemoBlock('Modification des droits')" style="display:inline">
+                        <button type="submit" class="btn btn-sm">Retirer admin</button>
+                    </form>
+                </td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Export des données')">⬇ Exporter</a>
+                    <form onsubmit="return gnDemoBlock('Suppression utilisateur')" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>lpetit</td><td>PETIT</td><td>Lucas</td>
+                <td style="font-family:monospace"><span style="color:var(--gris-300)">—</span></td>
+                <td>l.petit@exemple.fr</td>
+                <td><span style="color:var(--gris-300)">—</span></td>
+                <td><span style="color:var(--gris-300)">—</span></td>
+                <td>
+                    <form onsubmit="return gnDemoBlock('Modification des droits')" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-ghost">Rendre admin</button>
+                    </form>
+                </td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Export des données')">⬇ Exporter</a>
+                    <form onsubmit="return gnDemoBlock('Suppression utilisateur')" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="audit_log" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Journal d'activité</h1>
+            <div class="page-subtitle">1 284 actions enregistrées</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px"><div class="card-body">
+        <form onsubmit="return gnDemoBlock('Filtre du journal')" class="gn-ajax-form" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+            <div class="form-field" style="margin:0;min-width:220px">
+                <label style="font-size:12px">Utilisateur</label>
+                <select name="user_id" class="select-inline">
+                    <option value="0">— Tous —</option>
+                    <option value="1">MARESCAL Théo (tmarescal)</option>
+                    <option value="2">DURAND Julien (jdurand)</option>
+                    <option value="3">MARTIN Camille (cmartin)</option>
+                </select>
+            </div>
+            <div class="form-field" style="margin:0;min-width:200px">
+                <label style="font-size:12px">Action</label>
+                <select name="q" class="select-inline">
+                    <option value="">— Toutes —</option>
+                    <option value="mission.create">mission.create</option>
+                    <option value="service.update">service.update</option>
+                    <option value="document.upload">document.upload</option>
+                    <option value="import.run">import.run</option>
+                    <option value="profil.update">profil.update</option>
+                </select>
+            </div>
+            <div class="form-field" style="margin:0">
+                <label style="font-size:12px">Du</label>
+                <input type="date" name="from" value="" class="select-inline">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label style="font-size:12px">Au</label>
+                <input type="date" name="to" value="" class="select-inline">
+            </div>
+            <button type="submit" class="btn btn-ghost">Filtrer</button>
+        </form>
+    </div></div>
+
+    <div class="card"><div class="card-body" style="padding:0">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Page</th><th>Identifiants</th><th>IP</th><th>Navigateur</th></tr></thead>
+            <tbody>
+            <tr>
+                <td style="white-space:nowrap">04/09/2026 08:16:22</td>
+                <td>MARESCAL Théo (tmarescal)</td>
+                <td><code>mission.create</code></td>
+                <td>/missions</td>
+                <td style="font-size:12px;color:var(--gris-500)">#218</td>
+                <td style="font-size:12px;color:var(--gris-500)">192.168.1.24</td>
+                <td style="font-size:11px;color:var(--gris-400);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    title="Mozilla/5.0 (Linux; Android 14) Chrome/128">Mozilla/5.0 (Linux; Android 14) Chrome/128</td>
+            </tr>
+            <tr>
+                <td style="white-space:nowrap">03/09/2026 19:05:47</td>
+                <td>MARESCAL Théo (tmarescal)</td>
+                <td><code>service.update</code></td>
+                <td>/missions</td>
+                <td style="font-size:12px;color:var(--gris-500)">#402</td>
+                <td style="font-size:12px;color:var(--gris-500)">192.168.1.24</td>
+                <td style="font-size:11px;color:var(--gris-400);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    title="Mozilla/5.0 (Macintosh) Safari/17">Mozilla/5.0 (Macintosh) Safari/17</td>
+            </tr>
+            <tr>
+                <td style="white-space:nowrap">28/08/2026 21:50:11</td>
+                <td>MARESCAL Théo (tmarescal)</td>
+                <td><code>document.upload</code></td>
+                <td>/documents</td>
+                <td style="font-size:12px;color:var(--gris-500)">#7</td>
+                <td style="font-size:12px;color:var(--gris-500)">192.168.1.24</td>
+                <td style="font-size:11px;color:var(--gris-400);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    title="Mozilla/5.0 (Windows NT 10.0) Chrome/128">Mozilla/5.0 (Windows NT 10.0) Chrome/128</td>
+            </tr>
+            <tr>
+                <td style="white-space:nowrap">22/08/2026 23:12:03</td>
+                <td>MARTIN Camille (cmartin)</td>
+                <td><code>service.create</code></td>
+                <td>/missions</td>
+                <td style="font-size:12px;color:var(--gris-500)">#399</td>
+                <td style="font-size:12px;color:var(--gris-500)">10.42.0.8</td>
+                <td style="font-size:11px;color:var(--gris-400);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    title="Mozilla/5.0 (iPhone) Safari/17">Mozilla/5.0 (iPhone) Safari/17</td>
+            </tr>
+            <tr>
+                <td style="white-space:nowrap">14/08/2026 09:12:38</td>
+                <td>MARESCAL Théo (tmarescal)</td>
+                <td><code>import.run</code></td>
+                <td>/administration</td>
+                <td style="font-size:12px;color:var(--gris-500)">annuaire_national_2026-08.csv</td>
+                <td style="font-size:12px;color:var(--gris-500)">192.168.1.24</td>
+                <td style="font-size:11px;color:var(--gris-400);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    title="Mozilla/5.0 (Windows NT 10.0) Chrome/128">Mozilla/5.0 (Windows NT 10.0) Chrome/128</td>
+            </tr>
+            <tr>
+                <td style="white-space:nowrap">02/08/2026 14:41:55</td>
+                <td>DURAND Julien (jdurand)</td>
+                <td><code>profil.update</code></td>
+                <td>/profil</td>
+                <td style="font-size:12px;color:var(--gris-500)">#3</td>
+                <td style="font-size:12px;color:var(--gris-500)">10.42.0.19</td>
+                <td style="font-size:11px;color:var(--gris-400);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+                    title="Mozilla/5.0 (X11; Linux) Firefox/129">Mozilla/5.0 (X11; Linux) Firefox/129</td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="mission_types" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Types de mission</h1>
+            <div class="page-subtitle">
+                3 types — proposés dans cet ordre à la
+                création/modification d'une mission
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+        <div class="card-head">
+            <div class="card-title">Ajouter un type</div>
+        </div>
+        <div class="card-body">
+            <form onsubmit="return gnDemoBlock('Création de type')" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+                <div class="form-field" style="margin:0;flex:1;min-width:220px">
+                    <label for="mt_nom">Nom</label>
+                    <input type="text" id="mt_nom" name="nom" maxlength="100" placeholder="Ex : Cérémonie" value="">
+                </div>
+                <div class="form-field" style="margin:0">
+                    <label for="mt_couleur">Couleur du badge</label>
+                    <input type="color" id="mt_couleur" name="couleur" style="height:38px;padding:2px;width:70px" value="#6b7280">
+                </div>
+                <button class="btn btn-primary" type="submit">+ Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body" style="padding:0">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Type</th><th>Utilisation</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><span class="badge" style="background:#16a34a;color:#fff">Renfort</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">24 missions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" disabled title="Utilisé par des missions existantes">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#1d4ed8;color:#fff">Formation</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">6 missions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" disabled title="Utilisé par des missions existantes">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#b45309;color:#fff">Cérémonie</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">4 missions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" disabled title="Utilisé par des missions existantes">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="intervention_types" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Types d'intervention</h1>
+            <div class="page-subtitle">5 types — proposés à la saisie d'une intervention dans un service</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><div class="card-title">Ajouter un type</div></div>
+        <div class="card-body">
+            <form onsubmit="return gnDemoBlock('Création de type')" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+                <div class="form-field" style="margin:0;flex:1;min-width:220px">
+                    <label for="iv_nom">Nom</label>
+                    <input type="text" id="iv_nom" name="nom" maxlength="100" placeholder="Ex : Contrôle routier">
+                </div>
+                <button class="btn btn-primary" type="submit">+ Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body" style="padding:0">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Type</th><th>Utilisation</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><span class="badge badge-bleu">Contrôle routier</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">31 interventions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-bleu">Assistance</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">18 interventions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-bleu">Interpellation</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">9 interventions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-bleu">Accident</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">6 interventions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-bleu">Différend</span></td>
+                <td style="font-size:13px;color:var(--gris-600)">4 interventions</td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification de type')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de type')" style="display:inline">
+                        <button class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="ggd" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Groupements (GGD)</h1>
+            <div class="page-subtitle">1 entrée</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="groupement de gendarmerie départementale de l'aude carcassonne ggd11">
+                <td><strong>Groupement de gendarmerie départementale de l&#39;Aude</strong></td>
+                <td>Carcassonne</td>
+                <td style="font-family:monospace;font-size:12px">GGD11</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="cgd" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Compagnies (CGD)</h1>
+            <div class="page-subtitle">3 entrées</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="compagnie de carcassonne carcassonne cgd1101">
+                <td><strong>Compagnie de Carcassonne</strong></td>
+                <td>Carcassonne</td>
+                <td style="font-family:monospace;font-size:12px">CGD1101</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr class="admin-row" data-search="compagnie de narbonne narbonne cgd1102">
+                <td><strong>Compagnie de Narbonne</strong></td>
+                <td>Narbonne</td>
+                <td style="font-family:monospace;font-size:12px">CGD1102</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr class="admin-row" data-search="compagnie de limoux limoux cgd1103">
+                <td><strong>Compagnie de Limoux</strong></td>
+                <td>Limoux</td>
+                <td style="font-family:monospace;font-size:12px">CGD1103</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="edcf" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">EDCF</h1>
+            <div class="page-subtitle">1 entrée</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="escadron départemental de contrôle des flux de l'aude carcassonne edcf11">
+                <td><strong>Escadron Départemental de Contrôle des Flux de l&#39;Aude</strong></td>
+                <td>Carcassonne</td>
+                <td style="font-family:monospace;font-size:12px">EDCF11</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="pghm" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">PGHM</h1>
+            <div class="page-subtitle">0 entrée</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="empty-state">
+            <div class="empty-state-title">Aucune entrée</div>
+            <p><a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary btn-sm">+ Ajouter</a></p>
+        </div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="srj" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">SRJ</h1>
+            <div class="page-subtitle">1 entrée</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="service réserve jeunesse de carcassonne carcassonne srj1101">
+                <td><strong>Service Réserve Jeunesse de Carcassonne</strong></td>
+                <td>Carcassonne</td>
+                <td style="font-family:monospace;font-size:12px">SRJ1101</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="pmo_bmo" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">PMO / BMO</h1>
+            <div class="page-subtitle">1 entrée</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="peloton motorisé de narbonne narbonne pmo1101">
+                <td><strong>Peloton motorisé de Narbonne</strong></td>
+                <td>Narbonne</td>
+                <td style="font-family:monospace;font-size:12px">PMO1101</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="bn" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Brigades Nautiques (BN)</h1>
+            <div class="page-subtitle">1 entrée</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="brigade nautique de leucate leucate bn1101">
+                <td><strong>Brigade nautique de Leucate</strong></td>
+                <td>Leucate</td>
+                <td style="font-family:monospace;font-size:12px">BN1101</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="psig" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">PSIG</h1>
+            <div class="page-subtitle">2 entrées</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Nom</th><th>Ville</th><th>Code unité</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr class="admin-row" data-search="psig de carcassonne carcassonne psig1101">
+                <td><strong>PSIG de Carcassonne</strong></td>
+                <td>Carcassonne</td>
+                <td style="font-family:monospace;font-size:12px">PSIG1101</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            <tr class="admin-row" data-search="psig de narbonne narbonne psig1102">
+                <td><strong>PSIG de Narbonne</strong></td>
+                <td>Narbonne</td>
+                <td style="font-family:monospace;font-size:12px">PSIG1102</td>
+                <td><span class="badge">11</span></td>
+                <td class="actions">
+                    <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression d\'unité')" style="display:inline">
+                        <button class="btn btn-sm btn-danger" type="submit">Suppr.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="brigade" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">BP (COB / BTA / filles)</h1>
+            <div class="page-subtitle">9 entrées</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Ajout d\'unité')" class="btn btn-primary">+ Ajouter</a>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <select id="admin-dept-filter" onchange="gnDemoBlock('Changement de département')"
+                    style="flex-shrink:0;padding:9px 12px;border:1px solid var(--gris-200);border-radius:8px;font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+                <option value="all">Tous les départements — peut être lent</option>
+                <option value="11" selected>11 — Aude (le mien)</option>
+                <option value="34">34 — Hérault</option>
+            </select>
+            <input type="text" id="admin-live-search" placeholder="Filtrer par nom, ville ou code unité…" autocomplete="off"
+                   style="flex:1;min-width:180px;padding:10px 14px;border:1px solid var(--gris-200);border-radius:8px;font-family:Inter,sans-serif;font-size:14px">
+            <div id="bp-type-filter" style="display:flex;gap:6px;flex-shrink:0">
+                <button type="button" class="btn btn-sm bp-type-btn active" data-bp-type="all">Tout</button>
+                <button type="button" class="btn btn-sm bp-type-btn" data-bp-type="cob">COB</button>
+                <button type="button" class="btn btn-sm bp-type-btn" data-bp-type="bta">BTA</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card"><div class="card-body">
+        <div class="admin-group" data-search="cob de carcassonne carcassonne trèbes capendu" data-bp-type="cob" style="border:1px solid var(--gris-200);border-radius:8px;margin-bottom:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--gris-50);border-bottom:1px solid var(--gris-100)">
+                <span class="badge" style="background:#0891b2;color:#fff;font-size:10px">COB</span>
+                <strong style="flex:1">COB de Carcassonne</strong>
+                <span style="font-size:12px;color:var(--gris-500)">Carcassonne · 11</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+            <div class="admin-row" data-search="carcassonne bp1101" style="display:flex;align-items:center;gap:10px;padding:7px 14px 7px 34px;font-size:13px;border-bottom:1px solid var(--gris-100)">
+                <span style="color:var(--gris-400)">↳</span>
+                <span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span>
+                <span style="flex:1">Carcassonne</span>
+                <span style="font-family:monospace;font-size:11px;color:var(--gris-500)">BP1101</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+            <div class="admin-row" data-search="trèbes trebes bp1102" style="display:flex;align-items:center;gap:10px;padding:7px 14px 7px 34px;font-size:13px;border-bottom:1px solid var(--gris-100)">
+                <span style="color:var(--gris-400)">↳</span>
+                <span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span>
+                <span style="flex:1">Trèbes</span>
+                <span style="font-family:monospace;font-size:11px;color:var(--gris-500)">BP1102</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+            <div class="admin-row" data-search="capendu bp1103" style="display:flex;align-items:center;gap:10px;padding:7px 14px 7px 34px;font-size:13px">
+                <span style="color:var(--gris-400)">↳</span>
+                <span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span>
+                <span style="flex:1">Capendu</span>
+                <span style="font-family:monospace;font-size:11px;color:var(--gris-500)">BP1103</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+        </div>
+        <div class="admin-group" data-search="cob de narbonne narbonne sigean" data-bp-type="cob" style="border:1px solid var(--gris-200);border-radius:8px;margin-bottom:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--gris-50);border-bottom:1px solid var(--gris-100)">
+                <span class="badge" style="background:#0891b2;color:#fff;font-size:10px">COB</span>
+                <strong style="flex:1">COB de Narbonne</strong>
+                <span style="font-size:12px;color:var(--gris-500)">Narbonne · 11</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+            <div class="admin-row" data-search="narbonne bp1104" style="display:flex;align-items:center;gap:10px;padding:7px 14px 7px 34px;font-size:13px;border-bottom:1px solid var(--gris-100)">
+                <span style="color:var(--gris-400)">↳</span>
+                <span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span>
+                <span style="flex:1">Narbonne</span>
+                <span style="font-family:monospace;font-size:11px;color:var(--gris-500)">BP1104</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+            <div class="admin-row" data-search="sigean bp1105" style="display:flex;align-items:center;gap:10px;padding:7px 14px 7px 34px;font-size:13px">
+                <span style="color:var(--gris-400)">↳</span>
+                <span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span>
+                <span style="flex:1">Sigean</span>
+                <span style="font-family:monospace;font-size:11px;color:var(--gris-500)">BP1105</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+        </div>
+        <div class="admin-group" data-search="castelnaudary bta1101" data-bp-type="bta" style="border:1px solid var(--gris-200);border-radius:8px;margin-bottom:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--gris-50)">
+                <span class="badge" style="background:#0891b2;color:#fff;font-size:10px">BTA</span>
+                <strong style="flex:1">Castelnaudary</strong>
+                <span style="font-size:12px;color:var(--gris-500)">Castelnaudary · 11</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+        </div>
+        <div class="admin-group" data-search="lézignan-corbières lezignan bta1102" data-bp-type="bta" style="border:1px solid var(--gris-200);border-radius:8px;margin-bottom:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--gris-50)">
+                <span class="badge" style="background:#0891b2;color:#fff;font-size:10px">BTA</span>
+                <strong style="flex:1">Lézignan-Corbières</strong>
+                <span style="font-size:12px;color:var(--gris-500)">Lézignan-Corbières · 11</span>
+                <a class="btn btn-sm" href="#" onclick="return gnDemoBlock('Modification d\'unité')">Modifier</a>
+            </div>
+        </div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="sans_localisation" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Unités sans localisation</h1>
+            <div class="page-subtitle">2 unités sans coordonnées GPS — le géocodage se fait depuis la Base Adresse Nationale</div>
+        </div>
+    </div>
+    <div class="card"><div class="card-body" style="padding:0">
+        <div class="table-wrap"><table class="data-table">
+            <thead><tr><th>Type</th><th>Nom</th><th>Ville</th><th>Dépt</th><th class="actions">Actions</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span></td>
+                <td>Capendu</td><td>Capendu</td><td><span class="badge">11</span></td>
+                <td class="actions"><button class="btn btn-sm" onclick="return gnDemoBlock('Géocodage')">📍 Géocoder</button></td>
+            </tr>
+            <tr>
+                <td><span class="badge" style="background:#b45309;color:#fff;font-size:10px">PSIG</span></td>
+                <td>PSIG de Narbonne</td><td>Narbonne</td><td><span class="badge">11</span></td>
+                <td class="actions"><button class="btn btn-sm" onclick="return gnDemoBlock('Géocodage')">📍 Géocoder</button></td>
+            </tr>
+            </tbody>
+        </table></div>
+    </div></div>
+</div>
+<div class="admin-section" data-section="unit_history" hidden>
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Archives &amp; historique des unités</h1>
+            <div class="page-subtitle">Les unités disparues d'un import ne sont jamais supprimées : elles sont archivées, et leurs missions conservées</div>
+        </div>
+    </div>
+    <div class="card" style="margin-bottom:12px">
+        <div class="card-head"><div class="card-title">Unités archivées</div></div>
+        <div class="card-body" style="padding:0">
+            <div class="table-wrap"><table class="data-table">
+                <thead><tr><th>Type</th><th>Nom</th><th>Archivée le</th><th>Missions liées</th><th class="actions">Actions</th></tr></thead>
+                <tbody>
+                <tr>
+                    <td><span class="badge" style="background:#15803d;color:#fff;font-size:10px">BP</span></td>
+                    <td>Alaigne</td><td>14/08/2026</td><td>2</td>
+                    <td class="actions"><button class="btn btn-sm" onclick="return gnDemoBlock('Restauration')">♻ Restaurer</button></td>
+                </tr>
+                </tbody>
+            </table></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-head"><div class="card-title">Historique des réorganisations</div></div>
+        <div class="card-body" style="padding:0">
+            <div class="table-wrap"><table class="data-table">
+                <thead><tr><th>Date</th><th>Unité</th><th>Changement</th><th>Détail</th></tr></thead>
+                <tbody>
+                <tr><td>14/08/2026</td><td>Alaigne</td><td><span class="badge" style="background:#b91c1c;color:#fff">Archivée</span></td><td style="font-size:13px;color:var(--gris-600)">Absente de l'export intranet — fusionnée avec la BP de Limoux</td></tr>
+                <tr><td>14/08/2026</td><td>PSIG de Narbonne</td><td><span class="badge" style="background:#15803d;color:#fff">Créée</span></td><td style="font-size:13px;color:var(--gris-600)">Nouvelle unité détectée dans l'export</td></tr>
+                <tr><td>03/05/2026</td><td>Capendu</td><td><span class="badge" style="background:#7c3aed;color:#fff">Rattachement</span></td><td style="font-size:13px;color:var(--gris-600)">BTA autonome → BP rattachée à la COB de Carcassonne</td></tr>
+                </tbody>
+            </table></div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+</main>
+<script>
+/* DÉMO : le site réel charge chaque section en AJAX (gnLoadSection) depuis
+   administration.php?section=… ; ici toutes les sections sont pré-rendues et
+   on ne fait que basculer l'affichage — même navigation, sans requête. */
+function gnShowSection(key) {
+    document.querySelectorAll('.admin-section').forEach(function (s) {
+        s.hidden = (s.dataset.section !== key);
+    });
+    document.querySelectorAll('.admin-nav-link').forEach(function (a) {
+        a.classList.toggle('active', a.dataset.section === key);
+    });
+    var sel = document.querySelector('.admin-section-select');
+    if (sel && sel.value !== key) sel.value = key;
+    history.replaceState(null, '', '#' + key);
+    bindSectionFilters();
+    window.scrollTo(0, 0);
+}
+
+document.querySelectorAll('.admin-nav-link').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+        e.preventDefault();
+        gnShowSection(a.dataset.section);
+    });
+});
+
+/* Recherche en temps réel + filtre COB/BTA — copie conforme du script de
+   administration.php (filtre côté client sur les lignes déjà rendues). */
+function bindSectionFilters() {
+    var input = document.querySelector('.admin-section:not([hidden]) #admin-live-search');
+    if (!input || input.dataset.bound) return;
+    input.dataset.bound = '1';
+    var root = input.closest('.admin-section');
+    var bpType = 'all';
+    function applyFilters() {
+        var q = input.value.trim().toLowerCase();
+        root.querySelectorAll('.admin-group').forEach(function (g) {
+            var matchesSearch = !q || g.dataset.search.includes(q);
+            var matchesType   = bpType === 'all' || !g.dataset.bpType || g.dataset.bpType === bpType;
+            g.style.display = (matchesSearch && matchesType) ? '' : 'none';
+        });
+        root.querySelectorAll('.admin-row').forEach(function (r) {
+            r.style.display = (!q || r.dataset.search.includes(q)) ? '' : 'none';
+        });
+    }
+    input.addEventListener('input', applyFilters);
+    var toggleCount = 0;
+    root.querySelectorAll('.bp-type-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            bpType = btn.dataset.bpType;
+            root.querySelectorAll('.bp-type-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+            applyFilters();
+            toggleCount++;
+            if (toggleCount >= 10 && window.gnUnlockEgg) {
+                gnUnlockEgg('indecis', '🤔 10 bascules du filtre — difficile de se décider !', 3000);
+            }
+        });
+    });
+}
+
+/* Aperçu d'import — le vrai backend renvoie un diff complet par département. */
+function gnImportPreviewDemo() {
+    document.getElementById('import-preview').innerHTML =
+        '<div class="table-wrap"><table class="data-table">'
+        + '<thead><tr><th>Département</th><th>Unités du fichier</th><th>Modifs</th></tr></thead><tbody>'
+        + '<tr><td><strong>11</strong> — Aude</td><td>63</td>'
+        + '<td><span style="color:#15803d;font-weight:700">+1</span> '
+        + '<span style="color:#1d4ed8;font-weight:700">~4</span> '
+        + '<span style="color:#7c3aed;font-weight:700">⇄1</span> '
+        + '<span style="color:#b91c1c;font-weight:700">−1</span></td></tr>'
+        + '<tr><td><strong>34</strong> — Hérault</td><td>98</td>'
+        + '<td><span style="color:#1d4ed8;font-weight:700">~2</span></td></tr>'
+        + '</tbody></table></div>'
+        + '<p style="font-size:13px;color:var(--gris-500);margin-top:10px">'
+        + 'Aperçu figé de démonstration — sur le site réel, l\'import est appliqué département par département.</p>';
+}
+
+gnShowSection((location.hash || '#import_intranet').slice(1));
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Tableau de bord — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+<script src="js/demo-api.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Bonjour Théo</h1>
+        <div class="page-subtitle">Synthèse de ton activité de réserviste</div>
+    </div>
+    <a href="missions.html?action=add" class="btn btn-primary">+ Nouvelle mission</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total services</div>
+        <div class="stat-value">87</div>
+        <div class="stat-sub">Depuis le début</div>
+    </div>
+    <div class="stat-card accent-rouge">
+        <div class="stat-label">Total jours de réserve</div>
+        <div class="stat-value">62</div>
+        <div class="stat-sub">498h30 cumulés</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Services 2026</div>
+        <div class="stat-value">34</div>
+        <div class="stat-sub">28 jours · 216h15</div>
+    </div>
+    <div class="stat-card accent-or">
+        <div class="stat-label">Statistiques détaillées</div>
+        <div class="stat-value" style="font-size:18px;line-height:1.5">
+            <a href="statistiques.html" style="color:var(--bleu-texte);text-decoration:none">→ Voir les stats</a>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top:22px">
+    <div class="card-head">
+        <div class="card-title">Prochains services</div>
+        <a href="calendrier.html" class="btn btn-sm btn-ghost">Voir le calendrier →</a>
+    </div>
+    <div class="card-body">
+            <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Date</th><th>Horaires</th><th>Lieu</th><th>Durée</th><th>Contenu</th><th class="actions">Actions</th></tr></thead>
+                <tbody>
+                    <tr onclick="openMissionModal(101)" style="cursor:pointer">
+                        <td><strong>14/09/2026</strong></td>
+                        <td>14h00 – 22h00</td>
+                        <td>Carcassonne<br><span class="badge badge-bleu">BP</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Patrouille de sécurisation en centre-ville, marché h…</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=101">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(102)" style="cursor:pointer">
+                        <td><strong>15/09/2026</strong><br><small style="color:var(--gris-500)">→ 16/09/2026</small></td>
+                        <td>20h00 – 04h00</td>
+                        <td>Carcassonne<br><span class="badge badge-bleu">BP</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Service de nuit — contrôles routiers RD118</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=101">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(103)" style="cursor:pointer">
+                        <td><strong>21/09/2026</strong></td>
+                        <td>08h30 – 17h00</td>
+                        <td>Carcassonne<br><span class="badge badge-bleu">SRJ</span></td>
+                        <td>8h30</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Formation continue — actualisation des techniques d…</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=102">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(104)" style="cursor:pointer">
+                        <td><strong>03/10/2026</strong></td>
+                        <td>06h00 – 14h00</td>
+                        <td>Castelnaudary<br><span class="badge badge-bleu">BTA</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Renfort brigade — surveillance générale</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=103">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(105)" style="cursor:pointer">
+                        <td><strong>04/10/2026</strong></td>
+                        <td>14h00 – 22h00</td>
+                        <td>Castelnaudary<br><span class="badge badge-bleu">BTA</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Renfort brigade — interventions et patrouilles</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=103">Détail</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head">
+        <div class="card-title">Derniers services effectués</div>
+        <a href="missions.html" class="btn btn-sm btn-ghost">Toutes les missions →</a>
+    </div>
+    <div class="card-body">
+            <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Date</th><th>Horaires</th><th>Lieu</th><th>Durée</th><th>Contenu</th><th class="actions">Actions</th></tr></thead>
+                <tbody>
+                    <tr onclick="openMissionModal(201)" style="cursor:pointer">
+                        <td><strong>22/08/2026</strong></td>
+                        <td>14h00 – 22h00</td>
+                        <td>Narbonne<br><span class="badge badge-bleu">BP</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Sécurisation du festival — dispositif estival, deux …</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=201">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(202)" style="cursor:pointer">
+                        <td><strong>21/08/2026</strong></td>
+                        <td>06h00 – 14h00</td>
+                        <td>Narbonne<br><span class="badge badge-bleu">BP</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Patrouille littoral — plages et parkings, forte affl…</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=201">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(203)" style="cursor:pointer">
+                        <td><strong>19/07/2026</strong></td>
+                        <td>20h00 – 02h00</td>
+                        <td>Trèbes<br><span class="badge badge-bleu">BP</span></td>
+                        <td>6h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Dispositif fête locale — surveillance abords et sort…</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=202">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(204)" style="cursor:pointer">
+                        <td><strong>14/07/2026</strong></td>
+                        <td>09h00 – 12h30</td>
+                        <td>Carcassonne<br><span class="badge badge-bleu">SRJ</span></td>
+                        <td>3h30</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Cérémonie du 14 juillet — service d'honneur</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=203">Détail</a></td>
+                    </tr>
+                    <tr onclick="openMissionModal(205)" style="cursor:pointer">
+                        <td><strong>05/07/2026</strong></td>
+                        <td>14h00 – 22h00</td>
+                        <td>Narbonne<br><span class="badge badge-bleu">BP</span></td>
+                        <td>8h</td>
+                        <td style="max-width:200px;color:var(--gris-500);font-size:13px">Renfort estival — patrouilles pédestres centre-ville</td>
+                        <td class="actions" onclick="event.stopPropagation()"><a class="btn btn-sm btn-ghost" href="missions.html?action=edit&amp;id=204">Détail</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+    </div>
+</div>
+
+<!-- Modale détail service -->
+<div class="modal-overlay" id="mission-modal">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">Détail du service</div>
+            <button class="modal-close" type="button"
+                    onclick="document.getElementById('mission-modal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" id="mission-modal-body">…</div>
+        <div class="modal-footer">
+            <a id="modal-edit-link" class="btn btn-primary" href="#">Modifier</a>
+            <button class="btn" onclick="document.getElementById('mission-modal').classList.remove('open')">Fermer</button>
+        </div>
+    </div>
+</div>
+</main>
+<script>
+function esc(s) { return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function parseDT(s) { return new Date(s.replace(' ','T')); }
+function pad(n) { return String(n).padStart(2,'0'); }
+function fmtTime(d) { return pad(d.getHours())+'h'+pad(d.getMinutes()); }
+function sameDay(a,b) { return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
+
+async function openMissionModal(id) {
+    const r = await fetch('/api/missions?id='+id);
+    const m = await r.json();
+    if (!m || !m.id) return;
+    const d = parseDT(m.debut), f = parseDT(m.fin);
+    const dur = (f-d)/60000, dh = Math.floor(dur/60), dm = dur%60;
+    document.getElementById('mission-modal-body').innerHTML = `
+        <p style="margin-bottom:8px"><strong>Unité :</strong> ${esc(m.lieu_nom)} <span class="badge badge-bleu">${esc(m.lieu_type)}</span></p>
+        <p style="margin-bottom:8px"><strong>Département :</strong> ${esc(m.dept_code)} — ${esc(m.dept_nom)}</p>
+        <p style="margin-bottom:8px"><strong>Type :</strong> <span class="badge" style="background:${esc(m.type_couleur||'#22c55e')};color:#fff">${esc(m.type_nom||'Renfort')}</span></p>
+        <p style="margin-bottom:8px"><strong>Début :</strong> ${d.toLocaleDateString('fr-FR')} à ${fmtTime(d)}</p>
+        <p style="margin-bottom:8px"><strong>Fin :</strong> ${f.toLocaleDateString('fr-FR')} à ${fmtTime(f)}</p>
+        <p style="margin-bottom:12px"><strong>Durée :</strong> ${dh}h${dm?String(dm).padStart(2,'0'):''}</p>
+        <p style="margin-bottom:4px"><strong>Contenu :</strong></p>
+        <p style="white-space:pre-wrap;background:var(--gris-50);padding:12px;border-radius:8px;font-size:14px">${m.contenu?esc(m.contenu):'<em>Aucun contenu renseigné</em>'}</p>
+    `;
+    document.getElementById('modal-edit-link').href = 'missions.html?action=edit&id='+m.mission_id+'#service-'+m.id;
+    document.getElementById('mission-modal').classList.add('open');
+}
+document.getElementById('mission-modal').addEventListener('click', e => {
+    if (e.target===e.currentTarget) e.currentTarget.classList.remove('open');
+});
+</script>
+</body>
+</html>

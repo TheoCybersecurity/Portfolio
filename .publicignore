@@ -1,0 +1,36 @@
+# Fichiers exclus du dépôt GitHub public (format des filtres rsync : « - » exclut, « + » inclut,
+# la première règle qui correspond l'emporte). Utilisé par scripts/publish-public.sh.
+# Le dépôt privé de l'infrastructure, lui, continue de tout versionner.
+
+# --- Secrets et configuration locale ---
++ /.env.example
+- .env
+- .env.*
+
+# --- Documentation interne : décrit l'infrastructure (IP, proxy, chemins, sauvegardes) ---
+- CLAUDE.md
+- /scripts/publish-public.sh
+
+# --- Documents réels (rapports, CV, attestations) ---
+# Déjà téléchargeables sur le site ; hors du dépôt pour qu'aucune ancienne version ne puisse
+# jamais réapparaître dans l'historique public, et pour ne pas alourdir le dépôt (rapport de 65 Mo).
+# Seuls les PDF fictifs des démos sont publiés.
++ /public/demos/**.pdf
+- *.pdf
+
+# --- Données de mesure d'audience, bases de géolocalisation ---
+- *.db
+- *.db-*
+- *.mmdb
+- /data/
+
+# --- Dépendances, builds, fichiers système ---
+- node_modules/
+- .next/
+- out/
+- tsconfig.tsbuildinfo
+- npm-debug.log*
+- .DS_Store
+
+# --- Reste de l'ancien hébergement Apache (révèle un chemin interne du serveur) ---
+- /index.php

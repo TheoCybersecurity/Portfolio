@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Unités — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+<script src="js/demo-api.js"></script>
+
+<style>
+.tree-root   { display:flex;flex-direction:column;gap:10px }
+details      { background:#fff;border:1px solid var(--gris-200);border-radius:8px;overflow:hidden }
+details > summary {
+    display:flex;align-items:center;gap:10px;padding:10px 14px;
+    cursor:pointer;font-weight:700;font-size:14px;
+    background:var(--gris-50);border-bottom:1px solid var(--gris-200);
+    list-style:none;user-select:none
+}
+details > summary::-webkit-details-marker { display:none }
+details > summary::before {
+    content:'▶';font-size:10px;color:var(--gris-400);
+    transition:transform .15s;flex-shrink:0
+}
+details[open] > summary::before { transform:rotate(90deg) }
+.tree-children  { display:flex;flex-direction:column;gap:0;padding:6px 10px 8px }
+.tree-sub       { border:1px solid var(--gris-100);border-radius:6px;overflow:hidden;margin:3px 0 }
+.tree-sub > summary {
+    display:flex;align-items:center;gap:8px;padding:7px 12px;
+    cursor:pointer;font-weight:600;font-size:13px;
+    background:var(--gris-50);border-bottom:1px solid var(--gris-100);
+    list-style:none;user-select:none
+}
+.tree-sub > summary::-webkit-details-marker { display:none }
+.tree-sub > summary::before {
+    content:'▶';font-size:9px;color:var(--gris-400);
+    transition:transform .15s;flex-shrink:0
+}
+.tree-sub[open] > summary::before { transform:rotate(90deg) }
+.tree-sub-children { padding:4px 8px 6px }
+.tree-brigade-group { margin:3px 0;border:1px solid var(--gris-200);border-left:3px solid;border-radius:6px;overflow:hidden }
+.tree-brigade-header {
+    display:flex;align-items:center;gap:8px;padding:6px 12px;
+    background:var(--gris-50);border-bottom:1px solid var(--gris-100);
+    font-weight:700;font-size:13px;
+    cursor:pointer;list-style:none;user-select:none
+}
+.tree-brigade-header::-webkit-details-marker { display:none }
+.tree-brigade-header::before {
+    content:'▶';font-size:9px;color:var(--gris-400);
+    transition:transform .15s;flex-shrink:0
+}
+details.tree-brigade-group[open] > .tree-brigade-header::before { transform:rotate(90deg) }
+.tree-type-group { margin:3px 0;border:1px solid var(--gris-200);border-left:3px solid #6b7280;border-radius:6px;overflow:hidden }
+.tree-type-group-header {
+    display:flex;align-items:center;gap:8px;padding:5px 12px;
+    background:var(--gris-50);border-bottom:1px solid var(--gris-100);
+    font-weight:600;font-size:12px;color:var(--gris-700)
+}
+.tree-unit-row {
+    display:flex;align-items:center;gap:6px;padding:5px 10px;
+    font-size:13px;border-bottom:1px solid var(--gris-100)
+}
+.tree-unit-row:last-child { border-bottom:none }
+.tree-unit-row:hover      { background:var(--gris-50) }
+</style>
+
+    <div class="page-head">
+        <div>
+            <h1 class="page-title">Unités</h1>
+            <div class="page-subtitle">Hiérarchie complète des unités — cliquer sur un nom pour voir les détails</div>
+        </div>
+    </div>
+
+    <form id="unites-search-form" method="get" action="unites.html" style="margin-bottom:16px;display:flex;gap:8px;align-items:center">
+        <input type="text" id="unites-search-input" name="q" autocomplete="off" data-lpignore="true" data-1p-ignore data-bwignore="true" data-form-type="other" role="searchbox" value="" placeholder="Rechercher par nom ou code unité…"
+               style="flex:1;max-width:360px;padding:8px 12px;border:1px solid var(--gris-300);border-radius:var(--radius);font-size:14px">
+        <button type="submit" class="btn btn-ghost" id="unites-search-submit">Rechercher</button>
+        <a href="unites.html" class="btn btn-ghost" id="unites-search-clear" style="font-size:13px;display:none">✕ Effacer</a>
+    </form>
+
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+        <label for="unites-dept" style="font-size:13px;color:var(--gris-600);font-weight:600">Département affiché</label>
+        <select id="unites-dept" onchange="gnDemoBlock('Changement de département')"
+                style="padding:7px 10px;border:1px solid var(--gris-300);border-radius:var(--radius);font-size:14px;background:var(--surface);color:inherit;max-width:100%">
+            <option value="all">Tous les départements — peut être lent</option>
+            <option value="11" selected>11 — Aude (le mien)</option>
+            <option value="31">31 — Haute-Garonne</option>
+            <option value="34">34 — Hérault</option>
+            <option value="66">66 — Pyrénées-Orientales</option>
+        </select>
+        <span style="font-size:12px;color:var(--gris-400)">La recherche ci-dessus couvre toute la France.</span>
+    </div>
+
+    <div id="unites-live-results" style="display:none;margin-bottom:16px"></div>
+
+    <div id="unites-browse">
+    <div class="tree-root">
+    <details data-key="ggd-1" open>
+        <summary>
+            <span class="badge" style="background:#002395;color:#fff;font-size:11px">GGD</span>
+            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Groupement de gendarmerie départementale de l'Aude</span>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0"
+                   href="carte.html?lat=43.2105&lng=2.3547&zoom=12&dept=11"
+                   onclick="event.stopPropagation()">Carte</a>
+            <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0"
+               href="unites.html?action=detail&type=ggd&id=1"
+               onclick="event.stopPropagation()">Détail</a>
+        </summary>
+        <div class="tree-children">
+
+            <div class="tree-type-group" style="border-left-color:#4338ca">
+                <div class="tree-type-group-header">
+                    <span class="badge" style="background:#4338ca;color:#fff;font-size:10px;padding:1px 5px">SRJ</span>
+                    Service Réserve Jeunesse
+                </div>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#4338ca;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">SRJ</span><a href="unites.html?action=detail&amp;type=srj&amp;id=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Service Réserve Jeunesse de Carcassonne</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.216&lng=2.355&zoom=15&dept=11">Carte</a></div>
+            </div>
+        <details class="tree-sub" data-key="edcf-1">
+            <summary>
+                <span class="badge" style="background:#7c3aed;color:#fff;font-size:10px;padding:1px 5px">EDCF</span>
+                <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Escadron Départemental de Contrôle des Flux de l'Aude</span>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="carte.html?lat=43.209&lng=2.362&zoom=13&dept=11"
+                   onclick="event.stopPropagation()">Carte</a>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="unites.html?action=detail&type=edcf&id=1"
+                   onclick="event.stopPropagation()">Détail</a>
+            </summary>
+            <div class="tree-sub-children">
+            <div class="tree-type-group" style="border-left-color:#c2410c">
+                <div class="tree-type-group-header">
+                    <span class="badge" style="background:#c2410c;color:#fff;font-size:10px;padding:1px 5px">PMO/BMO</span>
+                    Pelotons / Brigades Motorisés
+                </div>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#c2410c;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">PMO</span><a href="unites.html?action=detail&amp;type=pmo_bmo&amp;id=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Peloton motorisé de Narbonne</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.190&lng=3.012&zoom=15&dept=11">Carte</a></div>
+            </div>
+            <div class="tree-type-group" style="border-left-color:#0e7490">
+                <div class="tree-type-group-header">
+                    <span class="badge" style="background:#0e7490;color:#fff;font-size:10px;padding:1px 5px">BN</span>
+                    Brigades Nautiques
+                </div>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#0e7490;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BN</span><a href="unites.html?action=detail&amp;type=bn&amp;id=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Brigade nautique de Leucate</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=42.9046&lng=3.0503&zoom=15&dept=11">Carte</a></div>
+            </div>
+            </div>
+        </details>
+        <details class="tree-sub" data-key="cgd-1">
+            <summary>
+                <span class="badge" style="background:#1d4ed8;color:#fff;font-size:10px;padding:1px 5px">CGD</span>
+                <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Compagnie de Carcassonne</span>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="carte.html?lat=43.213&lng=2.3491&zoom=13&dept=11"
+                   onclick="event.stopPropagation()">Carte</a>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="unites.html?action=detail&type=cgd&id=1"
+                   onclick="event.stopPropagation()">Détail</a>
+            </summary>
+            <div class="tree-sub-children">
+
+            <details class="tree-brigade-group" style="border-left-color:#0891b2" data-key="brigade-10">
+                <summary class="tree-brigade-header">
+                    <span style="font-size:11px;background:#0891b2;color:#fff;border-radius:4px;padding:1px 6px;font-weight:700">COB</span>
+                    <span style="font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">COB de Carcassonne</span>
+                    <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                       href="carte.html?lat=43.2168&lng=2.3556&zoom=15&dept=11"
+                       onclick="event.stopPropagation()">Carte</a>
+                    <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                       href="unites.html?action=detail&type=brigade&id=10"
+                       onclick="event.stopPropagation()">Détail</a>
+                </summary>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=11&amp;self=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Carcassonne</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.213&lng=2.3491&zoom=15&dept=11">Carte</a></div>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=12" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Trèbes</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.2094&lng=2.4419&zoom=15&dept=11">Carte</a></div>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=13" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Capendu</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.1889&lng=2.5081&zoom=15&dept=11">Carte</a></div>
+            </details>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BTA</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=14&amp;self=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Castelnaudary</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.3195&lng=1.9515&zoom=15&dept=11">Carte</a></div>
+            <div class="tree-type-group" style="border-left-color:#b45309">
+                <div class="tree-type-group-header">
+                    <span class="badge" style="background:#b45309;color:#fff;font-size:10px;padding:1px 5px">PSIG</span>
+                    Pelotons de Surveillance et d'Intervention de la Gendarmerie
+                </div>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#b45309;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">PSIG</span><a href="unites.html?action=detail&amp;type=psig&amp;id=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PSIG de Carcassonne</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.22&lng=2.36&zoom=15&dept=11">Carte</a></div>
+            </div>
+
+            </div>
+        </details>
+        <details class="tree-sub" data-key="cgd-2">
+            <summary>
+                <span class="badge" style="background:#1d4ed8;color:#fff;font-size:10px;padding:1px 5px">CGD</span>
+                <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Compagnie de Narbonne</span>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="carte.html?lat=43.1839&lng=3.0039&zoom=13&dept=11"
+                   onclick="event.stopPropagation()">Carte</a>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="unites.html?action=detail&type=cgd&id=2"
+                   onclick="event.stopPropagation()">Détail</a>
+            </summary>
+            <div class="tree-sub-children">
+
+            <details class="tree-brigade-group" style="border-left-color:#0891b2" data-key="brigade-20">
+                <summary class="tree-brigade-header">
+                    <span style="font-size:11px;background:#0891b2;color:#fff;border-radius:4px;padding:1px 6px;font-weight:700">COB</span>
+                    <span style="font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">COB de Narbonne</span>
+                    <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                       href="carte.html?lat=43.1871&lng=3.0028&zoom=15&dept=11"
+                       onclick="event.stopPropagation()">Carte</a>
+                    <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                       href="unites.html?action=detail&type=brigade&id=20"
+                       onclick="event.stopPropagation()">Détail</a>
+                </summary>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=21&amp;self=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Narbonne</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.1839&lng=3.0039&zoom=15&dept=11">Carte</a></div>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=22" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Sigean</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.0286&lng=2.9736&zoom=15&dept=11">Carte</a></div>
+            </details>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BTA</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=23&amp;self=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Lézignan-Corbières</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.1997&lng=2.7597&zoom=15&dept=11">Carte</a></div>
+            <div class="tree-type-group" style="border-left-color:#b45309">
+                <div class="tree-type-group-header">
+                    <span class="badge" style="background:#b45309;color:#fff;font-size:10px;padding:1px 5px">PSIG</span>
+                    Pelotons de Surveillance et d'Intervention de la Gendarmerie
+                </div>
+<div class="tree-unit-row" style=""><span class="badge" style="background:#b45309;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">PSIG</span><a href="unites.html?action=detail&amp;type=psig&amp;id=2" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">PSIG de Narbonne</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.19&lng=3.01&zoom=15&dept=11">Carte</a></div>
+            </div>
+
+            </div>
+        </details>
+        <details class="tree-sub" data-key="cgd-3">
+            <summary>
+                <span class="badge" style="background:#1d4ed8;color:#fff;font-size:10px;padding:1px 5px">CGD</span>
+                <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Compagnie de Limoux</span>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="carte.html?lat=43.0578&lng=2.2179&zoom=13&dept=11"
+                   onclick="event.stopPropagation()">Carte</a>
+                <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                   href="unites.html?action=detail&type=cgd&id=3"
+                   onclick="event.stopPropagation()">Détail</a>
+            </summary>
+            <div class="tree-sub-children">
+
+            <details class="tree-brigade-group" style="border-left-color:#0891b2" data-key="brigade-30">
+                <summary class="tree-brigade-header">
+                    <span style="font-size:11px;background:#0891b2;color:#fff;border-radius:4px;padding:1px 6px;font-weight:700">COB</span>
+                    <span style="font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">COB de Limoux</span>
+                    <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                       href="carte.html?lat=43.0561&lng=2.2151&zoom=15&dept=11"
+                       onclick="event.stopPropagation()">Carte</a>
+                    <a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 6px;flex-shrink:0"
+                       href="unites.html?action=detail&type=brigade&id=30"
+                       onclick="event.stopPropagation()">Détail</a>
+                </summary>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=31&amp;self=1" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Limoux</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=43.0578&lng=2.2179&zoom=15&dept=11">Carte</a></div>
+<div class="tree-unit-row" style="padding-left:28px"><span style="color:var(--gris-400);margin-right:6px;flex-shrink:0">↳</span><span class="badge" style="background:#15803d;color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">BP</span><a href="unites.html?action=detail&amp;type=brigade&amp;id=32" style="font-weight:500;color:inherit;text-decoration:none;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Quillan</a><a class="btn btn-sm btn-ghost" style="font-size:11px;padding:2px 8px;flex-shrink:0;margin-left:8px" href="carte.html?lat=42.8768&lng=2.1809&zoom=15&dept=11">Carte</a></div>
+            </details>
+
+            </div>
+        </details>
+
+        </div>
+    </details>
+    </div>
+    <script>
+    (function () {
+        const detailsEls = document.querySelectorAll('.tree-root details[data-key]');
+        const params = new URLSearchParams(location.search);
+        const openKeys = new Set((params.get('open') || '').split(',').filter(Boolean));
+        detailsEls.forEach(function (el) {
+            if (openKeys.has(el.dataset.key)) el.open = true;
+        });
+        detailsEls.forEach(function (el) {
+            el.addEventListener('toggle', function () {
+                const keys = [];
+                detailsEls.forEach(function (d) { if (d.open) keys.push(d.dataset.key); });
+                const p = new URLSearchParams(location.search);
+                if (keys.length) p.set('open', keys.join(',')); else p.delete('open');
+                const qs = p.toString();
+                history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
+                if (window.gnNavSync) window.gnNavSync();
+            });
+        });
+    })();
+    </script>
+    </div><!-- /#unites-browse -->
+
+    <script>
+    // ─── Recherche d'unités en temps réel — copie conforme de unites.php ────
+    (function () {
+        var input   = document.getElementById('unites-search-input');
+        var form    = document.getElementById('unites-search-form');
+        var box     = document.getElementById('unites-live-results');
+        var browse  = document.getElementById('unites-browse');
+        var clear   = document.getElementById('unites-search-clear');
+        if (!input || !box || !browse) return;
+
+        var COLORS = {
+            ggd:'#002395', srj:'#4338ca', pghm:'#78350f', edcf:'#7c3aed',
+            pmo_bmo:'#c2410c', bn:'#0e7490', cgd:'#1d4ed8', brigade:'#15803d', psig:'#b45309'
+        };
+        var timer = null, lastReq = 0, emptyStreak = 0;
+
+        function esc(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+            });
+        }
+
+        function showBrowse() {
+            box.style.display = 'none';
+            box.innerHTML = '';
+            browse.style.display = '';
+            if (clear) clear.style.display = 'none';
+        }
+
+        function render(q, results) {
+            browse.style.display = 'none';
+            box.style.display = '';
+            if (clear) clear.style.display = '';
+            var head = '<div class="card"><div class="card-head">'
+                + '<div class="card-title">Résultats pour «&nbsp;' + esc(q) + '&nbsp;»</div>'
+                + '<span class="badge badge-bleu">' + results.length + ' unité' + (results.length > 1 ? 's' : '') + '</span>'
+                + '</div>';
+            if (!results.length) {
+                box.innerHTML = head + '<div class="card-body"><div class="empty-state">'
+                    + '<div class="empty-state-title">Aucune unité ne correspond à cette recherche</div></div></div></div>';
+                emptyStreak++;
+                if (emptyStreak >= 5 && window.gnUnlockEgg) { emptyStreak = 0; gnUnlockEgg('chercheur_acharne'); }
+                return;
+            }
+            emptyStreak = 0;
+            var rows = results.map(function (r) {
+                var color = COLORS[r.type] || '#15803d';
+                return '<div class="tree-unit-row" style="padding:8px 14px">'
+                    + '<span class="badge" style="background:' + color + ';color:#fff;font-size:10px;padding:1px 5px;flex-shrink:0">' + esc(r.sigle) + '</span>'
+                    + '<a href="' + esc(r.href) + '" style="font-weight:500;color:inherit;text-decoration:none;flex:1">' + esc(r.nom) + '</a>'
+                    + (r.code_unite ? '<span style="font-family:monospace;font-size:11px;background:var(--gris-100);color:var(--gris-600);border-radius:4px;padding:1px 6px;flex-shrink:0">' + esc(r.code_unite) + '</span>' : '')
+                    + (r.ville ? '<span style="color:var(--gris-500);font-size:12px;flex-shrink:0;margin-left:6px">' + esc(r.ville) + '</span>' : '')
+                    + '</div>';
+            }).join('');
+            box.innerHTML = head + '<div class="card-body" style="padding:0">' + rows + '</div></div>';
+        }
+
+        function run() {
+            var q = input.value.trim();
+            if (q === '') { showBrowse(); return; }
+            var reqId = ++lastReq;
+            fetch('/api/unites_search?q=' + encodeURIComponent(q), { credentials: 'same-origin' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (reqId !== lastReq) return;
+                    render(q, (data && data.results) || []);
+                })
+                .catch(function () { if (reqId === lastReq) showBrowse(); });
+        }
+
+        input.addEventListener('input', function () {
+            clearTimeout(timer);
+            timer = setTimeout(run, 180);
+        });
+        form.addEventListener('submit', function (e) { e.preventDefault(); clearTimeout(timer); run(); });
+        if (clear) clear.addEventListener('click', function (e) {
+            e.preventDefault();
+            input.value = '';
+            showBrowse();
+            input.focus();
+        });
+    })();
+    </script>
+</main>
+</body>
+</html>

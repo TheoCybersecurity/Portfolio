@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Mentions légales — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Mentions légales &amp; protection des données</h1>
+        <div class="page-subtitle">Éditeur, hébergement, RGPD, sécurité, tes droits — dernière mise à jour : septembre 2026</div>
+    </div>
+</div>
+
+<div class="card" id="editeur" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">1. Éditeur du site</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Ce site est édité à titre personnel, non professionnel, par :<br>
+            <strong>Théo Marescal</strong> — développeur individuel, réserviste opérationnel de la
+            Gendarmerie Nationale.<br>
+            Contact : <a href="mailto:theo@marescal.fr">theo@marescal.fr</a>
+        </p>
+        <p>
+            <strong>Directeur de la publication :</strong> Théo Marescal, en sa qualité d'éditeur et
+            d'administrateur unique du site.
+        </p>
+        <p style="margin-bottom:0">
+            Memoria fait partie d'un ensemble de projets personnels développés et hébergés par le même
+            auteur — voir <a href="https://theo.marescal.fr" target="_blank" rel="noopener noreferrer">theo.marescal.fr</a>
+            pour la liste complète, et la page <a href="a_propos.html">À propos</a> de ce site pour le détail
+            technique du projet (stack, infrastructure, sécurité).
+        </p>
+    </div>
+</div>
+
+<div class="card" id="hebergement" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">2. Hébergement</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p style="margin-bottom:0">
+            Le site est <strong>auto-hébergé</strong> par l'éditeur lui-même, sur une infrastructure
+            personnelle (serveur Raspberry Pi) située en France, derrière une passerelle domestique
+            standard. Aucun hébergeur tiers (cloud public, VPS commercial…) n'intervient dans le stockage ou
+            le traitement des données du site — l'éditeur est donc à la fois responsable de traitement et
+            hébergeur au sens du RGPD.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="nature" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">3. Nature du service</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <div class="alert alert-info" style="margin-bottom:12px">
+            <strong>Site non agréé DGGN.</strong> Outil personnel développé par un réserviste de la
+            gendarmerie nationale. Les informations qui y sont enregistrées sont strictement personnelles et
+            ne constituent en aucun cas une communication officielle de la Gendarmerie Nationale.
+        </div>
+        <p style="margin-bottom:0">
+            Memoria est un carnet de suivi personnel de l'activité de réserve opérationnelle (missions,
+            services, interventions, documents, statistiques). Il vient en complément des outils
+            institutionnels existants (Minotaur, Agorha, Gendform2…) et ne les remplace ni ne s'y substitue :
+            aucune démarche administrative officielle (convocation, solde, dossier FDCR…) ne doit être
+            effectuée exclusivement via ce site.
+        </p>
+        <p style="margin:12px 0 0">
+            Les règles d'utilisation du site — notamment la responsabilité de chacun quant aux données qu'il
+            choisit d'y renseigner — sont détaillées dans les
+            <a href="cgu.html">conditions générales d'utilisation</a>, acceptées obligatoirement à la première
+            connexion.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="donnees" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">4. Protection des données personnelles</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p><strong>Responsable de traitement :</strong> Théo Marescal (voir § Éditeur), joignable à
+        <a href="mailto:theo@marescal.fr">theo@marescal.fr</a> pour toute question relative à tes données.</p>
+
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Données collectées</h3>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Catégorie</th><th>Exemples</th><th>Finalité</th><th>Chiffrée</th></tr></thead>
+                <tbody>
+                    <tr><td>Identité (compte)</td><td>Nom, prénom, identifiant de connexion, adresse mail</td><td>Authentification, affichage du nom</td><td>Non — infra. d'authentification partagée</td></tr>
+                    <tr><td>Identité professionnelle</td><td>NIGEND, RIO, grade, date d'entrée en réserve, mail professionnel</td><td>Vérification d'appartenance, profil personnel</td><td>Oui — AES-256-CBC</td></tr>
+                    <tr><td>Contenu des missions</td><td>Unité, dates, horaires, contenu des services et interventions</td><td>Suivi personnel de l'activité, statistiques</td><td>Oui — AES-256-CBC</td></tr>
+                    <tr><td>Documents</td><td>Convocations et bulletins de solde en PDF</td><td>Archivage personnel, justificatifs</td><td>Oui — fichier chiffré sur disque</td></tr>
+                    <tr><td>Retours &amp; support</td><td>Messages de feedback, signalements de bug</td><td>Amélioration du site, correction des bugs</td><td>Oui — AES-256-CBC</td></tr>
+                    <tr><td>Journal technique</td><td>Adresse IP, navigateur, actions effectuées, horodatage</td><td>Sécurité, traçabilité, diagnostic</td><td>Non</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Base légale &amp; finalités</h3>
+        <p>
+            Le traitement repose sur ton <strong>consentement</strong> : la création d'un compte et la saisie
+            de données sont des démarches volontaires. La vérification d'identité et le journal d'activité
+            reposent sur l'<strong>intérêt légitime</strong> de l'éditeur à garantir que seuls des réservistes
+            réels utilisent l'outil et à assurer la sécurité du service.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Destinataires</h3>
+        <p>
+            Tes données ne sont <strong>communiquées à aucun tiers</strong>, ni vendues, ni utilisées à des
+            fins commerciales ou publicitaires. Seuls toi-même et l'administrateur technique peuvent y accéder.
+        </p>
+
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Durée de conservation</h3>
+        <p style="margin-bottom:0">
+            Tes données sont conservées tant que ton compte reste actif. Tu peux à tout moment demander la
+            suppression de ton compte (§ Vos droits) — la suppression entraîne l'effacement de toutes tes
+            données personnelles, à l'exception du journal d'activité générique et des sauvegardes déjà
+            réalisées, purgées selon le cycle normal de rotation.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="securite" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">5. Sécurité</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <ul style="margin:0;padding-left:20px">
+            <li><strong>Chiffrement</strong> — données sensibles chiffrées en AES-256-CBC avant tout stockage,
+                clé conservée hors du code du site.</li>
+            <li><strong>Connexion</strong> — authentification par jeton (JWT) signé, cookie sécurisé
+                (<code>httponly</code>, <code>secure</code>), HTTPS uniquement.</li>
+            <li><strong>Cloisonnement strict</strong> — chaque utilisateur n'accède qu'à ses propres données.</li>
+            <li><strong>Vérification d'identité</strong> — appartenance à la gendarmerie confirmée par code
+                envoyé sur l'adresse professionnelle avant tout accès.</li>
+            <li><strong>Traçabilité</strong> — actions de modification journalisées (utilisateur, action,
+                date, IP).</li>
+            <li><strong>Protection anti-CSRF</strong> et en-têtes de sécurité HTTP sur l'ensemble du site.</li>
+            <li><strong>Sauvegardes chiffrées</strong> de la base de données, réalisées régulièrement et
+                conservées hors ligne.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" id="droits" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">6. Vos droits</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Conformément au RGPD et à la loi « Informatique et Libertés », tu disposes des droits suivants sur
+            tes données personnelles :
+        </p>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>Droit d'accès</strong> — consulter l'ensemble de tes données.</li>
+            <li><strong>Droit de rectification</strong> — corriger une information inexacte (depuis ton
+                <a href="profil.html">profil</a> pour la plupart des champs).</li>
+            <li><strong>Droit à la portabilité</strong> — récupérer tes données dans un format réutilisable.</li>
+            <li><strong>Droit à l'effacement</strong> — demander la suppression de ton compte et de tes
+                données.</li>
+            <li><strong>Droit d'opposition et de limitation</strong> du traitement.</li>
+        </ul>
+        <div class="alert alert-info" style="margin-bottom:16px">
+            Les droits d'accès et de portabilité sont accessibles en un clic, sans avoir à en faire la
+            demande : bouton <strong>« ⬇ Extraire mes données »</strong> tout en bas de ta page
+            <a href="profil.html">Mon profil</a>.
+        </div>
+        <p>
+            Pour un droit de rectification hors profil, un droit à l'effacement ou toute autre demande,
+            contacte l'éditeur à <a href="mailto:theo@marescal.fr">theo@marescal.fr</a>.
+        </p>
+        <p style="margin-bottom:0">
+            Si tu estimes, après nous avoir contactés, que tes droits ne sont pas respectés, tu peux adresser
+            une réclamation à la <strong>CNIL</strong> —
+            <a href="https://www.cnil.fr/fr/plaintes" target="_blank" rel="noopener noreferrer">cnil.fr/fr/plaintes</a>.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="cookies" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">7. Cookies &amp; services tiers</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Ce site ne dépose <strong>aucun cookie de mesure d'audience, de publicité ou de traçage</strong>.
+            Seuls des cookies strictement nécessaires au fonctionnement sont utilisés : un jeton de connexion
+            (JWT) et un identifiant de session technique.
+        </p>
+        <p style="margin-bottom:0">
+            Certaines pages appellent, uniquement au moment où tu les utilises, des services tiers
+            nécessaires à la fonctionnalité elle-même : fond de carte (OpenStreetMap), calcul d'itinéraire et
+            géocodage d'adresse (Base Adresse Nationale, OSRM), police d'écriture (Google Fonts), et
+            bibliothèques JavaScript chargées depuis un CDN (Leaflet, Chart.js).
+        </p>
+    </div>
+</div>
+
+<div class="card" id="propriete" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">8. Propriété intellectuelle</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p style="margin-bottom:0">
+            L'ensemble du code source, des textes, du logo et des éléments graphiques propres à Memoria est
+            la propriété intellectuelle de Théo Marescal, sauf mention contraire. Toute reproduction ou
+            réutilisation en dehors d'un usage personnel est soumise à autorisation préalable de l'auteur.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="contact" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">9. Droit applicable &amp; contact</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Les présentes mentions sont soumises au droit français. Tout litige relatif à l'utilisation du
+            site relève, à défaut de résolution amiable, des juridictions compétentes en France.
+        </p>
+        <p style="margin-bottom:0">
+            Pour toute question — technique, légale, ou relative à tes données — un seul contact :
+            <a href="mailto:theo@marescal.fr">theo@marescal.fr</a>, ou le bouton de retour d'expérience /
+            signalement de bug présent en bas à droite de chaque page du site.
+        </p>
+    </div>
+</div>
+
+<p style="text-align:center;margin:28px 0">
+    <a href="profil.html" class="btn btn-ghost">← Retour à mon profil</a>
+</p>
+</main>
+</body>
+</html>

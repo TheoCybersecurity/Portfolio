@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Calendrier des missions</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+<script src="js/demo-api.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Calendrier</h1>
+        <div class="page-subtitle">Vue mensuelle et détail heure par heure. Clique sur un service pour voir sa mission.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="view-day"      class="btn">Jour</button>
+        <button id="view-month"    class="btn btn-primary">Mois</button>
+        <button id="view-year"     class="btn">Année</button>
+        <button id="view-custom"   class="btn">Personnalisée</button>
+        <a href="missions.html?action=add" class="btn btn-primary">+ Mission</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="calendar-toolbar">
+            <button id="prev-period" class="btn">← Précédent</button>
+            <div class="calendar-month-label" id="period-label">…</div>
+            <div style="display:flex;gap:8px">
+                <button id="today-btn" class="btn">Aujourd'hui</button>
+                <button id="next-period" class="btn">Suivant →</button>
+            </div>
+        </div>
+
+        <!-- Vue personnalisée : choix de deux dates, cachée tant que non active -->
+        <div id="custom-range-picker" style="display:none;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px;padding:12px 14px;background:var(--gris-50);border-radius:var(--radius)">
+            <div class="form-field" style="margin:0">
+                <label for="custom-start" style="font-size:12px">Du</label>
+                <input type="date" id="custom-start">
+            </div>
+            <div class="form-field" style="margin:0">
+                <label for="custom-end" style="font-size:12px">Au</label>
+                <input type="date" id="custom-end">
+            </div>
+            <button id="custom-apply" class="btn btn-primary btn-sm">Afficher</button>
+            <span id="custom-error" style="color:var(--rouge);font-size:12px"></span>
+        </div>
+
+        <div id="month-view"></div>
+        <div id="day-view-container" style="display:none"></div>
+        <div id="multi-month-view" style="display:none"></div>
+    </div>
+</div>
+
+<!-- Modale détail mission -->
+<div class="modal-overlay" id="mission-modal">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">Détail du service</div>
+            <button class="modal-close" type="button"
+                    onclick="document.getElementById('mission-modal').classList.remove('open')">×</button>
+        </div>
+        <div class="modal-body" id="mission-modal-body">…</div>
+        <div class="modal-footer">
+            <a id="modal-edit-link" class="btn btn-primary" href="#">Modifier</a>
+            <button class="btn" onclick="document.getElementById('mission-modal').classList.remove('open')">Fermer</button>
+        </div>
+    </div>
+</div>
+</main>
+
+<script>
+window.GN_API = '/api/missions';
+window.GN_DEFAULT_VIEW = "month";
+</script>
+<script src="js/calendar.js"></script>
+</body>
+</html>

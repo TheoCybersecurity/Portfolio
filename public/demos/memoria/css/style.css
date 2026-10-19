@@ -1,0 +1,1459 @@
+/* =============================================================================
+   Réserve Gendarmerie — Feuille de style principale
+   Couleurs officielles drapeau français : bleu #002395, blanc #FFFFFF, rouge #ED2939
+   ============================================================================= */
+
+:root {
+    --bleu: #002395;
+    --bleu-clair: #1e40af;
+    --bleu-fonce: #001a6e;
+    /* --bleu-texte : alias pour tout TEXTE en --bleu (liens, valeurs mises en
+       avant…), distinct de --bleu lui-même qui reste la couleur de marque
+       (drapeau, boutons, bandeaux — toujours #002395 en fond, avec du texte
+       blanc par-dessus, peu importe le thème). --bleu en tant que COULEUR DE
+       TEXTE sur un fond clair devient illisible une fois ce fond basculé en
+       sombre (juillet 2026, suite encore, troisième passe — signalé par
+       l'utilisateur : "tout ce qui est bleu foncé"). Repris par var(--bleu)
+       en clair, redéfini plus clair en sombre ci-dessous. */
+    --bleu-texte: var(--bleu);
+    --rouge: #ED2939;
+    --rouge-fonce: #c41e2c;
+    --blanc: #ffffff;
+    --gris-50: #f8fafc;
+    --gris-100: #f1f5f9;
+    --gris-200: #e2e8f0;
+    --gris-300: #cbd5e1;
+    --gris-400: #94a3b8;
+    --gris-500: #64748b;
+    /* --gris-600 : jamais défini à l'origine, utilisé tel quel dans une
+       douzaine de fichiers (administration.php, feedback.php, missions.php,
+       profil.php, unites.php…) — une variable CSS non définie et sans
+       fallback rend la déclaration invalide, ignorée par le navigateur, qui
+       hérite alors silencieusement de la couleur du parent. Ça passait
+       inaperçu en clair (l'héritage tombait sur une teinte sombre proche par
+       coïncidence) mais devenait franchement imprévisible en sombre
+       (héritage sur la couleur du nouveau <body> clair, pas forcément
+       adapté au contexte). Définie ici pour de bon (juillet 2026, suite
+       encore, mode sombre deuxième passe).*/
+    --gris-600: #475569;
+    --gris-700: #334155;
+    /* --gris-800 : même bug que --gris-600 ci-dessus (jamais défini), utilisé
+       dans profil.php et unites.php. Définie ici pour de bon. */
+    --gris-800: #1e293b;
+    --gris-900: #0f172a;
+    --or: #d4af37;
+    --vert-success: #16a34a;
+    --orange-warn: #ea580c;
+
+    /* Alias sémantique pour les surfaces (cartes, modales, champs de formulaire…) —
+       vaut --blanc en clair, redéfini indépendamment en mode sombre ci-dessous.
+       --blanc lui-même reste TOUJOURS blanc (texte sur fond coloré, drapeau) : les
+       deux rôles ne peuvent pas partager la même variable, d'où cet alias distinct
+       (juillet 2026, suite encore — mode sombre, deuxième passe). */
+    --surface: var(--blanc);
+
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, .05);
+    --shadow:    0 4px 12px rgba(15, 23, 42, .08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, .12);
+    --radius:    10px;
+    --radius-lg: 14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--gris-50);
+    color: var(--gris-900);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+body { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ---------- Bandeau tricolore ---------- */
+.tricolore { display: flex; height: 6px; }
+.tricolore-bleu  { flex: 1; background: var(--bleu); }
+.tricolore-blanc { flex: 1; background: #ffffff; border-top: 1px solid var(--gris-200); border-bottom: 1px solid var(--gris-200); } /* blanc du drapeau : toujours blanc, jamais thémé */
+.tricolore-rouge { flex: 1; background: var(--rouge); }
+
+/* ---------- En-tête ---------- */
+.site-header {
+    background: linear-gradient(135deg, var(--bleu-fonce) 0%, var(--bleu) 100%);
+    color: var(--blanc);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+}
+.header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon {
+    width: 54px; height: 54px;
+    display: grid; place-items: center;
+    /* Écusson (septembre 2026, suite) : le logo se fondait dans le bandeau bleu
+       foncé du header. Un encadré blanc plein a été essayé en premier — jugé trop
+       plat/froid ; remplacé par un écusson rond ton parchemin (clin d'œil au thème
+       "livre" du logo) avec léger relief, plutôt qu'un blanc uni. Utilise l'icône
+       seule recadrée (Logo_Memoria_icon.png), sans le mot "MEMORIA" déjà illisible
+       à cette taille et redondant avec .brand-title juste à côté. */
+    border-radius: 50%;
+    background: radial-gradient(circle at 33% 28%, #fbf7ec 0%, #f1e6c8 65%, #e4d5a8 100%);
+    box-shadow: 0 2px 6px rgba(0,0,0,.35), inset 0 0 0 2px rgba(0,35,149,.18);
+    padding: 5px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+/* .brand-title est désormais l'image du mot "MEMORIA" recadrée depuis le logo
+   (Logo_Memoria_texte.png, septembre 2026) plutôt qu'un texte — même wordmark
+   que sur Logo_Memoria.png, fond transparent. Nom de classe conservé (utilisé
+   par l'easter egg "triple-clic sur le titre du bandeau", includes/footer.php
+   — un clic sur une image fonctionne identiquement à un clic sur le texte
+   qu'elle remplace). Le wordmark est encré en bleu marine dans le fichier
+   source (pensé pour un fond clair) — sur le bandeau tricolore, lui-même bleu
+   marine (var(--bleu)), il devenait quasiment invisible ; `filter` le convertit
+   en blanc (comme le reste du texte du bandeau) sans toucher au fichier
+   d'origine ni à ses contours anti-crénelés (l'alpha est préservé). */
+.brand-title { display: block; height: 22px; width: auto; filter: brightness(0) invert(1); }
+.brand-sub   { font-size: 13px; color: rgba(255,255,255,.78); margin-top: 2px; }
+
+.user-block { display: flex; align-items: center; gap: 10px; }
+.user-name {
+    font-size: 14px; font-weight: 500;
+    padding: 6px 12px;
+    background: rgba(255,255,255,.10);
+    border-radius: 999px;
+}
+.user-badge {
+    font-size: 11px; font-weight: 700;
+    padding: 4px 10px;
+    background: var(--rouge);
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.logout-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 12px;
+    color: var(--blanc);
+    background: rgba(255,255,255,.10);
+    border-radius: 999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .15s;
+}
+.logout-link:hover { background: rgba(255,255,255,.22); }
+
+/* ---------- Navigation ---------- */
+.main-nav {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    border-top: 1px solid rgba(255,255,255,.10);
+}
+.main-nav a {
+    padding: 14px 18px;
+    font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,.82);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all .15s;
+}
+.main-nav a:hover { color: var(--blanc); background: rgba(255,255,255,.06); }
+.main-nav a.active {
+    color: var(--blanc);
+    border-bottom-color: var(--rouge);
+    background: rgba(255,255,255,.04);
+}
+
+/* ---------- Menu déroulant "Admin" du header ---------- */
+.nav-dropdown { position: relative; display: flex; }
+.nav-admin-inline { display: none; } /* visible seulement en ≤720px (voir Responsive) */
+.nav-dropdown-toggle {
+    padding: 14px 18px;
+    font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,.82);
+    background: none; border: none; border-bottom: 3px solid transparent;
+    cursor: pointer; white-space: nowrap;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 4px;
+    transition: all .15s;
+}
+.nav-dropdown-toggle:hover, .nav-dropdown-toggle.open { color: var(--blanc); background: rgba(255,255,255,.06); }
+.nav-dropdown-toggle.active { color: var(--blanc); border-bottom-color: var(--rouge); background: rgba(255,255,255,.04); }
+.nav-dropdown-arrow { display: inline-block; font-size: 11px; transition: transform .18s ease; }
+.nav-dropdown-toggle.open .nav-dropdown-arrow { transform: rotate(180deg); }
+.nav-dropdown-menu {
+    /* position:fixed (calculée en JS à l'ouverture, voir gnToggleAdminMenu) plutôt
+       qu'absolute : .main-nav a overflow-x:auto (défilement horizontal sur petits
+       écrans), qui implique overflow-y:auto de facto (règle CSS : si overflow-x
+       n'est pas 'visible', overflow-y ne peut pas rester 'visible' non plus) — un
+       menu position:absolute descendant de .main-nav se retrouvait donc "coupé"
+       par ce clip au lieu de se déployer visuellement en dessous de la barre
+       (bug corrigé, juillet 2026, suite). position:fixed échappe à ce clip.
+    */
+    position: fixed;
+    min-width: 190px;
+    max-width: calc(100vw - 16px);
+    background: var(--surface);
+    border: 1px solid var(--gris-200);
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.16);
+    padding: 6px;
+    z-index: 1002; /* au-dessus de .site-header (1001) — sinon invisible derrière le bandeau */
+    opacity: 0;
+    transform: translateY(-8px) scale(.97);
+    pointer-events: none;
+    transform-origin: top left;
+    transition: opacity .16s ease, transform .16s ease;
+}
+.nav-dropdown-menu.open { opacity: 1; transform: translateY(4px) scale(1); pointer-events: auto; }
+.nav-dropdown-menu a {
+    display: block;
+    padding: 9px 12px;
+    font-size: 14px; font-weight: 500;
+    color: var(--gris-700);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background .12s, color .12s;
+}
+.nav-dropdown-menu a:hover { background: var(--gris-50); color: var(--bleu); }
+.nav-dropdown-menu a.active { background: var(--gris-50); color: var(--bleu); font-weight: 700; }
+
+/* ---------- Conteneur principal ---------- */
+.container {
+    flex: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 28px;
+}
+
+/* ---------- Titres de page ---------- */
+.page-head {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.page-title    { font-size: 26px; font-weight: 700; letter-spacing: -.02em; color: var(--gris-900); }
+.page-subtitle { color: var(--gris-500); font-size: 14px; margin-top: 4px; }
+
+/* ---------- Cartes / panneaux ---------- */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gris-200);
+    overflow: hidden;
+    transition: box-shadow .22s ease;
+}
+.card:hover { box-shadow: var(--shadow); }
+.card + .card { margin-top: 20px; }
+.card-head {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--gris-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.card-title { font-size: 16px; font-weight: 700; }
+.card-body  { padding: 22px; }
+
+/* ---------- Boutons ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    font-size: 14px; font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .05s, box-shadow .15s, background .15s;
+    background: var(--surface); color: var(--gris-700); border-color: var(--gris-300);
+}
+.btn:hover  { box-shadow: var(--shadow-sm); }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--bleu);  color: var(--blanc); border-color: var(--bleu); }
+.btn-primary:hover { background: var(--bleu-fonce); }
+.btn-danger  { background: var(--rouge); color: var(--blanc); border-color: var(--rouge); }
+.btn-danger:hover  { background: var(--rouge-fonce); }
+.btn-ghost { background: transparent; }
+.btn-sm    { padding: 6px 12px; font-size: 13px; }
+
+/* Filtre COB/BTA/Tout — administration.php, section BP */
+.bp-type-btn.active { background: var(--bleu); color: var(--blanc); border-color: var(--bleu); }
+
+/* ---------- Input file — bouton natif stylisé ---------- */
+input[type="file"] { font-size: 13px; color: var(--gris-600); max-width: 100%; }
+input[type="file"]::file-selector-button {
+    appearance: none;
+    background: var(--surface);
+    color: var(--gris-700);
+    border: 1px solid var(--gris-300);
+    border-radius: var(--radius);
+    font: 600 13px/1 inherit;
+    padding: 6px 12px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: box-shadow .15s;
+}
+input[type="file"]::file-selector-button:hover { box-shadow: var(--shadow-sm); }
+
+/* ---------- Formulaires ---------- */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label { font-size: 13px; font-weight: 600; color: var(--gris-700); }
+.form-field input,
+.form-field select,
+.form-field textarea {
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gris-200);
+    background: var(--surface);
+    font: inherit;
+    color: var(--gris-900);
+    transition: border-color .15s, box-shadow .15s;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: var(--bleu);
+    box-shadow: 0 0 0 3px rgba(0, 35, 149, .12);
+}
+.form-field textarea { resize: vertical; min-height: 80px; }
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.form-help    { font-size: 12px; color: var(--gris-500); }
+.form-full    { grid-column: 1 / -1; }
+
+/* Fond jaune d'autofill du navigateur (surtout visible sur les champs de
+   recherche, souvent réutilisés d'une visite à l'autre) remplacé par la
+   couleur de surface du site — juillet 2026, suite encore. Le
+   box-shadow inset (plutôt que background) est la seule façon fiable de
+   surcharger le fond d'autofill, background-color seul étant ignoré par
+   les navigateurs WebKit/Blink sur :-webkit-autofill ; le délai de
+   transition très long (au lieu de 0s) évite un flash visible de jaune
+   avant que l'override ne s'applique. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+    -webkit-text-fill-color: var(--gris-900);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ---------- Sélecteur autonome (hors .form-field) ----------
+   Même habillage que .form-field select (bords arrondis, cohérent avec le
+   reste du site) pour un <select> isolé, pas encapsulé dans un form-field
+   complet avec label — ex : sélecteur de document à attacher à une mission
+   (missions.php), jusque-là un <select> natif sans aucun style (juillet
+   2026, suite encore). */
+.select-inline {
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gris-200);
+    background: var(--surface);
+    font: inherit;
+    color: var(--gris-900);
+    transition: border-color .15s, box-shadow .15s;
+}
+.select-inline:focus {
+    outline: none;
+    border-color: var(--bleu);
+    box-shadow: 0 0 0 3px rgba(0, 35, 149, .12);
+}
+
+/* ---------- Tableaux ---------- */
+.table-wrap { overflow-x: auto; }
+table.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th,
+.data-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--gris-200);
+}
+.data-table th {
+    background: var(--gris-50);
+    font-weight: 600;
+    color: var(--gris-700);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+/* Combinateur enfant direct (>), pas descendant : le mini-tableau des
+   services d'une mission (missions.php) est un <table class="data-table">
+   imbriqué dans une <tr> du tableau des missions, LUI AUSSI class="data-table"
+   — avec un simple descendant, survoler UNE ligne de service fait passer sa
+   <tr> parente ("wrapper" des missions) en :hover par bulle, ce qui matchait
+   alors TOUS les <td> imbriqués dedans (toutes les lignes de service à la
+   fois), pas seulement celle réellement survolée (bug signalé, juillet 2026,
+   suite encore — reproduit et confirmé via matches() en navigateur réel). */
+.data-table tr:hover > td { background: var(--gris-50); }
+.data-table .actions    { text-align: right; white-space: nowrap; }
+
+/* table-layout:fixed + colgroup identiques sur chaque instance (administration.php,
+   section BP/COB — un <table> par groupe COB/BTA) : sans ça, chaque table s'auto-
+   dimensionne sur son propre contenu et les colonnes ne s'alignent pas visuellement
+   d'un groupe à l'autre (bug corrigé, juillet 2026). */
+.brigade-table { table-layout: fixed; }
+.brigade-table td:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- Badges ---------- */
+.badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    background: var(--gris-100);
+    color: var(--gris-700);
+}
+.badge-bleu  { background: rgba(0,35,149,.10);  color: var(--bleu); }
+.badge-rouge { background: rgba(237,41,57,.10);  color: var(--rouge); }
+.badge-vert  { background: rgba(22,163,74,.10);  color: var(--vert-success); }
+
+/* ---------- Stat cards (dashboard / statistiques) ---------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+/* Répartitions "par X" des statistiques (par type d'unité / département /
+   type de mission / type d'intervention) — 2 colonnes fixes plutôt que
+   `auto-fit` (juillet 2026, suite encore) : avec 4 cartes et `auto-fit`, la
+   4ème (Interventions par type, souvent plus longue — jusqu'à une dizaine de
+   types) se retrouvait systématiquement seule sur sa propre ligne, étirée sur
+   toute la largeur (comportement `auto-fit` : les pistes vides sont
+   supprimées, la piste restante s'étire pour occuper tout l'espace) — visuel
+   décousu par rapport aux 3 cartes bien alignées juste au-dessus. Un vrai
+   2×2 régulier est plus cohérent avec le reste du site.
+   */
+.stats-split-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+@media (max-width: 720px) {
+    .stats-split-grid { grid-template-columns: 1fr; }
+}
+.stat-card {
+    background: var(--surface);
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gris-200);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,35,149,.12);
+}
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--bleu);
+}
+.stat-card.accent-rouge::before { background: var(--rouge); }
+.stat-card.accent-or::before    { background: var(--or); }
+.stat-card.accent-vert::before  { background: var(--vert-success); }
+.stat-label { font-size: 12px; font-weight: 600; color: var(--gris-500); text-transform: uppercase; letter-spacing: .04em; }
+.stat-value { font-size: 30px; font-weight: 800; color: var(--gris-900); margin-top: 6px; letter-spacing: -.02em; }
+.stat-sub   { font-size: 12px; color: var(--gris-500); margin-top: 4px; }
+
+/* ---------- Alertes ---------- */
+.alert {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+    font-size: 14px;
+    border: 1px solid transparent;
+}
+.alert-info    { background: rgba(0,35,149,.06);  color: var(--bleu-texte);   border-color: rgba(0,35,149,.18); }
+.alert-success { background: rgba(22,163,74,.08); color: var(--vert-success); border-color: rgba(22,163,74,.20); }
+.alert-error   { background: rgba(237,41,57,.08); color: var(--rouge-fonce);  border-color: rgba(237,41,57,.20); }
+
+/* ---------- État vide ---------- */
+.empty-state       { padding: 48px 16px; text-align: center; color: var(--gris-500); }
+.empty-state-title { font-size: 16px; font-weight: 600; color: var(--gris-700); margin-bottom: 6px; }
+
+/* ---------- Encart d'information (profil.php) ----------
+   Remplace un style inline répété tel quel une dizaine de fois — extrait en
+   classe (juillet 2026, suite encore, mode sombre deuxième passe) : une
+   couleur codée en dur dans du style="" ne peut pas être ciblée proprement
+   par un thème (nécessiterait !important + risque de collision avec un usage
+   non lié de la même couleur ailleurs, ex: color:#0f172a réutilisé pour le
+   texte des bannières saisonnières de index.php qui elles doivent RESTER
+   sombres sur leur propre dégradé, indépendant du thème de la page). */
+.info-tile {
+    background: #f0f4fb;
+    border-left: 4px solid var(--bleu);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+}
+.info-tile-label {
+    font-size: 10px; font-weight: 700;
+    color: #5b7aad;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 8px;
+}
+.info-tile-value { font-size: 22px; font-weight: 800; color: #0f172a; }
+[data-theme="dark"] .info-tile { background: #1e3a5f; border-left-color: var(--bleu-clair); }
+[data-theme="dark"] .info-tile-label { color: #93c5fd; }
+[data-theme="dark"] .info-tile-value,
+[data-theme="dark"] .info-tile [style*="color:#0f172a"] { color: #f1f5f9 !important; }
+[data-theme="dark"] .info-tile [style*="color:#5b7aad"] { color: #93c5fd !important; }
+
+/* Cartes "Liens officiels" (profil.php) — extraites en classes réelles
+   (juillet 2026, suite encore, troisième passe) : jusque-là un survol changeait
+   l'ombre via onmouseover/onmouseout en JS (`this.style.boxShadow = ...`), ce
+   qui MUTE l'attribut style entier — le navigateur le réécrit alors avec les
+   couleurs hex converties en rgb() (`background:#fff` devient `background:
+   rgb(255, 255, 255)`), cassant tout sélecteur CSS basé sur le texte littéral
+   de l'attribut (comme les correctifs `[style*="background:#fff;"]` employés
+   ailleurs) — d'où le symptôme signalé : la carte passe en blanc au survol et
+   ne revient JAMAIS à sa couleur normale, y compris après que la souris l'ait
+   quittée (onmouseout ne touche que le box-shadow, jamais le fond déjà muté).
+   Remplacé par une vraie classe + :hover CSS, purement déclaratif, aucun JS,
+   aucun risque de mutation. */
+.official-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--gris-100);
+    border-radius: 8px;
+    text-decoration: none; color: inherit;
+    background: var(--surface);
+    transition: box-shadow .15s;
+}
+.official-link:hover { box-shadow: 0 2px 8px rgba(0,35,149,.1); }
+.official-link-icon {
+    /* Fond TOUJOURS blanc, peu importe le thème — les logos (Gendarmerie,
+       Minotaur, Gendform2) sont conçus pour un fond clair type papier
+       à en-tête ; un fond sombre risquerait de les rendre peu lisibles. */
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid var(--gris-100);
+    flex-shrink: 0; padding: 4px;
+}
+.official-link-title { color: var(--gris-800); }
+[data-theme="dark"] .official-link:hover { box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+
+/* Bloc "République Française" (profil.php § Liens officiels) */
+.republic-badge {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    background: #f0f4fb;
+    border: 1px solid #c7d2e8;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.republic-badge-title { font-size: 13px; font-weight: 800; letter-spacing: .09em; color: #002395; text-transform: uppercase; }
+.republic-badge-sub   { font-size: 10px; color: #64748b; letter-spacing: .05em; margin-top: 2px; }
+[data-theme="dark"] .republic-badge { background: #1e3a5f; border-color: #2d4a70; }
+[data-theme="dark"] .republic-badge-title { color: #93c5fd; }
+[data-theme="dark"] .republic-badge-sub { color: #94a3b8; }
+/* Petits séparateurs/pastille de la timeline de grades (profil.php) */
+[data-theme="dark"] [style*="background:#c7d7f0"] { background: #334155 !important; }
+[data-theme="dark"] [style*="background:#e8eef8"] { background: #263449 !important; }
+
+/* =============================================================================
+   Calendrier
+   ============================================================================= */
+.calendar-toolbar {
+    display: flex; gap: 10px; align-items: center;
+    justify-content: space-between; flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.calendar-month-label { font-size: 20px; font-weight: 700; color: var(--gris-900); text-transform: capitalize; }
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: var(--gris-200);
+    border: 1px solid var(--gris-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.calendar-day-name {
+    padding: 10px;
+    background: var(--gris-50);
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--gris-700);
+    text-align: center;
+}
+.calendar-cell {
+    background: var(--surface);
+    /* Hauteur fixe (pas min-height) : toutes les cases de toutes les semaines
+       ont la même taille, qu'elles contiennent des missions ou non — le
+       contenu est déjà plafonné (3 services + 2 repères + badge "+N") côté JS. */
+    height: 130px;
+    padding: 8px;
+    cursor: pointer;
+    transition: background .12s;
+    position: relative;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.calendar-cell:hover     { background: var(--gris-50); }
+.calendar-cell.other-month { background: var(--gris-50); color: var(--gris-400); }
+.calendar-cell.today .day-num {
+    background: var(--bleu); color: var(--blanc);
+    border-radius: 50%; width: 26px; height: 26px;
+    display: grid; place-items: center;
+}
+.day-num      { font-size: 13px; font-weight: 600; }
+.day-missions { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+.day-mission-pill {
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    background: var(--bleu);
+    color: var(--blanc);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.day-mission-pill.cross-day::after { content: " ⟳"; }
+
+/* Vues 6 mois / année — grille de mini-calendriers, aperçu par jour uniquement
+   (pastille + compteur, pas de détail — cliquer un jour ouvre la vue Jour) */
+.multi-month-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+}
+.mini-month {
+    border: 1px solid var(--gris-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.mini-month-head {
+    padding: 8px 12px;
+    background: var(--gris-50);
+    border-bottom: 1px solid var(--gris-200);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: capitalize;
+    text-align: center;
+    cursor: pointer;
+    transition: background .12s;
+}
+.mini-month-head:hover { background: var(--gris-100); }
+.mini-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    padding: 8px;
+}
+.mini-day-name {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--gris-400);
+    padding-bottom: 3px;
+}
+.mini-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--gris-700);
+    position: relative;
+}
+.mini-day:hover { background: var(--gris-100); }
+.mini-day.other-month { color: var(--gris-300); }
+.mini-day.today { font-weight: 800; box-shadow: inset 0 0 0 1.5px var(--bleu); }
+.mini-day.has-activity { background: #e0ecff; color: var(--bleu-fonce, var(--bleu)); font-weight: 700; }
+.mini-day.out-of-range { color: var(--gris-300); opacity: .5; }
+.mini-day-dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--bleu);
+    position: absolute; bottom: 3px;
+}
+
+/* Infobulle flottante au survol d'un service (js/calendar.js) */
+.gn-cal-tip {
+    position: fixed;
+    z-index: 1300;
+    max-width: min(340px, 90vw);
+    background: var(--surface);
+    color: var(--gris-800);
+    border: 1px solid var(--gris-300);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    pointer-events: none;
+}
+.gn-cal-tip-h {
+    font-weight: 700; color: var(--gris-900);
+    margin-bottom: 6px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--gris-200);
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.gn-cal-tip-badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em;
+    background: var(--badge-bleu-bg, rgba(0,35,149,.10)); color: var(--bleu-texte);
+    border-radius: 4px; padding: 1px 6px;
+}
+.gn-cal-tip-b { white-space: pre-wrap; word-break: break-word; }
+.gn-cal-tip-empty { color: var(--gris-400); font-style: italic; }
+.gn-cal-tip-item { padding: 5px 0; border-top: 1px solid var(--gris-100); }
+.gn-cal-tip-item:first-of-type { border-top: 0; }
+.gn-cal-tip-sub { color: var(--gris-500); font-size: 12px; white-space: pre-wrap; word-break: break-word; margin-top: 2px; }
+[data-theme="dark"] .gn-cal-tip { background: #1e293b; color: #cbd5e1; border-color: #334155; }
+[data-theme="dark"] .gn-cal-tip-h { color: #f1f5f9; border-bottom-color: #334155; }
+[data-theme="dark"] .gn-cal-tip-item { border-top-color: #334155; }
+
+/* Vue jour */
+.day-view {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gris-200);
+    overflow: hidden;
+}
+.day-view-head {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--gris-200);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.day-view-title { font-size: 18px; font-weight: 700; text-transform: capitalize; }
+.hour-grid {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+}
+.hour-row   { display: contents; }
+.hour-label {
+    padding: 8px 10px;
+    border-top: 1px solid var(--gris-200);
+    font-size: 12px;
+    color: var(--gris-500);
+    text-align: right;
+}
+.hour-slot {
+    border-top: 1px solid var(--gris-200);
+    border-left: 1px solid var(--gris-200);
+    min-height: 38px;
+    position: relative;
+}
+.hour-mission {
+    position: absolute;
+    left: 6px; right: 6px;
+    background: var(--bleu);
+    color: var(--blanc);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border-left: 4px solid var(--rouge);
+}
+.hour-mission:hover { background: var(--bleu-fonce); }
+
+/* =============================================================================
+   Carte Leaflet
+   ============================================================================= */
+#map {
+    height: 600px;
+    width: 100%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gris-200);
+    overflow: hidden;
+    isolation: isolate;
+}
+.map-controls {
+    display: flex; gap: 12px; align-items: center;
+    flex-wrap: wrap; margin-bottom: 14px;
+}
+.map-legend {
+    background: var(--surface);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    font-size: 13px;
+}
+.legend-item   { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+.legend-circle { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--blanc); }
+.dept-tooltip  { background: rgba(255,255,255,.92); border: 1px solid var(--gris-200); border-radius: 4px; font-size: 12px; padding: 3px 8px; box-shadow: var(--shadow-sm); }
+
+/* =============================================================================
+   Modale
+   ============================================================================= */
+.modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,.55);
+    display: flex;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 1100; /* au-dessus de .site-header (1001) : le fond flouté doit couvrir tout, header inclus */
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .22s ease, visibility .22s ease;
+}
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+.modal {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(18px) scale(.96);
+    opacity: 0;
+    transition: transform .28s cubic-bezier(.16,1,.3,1), opacity .24s ease;
+}
+.modal-overlay.open .modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+.modal-head   { padding: 18px 22px; border-bottom: 1px solid var(--gris-200); display: flex; justify-content: space-between; align-items: center; }
+.modal-title  { font-size: 18px; font-weight: 700; }
+.modal-close  { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--gris-500); }
+.modal-body   { padding: 22px; }
+.modal-footer { padding: 14px 22px; border-top: 1px solid var(--gris-200); display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ---------- Détail lieu ---------- */
+.lieu-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.lieu-detail-item { display: flex; flex-direction: column; gap: 2px; }
+.lieu-detail-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--gris-500); }
+.lieu-detail-value { font-size: 15px; font-weight: 500; }
+
+/* =============================================================================
+   Pied de page
+   ============================================================================= */
+.site-footer {
+    background: var(--gris-900);
+    color: rgba(255,255,255,.78);
+    padding: 28px 16px;
+    margin-top: 40px;
+    font-size: 13px;
+}
+.footer-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+.footer-flag  { display: inline-flex; gap: 0; margin-bottom: 12px; border-radius: 4px; overflow: hidden; }
+.ff   { width: 18px; height: 12px; }
+.ff-b { background: var(--bleu); }
+.ff-w { background: #ffffff; } /* blanc du drapeau : toujours blanc, jamais thémé */
+.ff-r { background: var(--rouge); }
+.footer-text  { margin-bottom: 8px; line-height: 1.6; }
+.footer-text strong { color: var(--blanc); }
+.footer-meta  { color: rgba(255,255,255,.50); font-size: 12px; margin-top: 8px; }
+.footer-links { margin-top: 14px; font-size: 12px; }
+.footer-links a { color: rgba(255,255,255,.65); text-decoration: underline; text-underline-offset: 2px; }
+.footer-links a:hover { color: #fff; }
+.footer-links .sep { color: rgba(255,255,255,.3); margin: 0 8px; }
+
+/* =============================================================================
+   Animations & transitions globales
+   ============================================================================= */
+
+/*
+ * Animation de montée des cartes au chargement de la page.
+ * Le délai de base (.2s) correspond à la durée de la view-transition :
+ * les cartes sont invisibles PENDANT la transition, puis montent
+ * dès que la nouvelle page est pleinement visible. fill-mode:both
+ * garantit opacity:0 pendant tout le délai (pas de flash).
+ */
+.card, .stat-card                { animation: gn-fade-up .35s ease-out .20s both; }
+.card:nth-child(2),
+.stat-card:nth-child(2)          { animation-delay: .25s; }
+.card:nth-child(3),
+.stat-card:nth-child(3)          { animation-delay: .30s; }
+.card:nth-child(4),
+.stat-card:nth-child(4)          { animation-delay: .34s; }
+.card:nth-child(n+5),
+.stat-card:nth-child(n+5)        { animation-delay: .38s; }
+
+/* Keyframes */
+@keyframes gn-fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes gn-slide-down {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0);     }
+}
+@keyframes gn-fade-out { to   { opacity: 0; } }
+@keyframes gn-fade-in  { from { opacity: 0; } }
+@keyframes gn-pop {
+    0%   { transform: scale(.7); opacity: 0; }
+    60%  { transform: scale(1.12); }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes gn-pulse-border {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,35,149,.35); }
+    50%       { box-shadow: 0 0 0 6px rgba(0,35,149,.0); }
+}
+/* Easter egg "gyrophare" — clics rapides sur le blason du header */
+@keyframes gn-gyrophare {
+    0%, 49%  { background: rgba(0,35,149,.18); }
+    50%, 99% { background: rgba(237,41,57,.18); }
+    100%     { background: transparent; }
+}
+
+/* Toast (notification discrète bas-droite — utilisée par les easter eggs) */
+.gn-toast {
+    position: fixed; right: 18px; bottom: 74px;
+    max-width: 320px;
+    background: #0f172a; color: #fff;
+    padding: 14px 18px; border-radius: 10px;
+    font-family: Inter, sans-serif; font-size: 14px; line-height: 1.4;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    animation: gn-pop .35s cubic-bezier(.16,1,.3,1) both;
+}
+.gn-toast.gn-toast-out { animation: gn-toast-out .25s ease-in both; }
+@keyframes gn-toast-out {
+    to { opacity: 0; transform: translateY(8px) scale(.95); }
+}
+
+/* Petit spinner de chargement — carte.php (compétence territoriale) */
+.gn-spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--gris-200);
+    border-top-color: var(--bleu);
+    border-radius: 50%;
+    animation: gn-spin .7s linear infinite;
+    vertical-align: -2px;
+    margin-right: 6px;
+}
+@keyframes gn-spin { to { transform: rotate(360deg); } }
+
+/* Bouton de géolocalisation — carte.php */
+.geoloc-btn.active { background: var(--bleu); color: #fff; border-color: var(--bleu); }
+
+/* Alertes & bannières */
+.alert { animation: gn-slide-down .28s ease-out both; }
+
+/* Boutons — retour visuel au clic */
+.btn { transition: transform .08s, box-shadow .15s, background .15s, color .15s; }
+.btn:active { transform: scale(.96); }
+
+/* Badges : pop au survol */
+.badge { transition: transform .15s ease; }
+.badge:hover { transform: scale(1.08); }
+
+/* Transitions de page (View Transitions API — cross-document natif) */
+@view-transition { navigation: auto; }
+/* Fond = couleur page : évite le flash blanc si les deux snapshots sont < 1 en opacité */
+::view-transition { background: var(--gris-50); }
+/* Durées égales → fondu enchaîné symétrique, pas de gap blanc */
+::view-transition-old(root) { animation: .2s ease both gn-fade-out; }
+::view-transition-new(root) { animation: .2s ease both gn-fade-in;  }
+
+/* Nav links */
+.main-nav a { transition: color .15s, background .15s, border-bottom-color .15s; }
+
+/* Inputs focus : ring animé */
+.form-field input,
+.form-field select,
+.form-field textarea {
+    transition: border-color .18s, box-shadow .18s;
+}
+
+/* Barres de progression statistiques */
+[style*="background:var(--bleu)"][style*="width"],
+[style*="background:var(--rouge)"][style*="width"] {
+    transition: width .7s cubic-bezier(.16,1,.3,1);
+}
+
+/* =============================================================================
+   Mode sombre (préférences, juillet 2026)
+   Couvre la structure CSS partagée (fond, cartes, tableaux, formulaires,
+   modales, calendrier, carte, badges) via les mêmes sélecteurs que le thème
+   clair — la plupart des textes (titres de carte, valeurs de stat…) n'ont pas
+   de couleur explicite dans les règles ci-dessus et héritent donc déjà
+   automatiquement de la couleur de <body> une fois celle-ci basculée, sans
+   override supplémentaire. Limite connue : les couleurs codées EN DUR dans le
+   HTML de certaines pages (ex: les encarts d'information de profil.php,
+   `style="background:#f0f4fb"`) ne sont volontairement PAS couvertes ici —
+   portée limitée à la structure CSS partagée, pas à chaque style inline du site.
+   ============================================================================= */
+:root[data-theme="dark"] {
+    /* color-scheme:dark laisse le navigateur rendre nativement en sombre tout
+       contrôle de formulaire SANS style explicite (select/input non stylés via
+       .form-field, ex: #dept-filter carte.php, #top_type statistiques.php) —
+       sans quoi leur texte deviendrait illisible (fond blanc natif conservé,
+       texte clair hérité du nouveau <body> sombre par-dessus). */
+    color-scheme: dark;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.35);
+    --shadow:    0 4px 14px rgba(0,0,0,.45);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,.55);
+
+    /* Palette de base redéfinie (juillet 2026, suite encore — deuxième passe) :
+       --gris-* et --surface sont utilisés PARTOUT dans ce fichier ET dans les
+       <style> locaux de plusieurs pages (administration.php, unites.php,
+       feedback_admin.php, easter_eggs.php) ainsi que dans de très nombreux
+       styles inline PHP (`style="color:var(--gris-500)"` etc.) — la première
+       version du mode sombre ne redéfinissait que les ombres et ciblait les
+       sélecteurs un par un, laissant tout ce qui référence directement ces
+       variables inchangé (toujours la palette claire). Les rediriger ici
+       couvre d'un coup l'écrasante majorité des cas, sans toucher --blanc
+       (texte sur fond coloré + drapeau, doit rester blanc dans les deux
+       thèmes — voir plus haut) ni --gris-900 (fond du footer, doit rester
+       sombre dans les deux thèmes ; les rares usages en texte de ce fichier
+       ont déjà leur propre override littéral ci-dessous).
+       Échelle inversée : 50 devient la surface la plus sombre, 700 le texte
+       le plus clair — même intention qu'en clair (plus le chiffre est élevé,
+       plus fort est le contraste), juste à l'envers. */
+    --surface:  #1e293b;
+    --gris-50:  #1e293b;
+    --gris-100: #263449;
+    --gris-200: #334155;
+    --gris-300: #475569;
+    --gris-400: #64748b;
+    --gris-500: #94a3b8;
+    --gris-600: #a8b6c8;
+    --gris-700: #cbd5e1;
+    --gris-800: #e2e8f0;
+    --bleu-texte: #5b9bf5;
+}
+[data-theme="dark"] body { background: #0f172a; color: #e2e8f0; }
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .modal,
+[data-theme="dark"] .nav-dropdown-menu,
+[data-theme="dark"] .day-view,
+[data-theme="dark"] .mini-month,
+[data-theme="dark"] .map-legend {
+    background: #1e293b;
+    border-color: #334155;
+}
+[data-theme="dark"] .card-head,
+[data-theme="dark"] .modal-head,
+[data-theme="dark"] .modal-footer,
+[data-theme="dark"] .day-view-head,
+[data-theme="dark"] .mini-month-head,
+[data-theme="dark"] .data-table th,
+[data-theme="dark"] .data-table td,
+[data-theme="dark"] .hour-label,
+[data-theme="dark"] .hour-slot { border-color: #334155; }
+
+[data-theme="dark"] .data-table th,
+[data-theme="dark"] .calendar-day-name,
+[data-theme="dark"] .mini-month-head { background: #1e293b; color: #cbd5e1; }
+[data-theme="dark"] .data-table tr:hover > td { background: #24304a; }
+[data-theme="dark"] .nav-dropdown-menu a { color: #cbd5e1; }
+[data-theme="dark"] .nav-dropdown-menu a:hover,
+[data-theme="dark"] .nav-dropdown-menu a.active { background: #24304a; }
+
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .stat-value,
+[data-theme="dark"] .calendar-month-label { color: #f1f5f9; }
+[data-theme="dark"] .page-subtitle,
+[data-theme="dark"] .stat-label,
+[data-theme="dark"] .stat-sub,
+[data-theme="dark"] .form-help,
+[data-theme="dark"] .empty-state,
+[data-theme="dark"] .lieu-detail-label { color: #94a3b8; }
+[data-theme="dark"] .empty-state-title { color: #cbd5e1; }
+[data-theme="dark"] .form-field label { color: #cbd5e1; }
+
+[data-theme="dark"] .form-field input,
+[data-theme="dark"] .form-field select,
+[data-theme="dark"] .form-field textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn { background: #1e293b; color: #cbd5e1; border-color: #334155; }
+[data-theme="dark"] .btn-ghost { background: transparent; }
+[data-theme="dark"] .btn-primary { color: #fff; }
+[data-theme="dark"] .btn-danger  { color: #fff; }
+
+[data-theme="dark"] .badge { background: #334155; color: #cbd5e1; }
+[data-theme="dark"] .badge-bleu  { background: rgba(59,130,246,.18); color: #93c5fd; }
+[data-theme="dark"] .badge-rouge { background: rgba(248,113,113,.18); color: #fca5a5; }
+[data-theme="dark"] .badge-vert  { background: rgba(74,222,128,.18); color: #86efac; }
+
+/* Fonds solides plutôt que des teintes translucides (juillet 2026, suite
+   encore, troisième passe) — une rgba(...,.14) sur un fond de page déjà très
+   sombre (#0f172a) donne un résultat trop terne/peu distinct ; même teinte
+   "solide" que les badges de statut pastel ci-dessous, pour un rendu cohérent
+   et bien identifiable comme alerte. */
+[data-theme="dark"] .alert-info    { background: #1e3a5f; color: #93c5fd; border-color: #2d4a70; }
+[data-theme="dark"] .alert-success { background: #14321f; color: #86efac; border-color: #1e4a2e; }
+[data-theme="dark"] .alert-error   { background: #450a0a; color: #fca5a5; border-color: #6b1414; }
+
+[data-theme="dark"] .calendar-grid { background: #334155; border-color: #334155; }
+[data-theme="dark"] .calendar-cell { background: #1e293b; }
+[data-theme="dark"] .calendar-cell:hover { background: #24304a; }
+[data-theme="dark"] .calendar-cell.other-month { background: #17212f; color: #475569; }
+[data-theme="dark"] .mini-day { color: #cbd5e1; }
+[data-theme="dark"] .mini-day:hover { background: #24304a; }
+[data-theme="dark"] .mini-day.other-month { color: #475569; }
+[data-theme="dark"] .mini-day.has-activity { background: rgba(59,130,246,.18); color: #93c5fd; }
+[data-theme="dark"] .mini-day-name { color: #64748b; }
+
+[data-theme="dark"] .dept-tooltip { background: rgba(30,41,59,.92); border-color: #334155; color: #e2e8f0; }
+[data-theme="dark"] #map { border-color: #334155; }
+[data-theme="dark"] .modal-overlay { background: rgba(0,0,0,.65); }
+[data-theme="dark"] .gn-spinner { border-color: #334155; border-top-color: var(--bleu-clair); }
+
+/* =============================================================================
+   Mode sombre — badges/encarts pastel codés en dur (juillet 2026, suite
+   encore, deuxième passe)
+   Idiome répété tel quel dans plusieurs pages (feedback.php, feedback_admin.php,
+   missions.php, profil.php, documents.php, easter_eggs.php) : fond pastel clair +
+   texte saturé de la même teinte, pour un badge de statut ou une alerte. Cible
+   les valeurs hex exactes plutôt qu'une classe commune (idiome jamais factorisé
+   à l'origine).
+   Sélecteur `color:` en DEUX variantes ( [style^="color:X"] pour une déclaration
+   en tout début d'attribut, [style*=";color:X"] pour une déclaration précédée
+   d'une autre — jamais `[style*="color:X"]` seul) : un bug réel a été trouvé et
+   corrigé ici (juillet 2026, suite encore, troisième passe) — `[style*="color:
+   #c2410c"]` matchait aussi `border-left-color:#c2410c` (utilisé sur le
+   conteneur PMO/BMO de unites.php, sans aucun rapport avec un badge de statut),
+   car "color:#c2410c" est un sous-texte littéral de "border-LEFT-COLOR:#c2410c"
+   — le texte des unités PMO/BMO héritait alors d'un orange forcé via ce
+   conteneur parent (`color` est une propriété héritée). Vérifié qu'aucune autre
+   couleur ci-dessous n'a cette collision (`border-left-color`/`border-color`/
+   `background-color`… avec la même valeur hex, recherché explicitement). */
+[data-theme="dark"] [style*="background:#fef2f2"] { background: #450a0a !important; }
+[data-theme="dark"] [style^="color:#991b1b"],
+[data-theme="dark"] [style*=";color:#991b1b"] { color: #fca5a5 !important; }
+[data-theme="dark"] [style*="border:1px solid #fca5a5"] { border-color: #7f1d1d !important; }
+
+[data-theme="dark"] [style*="background:#eff6ff"] { background: #1e3a5f !important; }
+[data-theme="dark"] [style^="color:#1d4ed8"],
+[data-theme="dark"] [style*=";color:#1d4ed8"] { color: #93c5fd !important; }
+
+[data-theme="dark"] [style*="background:#fff7ed"] { background: #4a2c0f !important; }
+[data-theme="dark"] [style^="color:#c2410c"],
+[data-theme="dark"] [style*=";color:#c2410c"] { color: #fdba74 !important; }
+[data-theme="dark"] [style*="border:1px solid #fed7aa"] { border-color: #7c4a10 !important; }
+
+[data-theme="dark"] [style*="background:#f0fdf4"] { background: #14321f !important; }
+[data-theme="dark"] [style*="background:#dcfce7"] { background: #14321f !important; }
+[data-theme="dark"] [style^="color:#15803d"],
+[data-theme="dark"] [style*=";color:#15803d"] { color: #86efac !important; }
+[data-theme="dark"] [style^="color:#166534"],
+[data-theme="dark"] [style*=";color:#166534"] { color: #86efac !important; }
+[data-theme="dark"] [style*="border:1px solid #86efac"] { border-color: #166534 !important; }
+[data-theme="dark"] [style*="border:1px solid #bbf7d0"] { border-color: #166534 !important; }
+[data-theme="dark"] .egg-card.unlocked { background: #14321f; border-color: #166534; }
+
+/* Boîtes blanches codées en dur plutôt qu'en var(--surface) : boîte de
+   suggestions autocomplete (missions.php), cartes "Liens officiels"
+   (profil.php), icônes de ces mêmes cartes. Le point-virgule après #fff
+   distingue ces cas d'un usage isolé comme la bande blanche du drapeau
+   (`background:#fff` en toute fin d'attribut, sans point-virgule) qui doit
+   elle rester blanche dans les deux thèmes. */
+[data-theme="dark"] [style*="background:#fff;"],
+[data-theme="dark"] .kanban-card,
+[data-theme="dark"] details {
+    background: #1e293b !important;
+}
+
+/* =============================================================================
+   Liste des missions — vue « cartes » pour écrans étroits (missions.php)
+   Bascule table ↔ cartes à 720px. Toutes les couleurs via --gris-* / --surface
+   (redéfinies en mode sombre — pas de texte sombre sur fond sombre).
+   ============================================================================= */
+.missions-cards { display: none; }
+@media (max-width: 720px) {
+    .missions-cards { display: block; }
+    .missions-table { display: none; }
+}
+.mm-card {
+    background: var(--surface); border: 1px solid var(--gris-200);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);
+    margin-bottom: 12px; overflow: hidden;
+}
+.mm-card-head { padding: 14px 16px; cursor: pointer; }
+.mm-row1 { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.mm-dates { font-size: 15px; font-weight: 700; color: var(--gris-700); }
+.mm-dur   { font-size: 12px; color: var(--gris-400); font-weight: 500; }
+.mm-state {
+    margin-left: auto; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .03em; color: #fff; border-radius: 4px; padding: 2px 7px;
+}
+.mm-state.avenir  { background: var(--bleu); }
+.mm-state.encours { background: #0891b2; }
+.mm-unit { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.mm-unit .badge { flex-shrink: 0; }
+.mm-unit a { font-weight: 600; color: var(--gris-700); text-decoration: none; word-break: break-word; }
+.mm-meta { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; margin-top: 8px; font-size: 13px; color: var(--gris-500); }
+.mm-svc-toggle { display: inline-flex; align-items: center; gap: 6px; color: var(--gris-600); }
+.mm-chevron { display: inline-block; transition: transform .15s; color: var(--gris-400); }
+.mm-card.open .mm-chevron { transform: rotate(90deg); }
+.mm-meta .mm-pay { margin-left: auto; }
+.mm-actions { display: flex; gap: 8px; padding: 0 16px 14px; }
+.mm-actions .btn { flex: 1; justify-content: center; }
+.mm-actions form { flex: 1; display: flex; margin: 0; }
+.mm-actions form .btn { flex: 1; }
+.mm-services { display: none; padding: 2px 16px 14px; }
+.mm-card.open .mm-services { display: block; }
+.mm-svc {
+    border: 1px solid var(--gris-200); border-radius: 8px; padding: 8px 10px;
+    margin-bottom: 8px; font-size: 13px; background: var(--gris-100); cursor: pointer;
+}
+.mm-svc:active { border-color: var(--gris-300); }
+.mm-svc:last-child { margin-bottom: 0; }
+.mm-svc-h { display: flex; gap: 8px; flex-wrap: wrap; font-weight: 600; color: var(--gris-700); }
+.mm-svc-dur { color: var(--gris-400); font-weight: 500; }
+.mm-svc-c { color: var(--gris-600); margin-top: 3px; white-space: pre-wrap; word-break: break-word; }
+.mm-svc-empty { color: var(--gris-400); font-style: italic; }
+.mm-svc-none { font-size: 13px; color: var(--gris-400); }
+
+/* =============================================================================
+   Documents — carte d'un document (documents.php), responsive
+   ============================================================================= */
+.doc-item { padding: 16px 20px; border-bottom: 1px solid var(--gris-100); }
+.doc-item:last-child { border-bottom: 0; }
+.doc-item-head { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.doc-item-main { flex: 1 1 240px; min-width: 0; }
+.doc-item-title { font-weight: 600; font-size: 15px; color: var(--gris-900); word-break: break-word; }
+.doc-item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 12px; color: var(--gris-400); margin-top: 5px; }
+.doc-file-pill {
+    display: inline-flex; align-items: center; gap: 4px; max-width: 100%;
+    background: var(--gris-100); border: 1px solid var(--gris-200); border-radius: 6px;
+    padding: 2px 8px; font-family: monospace; color: var(--gris-700);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.doc-actions { flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+.doc-actions > .btn { justify-content: center; white-space: nowrap; }
+.doc-actions form { display: flex; margin: 0; }
+.doc-actions form .btn { flex: 1; justify-content: center; }
+.doc-label-edit { margin-top: 12px; padding: 10px 12px; background: var(--gris-50); border-radius: 8px; }
+.doc-label-edit form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.doc-label-edit input[type="text"] {
+    flex: 1 1 200px; min-width: 0; padding: 8px 10px;
+    border: 1px solid var(--gris-200); border-radius: 6px; font: inherit; font-size: 13px;
+    background: var(--surface); color: var(--gris-900);
+}
+.doc-missions { margin-top: 10px; }
+.doc-missions > summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--bleu-texte); user-select: none; padding: 6px 0; }
+.doc-mission-check {
+    display: flex; align-items: flex-start; gap: 10px; padding: 6px 8px;
+    border-radius: 6px; cursor: pointer; font-size: 13px;
+}
+.doc-mission-check input { margin-top: 2px; flex-shrink: 0; }
+.doc-mission-check span { word-break: break-word; }
+
+@media (max-width: 720px) {
+    .doc-item { padding: 14px 16px; }
+    .doc-actions { flex: 1 1 100%; grid-template-columns: 1fr 1fr; margin-top: 4px; }
+    .doc-label-edit input[type="text"] { flex-basis: 100%; }
+    .doc-label-edit form .btn { flex: 1 1 auto; justify-content: center; }
+}
+@media (max-width: 360px) {
+    .doc-actions { grid-template-columns: 1fr; }
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+@media (max-width: 720px) {
+    .container         { padding: 16px; }
+    .calendar-cell     { height: 90px; padding: 4px; font-size: 12px; }
+    .calendar-day-name { padding: 6px; font-size: 10px; }
+    .day-mission-pill  { font-size: 10px; padding: 2px 4px; }
+    .stat-value        { font-size: 24px; }
+    .header-inner      { padding: 12px 16px; }
+    .brand-title       { height: 17px; }
+    .brand-sub         { font-size: 11px; }
+    #map               { height: 400px; }
+    .form-actions      { flex-direction: column; }
+    .map-legend        { padding: 6px 10px; font-size: 11px; max-width: 160px; }
+    .legend-item       { margin: 2px 0; gap: 5px; }
+    .legend-circle     { width: 10px; height: 10px; flex-shrink: 0; }
+
+    /* En-tête / navigation */
+    .brand-icon        { width: 42px; height: 42px; }
+    .brand-icon img    { width: 30px; height: 30px; }
+    .user-block        { flex-wrap: wrap; gap: 6px; }
+    .user-name         { font-size: 12px; padding: 4px 9px; max-width: 60vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-badge        { font-size: 10px; padding: 3px 8px; }
+    .main-nav          { padding: 0 8px; -webkit-overflow-scrolling: touch; }
+    .main-nav a,
+    .nav-dropdown-toggle { padding: 12px 12px; font-size: 13px; }
+    /* Admin : sur mobile, plus de menu déroulant flottant (invisible / mal
+       positionné) — les deux liens s'affichent à plat dans la nav qui défile. */
+    .nav-dropdown        { display: none !important; }
+    .nav-admin-inline    {
+        display: block;                       /* base = display:none, à réactiver ici */
+        padding: 12px 12px; font-size: 13px; font-weight: 500;
+        color: rgba(255,255,255,.82); text-decoration: none;
+        border-bottom: 3px solid transparent; white-space: nowrap; flex-shrink: 0;
+    }
+    .nav-admin-inline.active { color: #fff; border-bottom-color: var(--rouge); background: rgba(255,255,255,.04); }
+
+    /* Titres de page : l'action passe sous le titre, pleine largeur */
+    .page-head              { gap: 12px; }
+    .page-title             { font-size: 21px; }
+    .page-head > *:not(:first-child)        { width: 100%; }
+    .page-head > div:not(:first-child)      { justify-content: flex-start; flex-wrap: wrap; }
+    .page-head .btn, .page-head > a         { flex: 1 1 auto; justify-content: center; }
+
+    /* Cartes / contenu */
+    .card-body  { padding: 16px; }
+    .card-head  { padding: 14px 16px; }
+
+    /* Formulaires : une seule colonne partout */
+    .form-grid                 { grid-template-columns: 1fr; }
+    .form-actions .btn         { width: 100%; justify-content: center; }
+    /* Champs à largeur mini fixe (carte.php, recherche.php, admin…) : plein large */
+    .page-head .form-field,
+    .card-body .form-field[style*="min-width"] { min-width: 0 !important; width: 100%; }
+    /* Rangées de filtres horizontales (carte, admin) : chaque champ pleine ligne */
+    .page-head [style*="display:flex"][style*="flex-wrap:wrap"] > .form-field { flex: 1 1 100%; }
+
+    /* Grilles de tuiles à colonnes fixes 1fr 1fr → 1 colonne (sélecteurs
+       d'attribut : ces grilles sont déclarées en style inline sur la page) */
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+    /* … sauf les mini-grilles de 2 boutons d'action (Modifier / Suppr.) */
+    .actions [style*="grid-template-columns:1fr 1fr"],
+    td [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr 1fr !important; }
+    /* Grilles de 4 boutons d'action (documents.php) → 2×2, largeur libre */
+    [style*="grid-template-columns:repeat(4,1fr)"],
+    [style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+    [style*="min-width:320px"] { min-width: 0 !important; }
+
+    /* Modales : quasi plein écran, ancrées en bas */
+    .modal-overlay   { padding: 0; align-items: flex-end; }
+    .modal           { max-width: 100%; max-height: 94vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .modal-head      { padding: 14px 16px; }
+    .modal-body      { padding: 16px; }
+    .modal-body[style*="grid"] { grid-template-columns: 1fr !important; }
+    .modal-footer    { padding: 12px 16px; flex-direction: column-reverse; }
+    .modal-footer .btn { width: 100%; justify-content: center; }
+    /* … sauf la modale d'aperçu PDF, qui garde ses boutons sur une ligne */
+    .pdf-preview-modal .modal-footer { flex-direction: row; }
+    .pdf-preview-modal .modal-footer .btn { width: auto; flex: 1; }
+
+    /* Tableaux NON transformés en cartes (.rt-skip, < 3 colonnes)
+       → défilement horizontal propre. */
+    .card > table.data-table:not(.rt-cards):not(.brigade-table),
+    .card-body > table.data-table:not(.rt-cards):not(.brigade-table) { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+    .table-wrap .data-table:not(.rt-cards) th,
+    .table-wrap .data-table:not(.rt-cards) td { padding: 8px 10px; }
+
+    /* Tables des BP de l'admin (.brigade-table — pas de <thead> donc pas cardées
+       automatiquement) : chaque ligne en bloc, nom en gras + méta + actions. */
+    .brigade-table, .brigade-table > tbody, .brigade-table > tbody > tr,
+    .brigade-table > tbody > tr > td { display: block; }
+    .brigade-table > colgroup { display: none; }
+    .brigade-table > tbody > tr { padding: 8px 12px; border-bottom: 1px solid var(--gris-100); }
+    .brigade-table > tbody > tr:last-child { border-bottom: 0; }
+    .brigade-table > tbody > tr > td { border: 0 !important; padding: 1px 0 !important; max-width: none !important; width: auto !important; white-space: normal !important; }
+    .brigade-table > tbody > tr > td:first-child { display: none; }                 /* la flèche ↳ */
+    .brigade-table > tbody > tr > td:nth-child(2) { font-weight: 600; font-size: 14px; }
+    .brigade-table > tbody > tr > td:nth-child(3),
+    .brigade-table > tbody > tr > td:nth-child(4),
+    .brigade-table > tbody > tr > td:nth-child(5) { display: inline-block; margin-right: 12px; font-size: 12px; color: var(--gris-500); vertical-align: middle; }
+    .brigade-table > tbody > tr > td.actions { display: flex; gap: 8px; margin-top: 8px; }
+    .brigade-table > tbody > tr > td.actions > * { flex: 1; }
+    .brigade-table > tbody > tr > td.actions form { display: flex; }
+    .brigade-table > tbody > tr > td.actions form .btn { flex: 1; }
+
+    /* ── Grands tableaux → cartes empilées (data-label posé par footer.php) ── */
+    table.data-table.rt-cards,
+    table.data-table.rt-cards > tbody { display: block; }
+    table.data-table.rt-cards > thead { display: none; }
+    table.data-table.rt-cards { width: 100%; }
+    table.data-table.rt-cards > tbody > tr {
+        display: block;
+        border: 1px solid var(--gris-200); border-radius: 10px;
+        background: var(--surface); box-shadow: var(--shadow-sm);
+        padding: 8px 12px; margin-bottom: 10px;
+    }
+    table.data-table.rt-cards > tbody > tr:hover > td { background: transparent; }
+    table.data-table.rt-cards > tbody > tr > td {
+        display: flex; gap: 10px; align-items: baseline;
+        border: 0 !important; padding: 5px 0 !important;
+        max-width: none !important; white-space: normal !important; text-align: left !important;
+        font-size: 13px; overflow-wrap: anywhere;
+    }
+    table.data-table.rt-cards > tbody > tr > td + td { border-top: 1px solid var(--gris-100) !important; }
+    table.data-table.rt-cards > tbody > tr > td::before {
+        content: attr(data-label);
+        flex: 0 0 6.8em; min-width: 0;
+        font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em;
+        color: var(--gris-500);
+    }
+    table.data-table.rt-cards > tbody > tr > td[data-label=""]::before,
+    table.data-table.rt-cards > tbody > tr > td:not([data-label])::before { content: none; }
+    /* Cellule d'actions : boutons sur une ligne pleine largeur, sans libellé */
+    table.data-table.rt-cards > tbody > tr > td.actions {
+        display: block; margin-top: 4px; padding-top: 8px !important;
+        border-top: 1px solid var(--gris-200) !important;
+    }
+    table.data-table.rt-cards > tbody > tr > td.actions::before { content: none; }
+    table.data-table.rt-cards > tbody > tr > td.actions > *,
+    table.data-table.rt-cards > tbody > tr > td.actions form { width: 100%; }
+
+    /* Timeline des grades (profil.php) : abréviation moins large */
+    .info-tile[style*="display:flex"][style*="gap:16px"] > div:first-child { width: 96px !important; }
+}
+
+@media (max-width: 430px) {
+    .container         { padding: 12px; }
+    .page-title        { font-size: 19px; }
+    .calendar-toolbar  { gap: 6px; }
+    .calendar-toolbar .btn { padding: 6px 10px; font-size: 12px; }
+    .calendar-month-label, #period-label { font-size: 15px; width: 100%; text-align: center; order: -1; }
+    .calendar-cell     { height: 76px; }
+    .day-num           { font-size: 11px; }
+    .modal-title       { font-size: 16px; }
+    .badge             { font-size: 10px; }
+    h1.page-title      { line-height: 1.2; }
+    /* boutons de bascule de vue (Jour/Mois/Année…) : grille compacte */
+    .page-head > div:not(:first-child) .btn { flex: 1 1 40%; }
+}

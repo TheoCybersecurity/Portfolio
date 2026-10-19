@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Nettoyage BDD - Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="admin.html" class="text-decoration-none text-muted"><i class="fas fa-arrow-left"></i> Retour Hub</a>
+            <h2 class="fw-bold mt-2 text-danger"><i class="fas fa-radiation me-2"></i>Zone de Réinitialisation</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="alert alert-info d-flex align-items-center gap-2 shadow-sm">
+                <i class="fas fa-flask fa-lg"></i>
+                <div><strong>Mode démonstration</strong> — le bouton d'exécution est désactivé, aucune donnée n'est réellement supprimée.</div>
+            </div>
+
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-trash-alt me-2"></i>Nettoyage des données</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">
+                        Cette page permet de remettre à zéro certaines parties de la base de données.
+                        <br><strong class="text-danger"><i class="fas fa-exclamation-triangle"></i> Attention : Les actions sont irréversibles.</strong>
+                    </p>
+
+                    <form onsubmit="return demoNotice('Exécution du nettoyage de la base de données');">
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-primary border-bottom pb-2">
+                                <i class="fas fa-shopping-cart me-2"></i>📦 Commandes &amp; Ventes (Opérationnel)
+                            </h6>
+                            <p class="small text-muted mb-2">Supprime toutes les commandes, les destinataires, les emplois du temps associés et le contenu des paniers.</p>
+                            <div class="list-group">
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div><input class="form-check-input me-2" type="checkbox" checked disabled> Détails des roses (Contenu panier)</div>
+                                    <span class="badge bg-light text-muted font-monospace">recipient_roses</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div><input class="form-check-input me-2" type="checkbox" checked disabled> Liaison Commande-Élève</div>
+                                    <span class="badge bg-light text-muted font-monospace">order_recipients</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div><input class="form-check-input me-2" type="checkbox" checked disabled> Emplois du temps (Liés aux destinataires)</div>
+                                    <span class="badge bg-light text-muted font-monospace">schedules</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div><input class="form-check-input me-2" type="checkbox" checked disabled> Destinataires (Infos élèves ciblés)</div>
+                                    <span class="badge bg-light text-muted font-monospace">recipients</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div><input class="form-check-input me-2" type="checkbox" checked disabled> Commandes (Facturation)</div>
+                                    <span class="badge bg-light text-muted font-monospace">orders</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-warning text-dark border-bottom pb-2">
+                                <i class="fas fa-users me-2"></i>Utilisateurs &amp; Élèves
+                            </h6>
+                            <div class="list-group">
+                                <label class="list-group-item list-group-item-warning d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <input class="form-check-input me-2" type="checkbox" disabled>
+                                        <strong>Supprimer uniquement les Élèves (Non-CVL)</strong>
+                                        <div class="small text-muted mt-1">
+                                            Conserve les comptes présents dans la table <code>cvl_members</code> et le Super Admin.
+                                            Supprime tous les autres inscrits.
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-warning text-dark font-monospace">users (filtre)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-secondary border-bottom pb-2">
+                                <i class="fas fa-file-alt me-2"></i>📜 Logs &amp; Historique
+                            </h6>
+                            <div class="list-group">
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Logs d'audit (Actions système)</div>
+                                    <span class="badge bg-light text-muted font-monospace">audit_logs</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-danger border-bottom pb-2">
+                                <i class="fas fa-cogs me-2"></i>⚙️ Structure Lycée &amp; Catalogue
+                            </h6>
+                            <div class="alert alert-danger py-2 small">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Ne cochez ceci que si vous devez réimporter toute la structure du lycée (CSV) ou reconfigurer le site de zéro.
+                            </div>
+                            <div class="list-group">
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Classes</div>
+                                    <span class="badge bg-danger text-white font-monospace">classes</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Niveaux de classe</div>
+                                    <span class="badge bg-danger text-white font-monospace">class_levels</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Salles</div>
+                                    <span class="badge bg-danger text-white font-monospace">rooms</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Étages</div>
+                                    <span class="badge bg-danger text-white font-monospace">floors</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Bâtiments</div>
+                                    <span class="badge bg-danger text-white font-monospace">buildings</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Catalogue (Types de roses)</div>
+                                    <span class="badge bg-danger text-white font-monospace">rose_products</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Grille Tarifaire</div>
+                                    <span class="badge bg-danger text-white font-monospace">roses_prices</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Messages prédéfinis</div>
+                                    <span class="badge bg-danger text-white font-monospace">predefined_messages</span>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                                    <div><input class="form-check-input me-2" type="checkbox" disabled> Paramètres globaux du site</div>
+                                    <span class="badge bg-danger text-white font-monospace">global_settings</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold shadow">
+                                <i class="fas fa-dumpster-fire me-2"></i>EXÉCUTER LE NETTOYAGE
+                            </button>
+                            <a href="admin.html" class="btn btn-outline-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

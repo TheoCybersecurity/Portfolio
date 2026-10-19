@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Statistiques Détaillées - St Valentin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        .card-stat-mini { transition: transform 0.2s; }
+        .card-stat-mini:hover { transform: translateY(-3px); }
+        .bg-gradient-gold { background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%); color: #5e4b00; }
+        .bg-gradient-mystery { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .table-sm td, .table-sm th { padding: 0.5rem; font-size: 0.9rem; }
+
+        /* CORRECTION MOBILE FORCEE */
+        .dropdown-menu { background-color: #ffffff !important; }
+        .dropdown-item { color: #000000 !important; }
+        .dropdown-item:hover { background-color: #f0f0f0 !important; color: #000000 !important; }
+
+        /* Styles Graphique */
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 220px;
+            padding: 20px 5px 10px 5px;
+            border-bottom: 1px solid #dee2e6;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .chart-container::-webkit-scrollbar { height: 4px; }
+        .chart-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        .chart-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; margin: 0 1px; min-width: 12px; }
+        .chart-bar { width: 80%; max-width: 12px; background-color: #0d6efd; border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 2px; }
+        .chart-bar:hover { opacity: 0.7; cursor: help; }
+        .chart-label { margin-top: 8px; font-size: 0.65rem; color: #6c757d; text-align: center; transform: rotate(-45deg); white-space: nowrap; transform-origin: center top; }
+        .chart-value { font-size: 0.65rem; font-weight: bold; color: #0d6efd; margin-bottom: 4px; }
+        @media (max-width: 768px) {
+            .chart-label { font-size: 0.5rem; margin-top: 4px; transform: rotate(-90deg); transform-origin: center top; width: 10px; }
+            .chart-value { font-size: 0.5rem; }
+            .chart-container { height: 180px; }
+        }
+    </style>
+</head>
+<body class="bg-light">
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+        <div class="d-flex align-items-center">
+            <a href="manage_orders.html" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i> Retour</a>
+            <div>
+                <h2 class="fw-bold m-0 fs-3">📊 Statistiques</h2>
+                <p class="text-muted m-0 small d-none d-sm-block">Vue d'ensemble de l'opération</p>
+            </div>
+        </div>
+        <button onclick="window.print()" class="btn btn-sm btn-outline-dark d-none d-md-block"><i class="fas fa-print me-2"></i>Imprimer</button>
+    </div>
+
+    <!-- ===================== INDICATEURS PRINCIPAUX ===================== -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-dark bg-opacity-10 p-2 rounded me-2 text-dark"><i class="fas fa-file-invoice"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Commandes</small>
+                </div>
+                <h3 class="fw-bold text-dark mb-0">9</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">3 en attente</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-warning bg-opacity-10 p-2 rounded me-2 text-warning"><i class="fas fa-piggy-bank"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Cagnotte totale</small>
+                </div>
+                <h3 class="fw-bold text-warning mb-0">38.00 €</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">(14 € en attente de paiement)</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-danger bg-opacity-10 p-2 rounded me-2 text-danger"><i class="fas fa-piggy-bank"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Roses totales</small>
+                </div>
+                <h3 class="fw-bold text-danger mb-0">19</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">(7 en attente de vente)</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-info bg-opacity-10 p-2 rounded me-2 text-info"><i class="fas fa-users"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Participants</small>
+                </div>
+                <h3 class="fw-bold text-info mb-0">8</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">Élèves différents</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-success bg-opacity-10 p-2 rounded me-2 text-success"><i class="fas fa-trophy"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Record</small>
+                </div>
+                <h3 class="fw-bold text-success mb-0">8.00 €</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">Plus grosse commande</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-primary bg-opacity-10 p-2 rounded me-2 text-primary"><i class="fas fa-shopping-basket"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Panier Moyen</small>
+                </div>
+                <h3 class="fw-bold text-primary mb-0">2.1</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">Roses par commande</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-danger bg-opacity-10 p-2 rounded me-2 text-danger"><i class="fas fa-heart-circle-check"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Casanova</small>
+                </div>
+                <h3 class="fw-bold text-dark mb-0 fs-5 text-truncate" title="Chloé B.">Chloé B.</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">2 destinataires diff.</small>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white">
+                <div class="d-flex align-items-center mb-1">
+                    <div class="bg-secondary bg-opacity-10 p-2 rounded me-2 text-secondary"><i class="fas fa-school"></i></div>
+                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Top Classe</small>
+                </div>
+                <h3 class="fw-bold text-secondary mb-0 fs-5 text-truncate">TG3</h3>
+                <small class="text-muted" style="font-size: 0.75rem;">4 commandes</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== AVANCEMENT LOGISTIQUE ===================== -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white border-bottom border-primary border-4 card-stat-mini">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-uppercase text-muted fw-bold d-none d-md-block">Paiements Validés</small>
+                    <small class="text-uppercase text-muted fw-bold d-md-none">Payé</small>
+                    <i class="fas fa-clipboard-list text-primary fa-lg"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-0">67%</h3>
+                <div class="progress mt-2" style="height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: 67%"></div>
+                </div>
+                <small class="text-muted mt-1 d-block small">6 / 9</small>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white border-bottom border-warning border-4 card-stat-mini">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-uppercase text-muted fw-bold d-none d-md-block">Commandes Préparées</small>
+                    <small class="text-uppercase text-muted fw-bold d-md-none">Prêt</small>
+                    <i class="fas fa-boxes text-warning fa-lg"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-0">33%</h3>
+                <div class="progress mt-2" style="height: 6px;">
+                    <div class="progress-bar bg-warning" style="width: 33%"></div>
+                </div>
+                <small class="text-muted mt-1 d-block small">3 / 9</small>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm p-3 h-100 bg-white border-bottom border-success border-4 card-stat-mini">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="text-uppercase text-muted fw-bold">Distribution</small>
+                    <i class="fas fa-truck text-success fa-lg"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-0">11%</h3>
+                <div class="progress mt-2" style="height: 6px;">
+                    <div class="progress-bar bg-success" style="width: 11%"></div>
+                </div>
+                <small class="text-muted mt-1 d-block small">1 / 9</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== RECETTES / ANONYMAT / MESSAGES ===================== -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-white p-3 d-flex flex-column justify-content-center">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3 text-success">
+                        <i class="fas fa-sack-dollar fa-2x"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-0">Recettes (Encaissées)</h6>
+                        <h3 class="fw-bold text-success mb-0">24.00 €</h3>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                     <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3 text-danger">
+                        <i class="fas fa-fan fa-2x"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-0">Roses Vendues (Encaissées)</h6>
+                        <h3 class="fw-bold text-danger mb-0">12</h3>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3 text-primary">
+                        <i class="fas fa-shopping-basket fa-2x"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-0">Panier Moyen (Encaissées)</h6>
+                        <h3 class="fw-bold text-primary mb-0">2.1 <small class="fs-6 text-muted">roses/cmd</small></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100 bg-gradient-mystery text-white">
+                <div class="card-body">
+                    <div class="row text-center mb-3">
+                        <div class="col-6 border-end border-white border-opacity-25">
+                            <h2 class="fw-bold mb-0">8</h2>
+                            <small class="opacity-75">Acheteurs</small>
+                        </div>
+                        <div class="col-6">
+                            <h2 class="fw-bold mb-0">11</h2>
+                            <small class="opacity-75">Destinataires</small>
+                        </div>
+                    </div>
+                    <hr class="border-white opacity-25">
+                    <div class="d-flex flex-column justify-content-center align-items-center text-center mt-3">
+                        <div class="mb-1"><i class="fas fa-user-secret fa-2x opacity-75"></i></div>
+                        <h3 class="fw-bold mb-0 display-6">16%</h3>
+                        <p class="small opacity-75 mb-0">des roses sont anonymes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="fw-bold m-0 text-info text-uppercase"><i class="fas fa-comment-dots me-2"></i>Top Messages</h6>
+                </div>
+                <div class="card-body pt-0 overflow-auto" style="max-height: 220px;">
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 80%;">Je t'aime &lt;3</span>
+                            <span class="fw-bold">3</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: 100%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 80%;">Merci d'être là pour moi :)</span>
+                            <span class="fw-bold">2</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: 67%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 80%;">Admirateur secret...</span>
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: 33%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 80%;">Ceci est une tentative de drague ;)</span>
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: 33%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 80%;">Juste pour te voir sourire :)</span>
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: 33%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-truncate" style="max-width: 80%;">Tu gères, change rien B-)</span>
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-info" style="width: 33%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== PODIUM / COULEURS / CLASSEMENTS ===================== -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 bg-gradient-gold">
+                <div class="card-body">
+                    <h6 class="fw-bold text-uppercase mb-3 text-center"><i class="fas fa-crown me-2"></i>Le Podium</h6>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between align-items-center mb-2 bg-white bg-opacity-25 rounded p-2">
+                            <span class="fw-bold small text-truncate">#1 Alexandre D.</span><span class="badge bg-white text-dark">3</span>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center mb-2 bg-white bg-opacity-25 rounded p-2">
+                            <span class="fw-bold small text-truncate">#2 Hugo B.</span><span class="badge bg-white text-dark">3</span>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center mb-2 bg-white bg-opacity-25 rounded p-2">
+                            <span class="fw-bold small text-truncate">#3 Lucas M.</span><span class="badge bg-white text-dark">2</span>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center mb-2 bg-white bg-opacity-25 rounded p-2">
+                            <span class="fw-bold small text-truncate">#4 Nathan C.</span><span class="badge bg-white text-dark">2</span>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center mb-2 bg-white bg-opacity-25 rounded p-2">
+                            <span class="fw-bold small text-truncate">#5 Manon P.</span><span class="badge bg-white text-dark">2</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="fw-bold m-0 text-danger text-uppercase"><i class="fas fa-palette me-2"></i>Couleurs</h6>
+                </div>
+                <div class="card-body pt-0 overflow-auto" style="max-height: 250px;">
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-capitalize">Rose Rouge</span><span class="fw-bold">12</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-danger" style="width: 100%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-capitalize">Rose Rose</span><span class="fw-bold">5</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-primary" style="width: 42%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span class="fw-bold text-dark text-capitalize">Rose Blanche</span><span class="fw-bold">2</span>
+                        </div>
+                        <div class="progress" style="height: 6px;"><div class="progress-bar bg-secondary" style="width: 17%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="fw-bold m-0 text-primary text-uppercase"><i class="fas fa-shopping-cart me-2"></i>Acheteurs</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm align-middle mb-0">
+                            <thead class="table-light"><tr><th class="ps-3">#</th><th>Classe</th><th class="text-end pe-3">Cmd</th></tr></thead>
+                            <tbody>
+                                <tr><td class="ps-3 fw-bold text-muted">1</td><td class="fw-bold">TG3</td><td class="text-end pe-3"><span class="badge bg-primary rounded-pill">4</span></td></tr>
+                                <tr><td class="ps-3 fw-bold text-muted">2</td><td class="fw-bold">1G2</td><td class="text-end pe-3"><span class="badge bg-primary rounded-pill">2</span></td></tr>
+                                <tr><td class="ps-3 fw-bold text-muted">3</td><td class="fw-bold">205</td><td class="text-end pe-3"><span class="badge bg-primary rounded-pill">2</span></td></tr>
+                                <tr><td class="ps-3 fw-bold text-muted">4</td><td class="fw-bold">2TSCIEL</td><td class="text-end pe-3"><span class="badge bg-primary rounded-pill">1</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="fw-bold m-0 text-danger text-uppercase"><i class="fas fa-heart me-2"></i>Reçu</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm align-middle mb-0">
+                            <thead class="table-light"><tr><th class="ps-3">#</th><th>Classe</th><th class="text-end pe-3">Reçu</th></tr></thead>
+                            <tbody>
+                                <tr><td class="ps-3 fw-bold text-muted">1</td><td class="fw-bold">TG3</td><td class="text-end pe-3"><span class="badge bg-danger bg-opacity-75 rounded-pill">8</span></td></tr>
+                                <tr><td class="ps-3 fw-bold text-muted">2</td><td class="fw-bold">1G2</td><td class="text-end pe-3"><span class="badge bg-danger bg-opacity-75 rounded-pill">7</span></td></tr>
+                                <tr><td class="ps-3 fw-bold text-muted">3</td><td class="fw-bold">205</td><td class="text-end pe-3"><span class="badge bg-danger bg-opacity-75 rounded-pill">3</span></td></tr>
+                                <tr><td class="ps-3 fw-bold text-muted">4</td><td class="fw-bold">2TSCIEL</td><td class="text-end pe-3"><span class="badge bg-danger bg-opacity-75 rounded-pill">1</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== GRAPHIQUE D'ACTIVITÉ ===================== -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0" id="activity-chart-wrapper"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================================
+   Graphique d'activité — copie statique.
+   Le site réel recharge ce bloc en AJAX (`stats?ajax=1&view=…`) ; on
+   reproduit ici le même rendu et les mêmes bascules Heures / Jours / Date.
+   ========================================================================= */
+
+var AVAILABLE_DATES = ['2026-02-10', '2026-02-11', '2026-02-12', '2026-02-13'];
+
+/* Répartition des 9 commandes du jeu de données fictif. */
+var DATA = {
+    global_hours: { title: 'Activité Horaire (Global)', values: hoursFrom({ 9: 1, 10: 1, 11: 1, 12: 3, 13: 1, 15: 1, 16: 1 }) },
+    global_days:  { title: 'Activité par Jour',         values: { '10/02': 1, '11/02': 2, '12/02': 2, '13/02': 4 } },
+    'date_2026-02-10': { title: 'Activité du 10/02/2026', values: hoursFrom({ 13: 1 }) },
+    'date_2026-02-11': { title: 'Activité du 11/02/2026', values: hoursFrom({ 9: 1, 15: 1 }) },
+    'date_2026-02-12': { title: 'Activité du 12/02/2026', values: hoursFrom({ 12: 1, 16: 1 }) },
+    'date_2026-02-13': { title: 'Activité du 13/02/2026', values: hoursFrom({ 10: 1, 11: 1, 12: 2 }) }
+};
+
+/* Construit les 24 tranches horaires, comme la boucle PHP `for($i=0;$i<=23;$i++)`. */
+function hoursFrom(map) {
+    var out = {};
+    for (var i = 0; i <= 23; i++) out[i + 'h'] = map[i] || 0;
+    return out;
+}
+
+function frDate(iso) {
+    var p = iso.split('-');
+    return p[2] + '/' + p[1] + '/' + p[0];
+}
+
+function renderChart(viewMode) {
+    var conf = DATA[viewMode] || DATA.global_hours;
+    var labels = Object.keys(conf.values);
+    var max = Math.max.apply(null, labels.map(function (k) { return conf.values[k]; }));
+
+    var dateItems = AVAILABLE_DATES.map(function (d) {
+        return '<li><button class="dropdown-item js-view-btn text-dark" style="color:#000 !important;" type="button" data-view="date_' + d + '">'
+             + frDate(d) + '</button></li>';
+    }).join('');
+
+    var header = ''
+        + '<div class="card-header bg-white py-3 border-bottom-0 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">'
+        +   '<h5 class="fw-bold m-0 text-primary fs-6 fs-md-5"><i class="fas fa-chart-bar me-2"></i>' + conf.title + '</h5>'
+        +   '<div class="w-100 w-md-auto d-flex justify-content-md-end justify-content-center">'
+        +     '<div class="btn-group btn-group-sm" role="group">'
+        +       '<button type="button" class="btn btn-outline-primary js-view-btn' + (viewMode === 'global_hours' ? ' active' : '') + '" data-view="global_hours">Heures</button>'
+        +       '<button type="button" class="btn btn-outline-primary js-view-btn' + (viewMode === 'global_days' ? ' active' : '') + '" data-view="global_days">Jours</button>'
+        +       '<div class="btn-group btn-group-sm" role="group">'
+        +         '<button type="button" class="btn btn-outline-primary dropdown-toggle' + (viewMode.indexOf('date_') === 0 ? ' active' : '') + '" data-bs-toggle="dropdown" aria-expanded="false">'
+        +           '<i class="far fa-calendar-alt"></i> <span class="d-none d-sm-inline">Date</span>'
+        +         '</button>'
+        +         '<ul class="dropdown-menu dropdown-menu-end bg-white" style="max-height:250px; overflow-y:auto;">' + dateItems + '</ul>'
+        +       '</div>'
+        +     '</div>'
+        +   '</div>'
+        + '</div>';
+
+    var bars = labels.map(function (label) {
+        var count = conf.values[label];
+        var height = Math.max(2, max > 0 ? (count / max * 100) : 0);
+        return '<div class="chart-col">'
+             + (count > 0 ? '<div class="chart-value">' + count + '</div>' : '')
+             + '<div class="chart-bar" style="height:' + height + '%; opacity:' + (count > 0 ? 1 : 0.2) + '" title="' + label + ' : ' + count + '"></div>'
+             + '<div class="chart-label">' + label + '</div>'
+             + '</div>';
+    }).join('');
+
+    document.getElementById('activity-chart-wrapper').innerHTML =
+        header + '<div class="card-body pt-0 px-2"><div class="chart-container">' + bars + '</div></div>';
+
+    attachChartListeners();
+}
+
+function attachChartListeners() {
+    document.querySelectorAll('.js-view-btn').forEach(function (btn) {
+        btn.onclick = function (e) {
+            e.preventDefault();
+            var container = document.getElementById('activity-chart-wrapper');
+            container.style.opacity = '0.6';
+            var view = this.getAttribute('data-view');
+            setTimeout(function () {
+                renderChart(view);
+                document.getElementById('activity-chart-wrapper').style.opacity = '1';
+            }, 120);
+        };
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () { renderChart('global_hours'); });
+</script>
+</body>
+</html>

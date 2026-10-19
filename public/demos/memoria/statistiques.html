@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Statistiques — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Statistiques détaillées</h1>
+        <div class="page-subtitle">Synthèse complète de ton activité de réserviste.</div>
+    </div>
+    <form onsubmit="return gnDemoBlock('Filtre par type')" class="form-field" style="margin:0;min-width:220px">
+        <label for="type" style="font-size:12px">Type de mission</label>
+        <select name="type" id="type" onchange="gnDemoBlock('Filtre par type')">
+            <option value="0">Tous les types</option>
+            <option value="1">Renfort</option>
+            <option value="2">Formation</option>
+            <option value="3">Cérémonie</option>
+        </select>
+    </form>
+</div>
+
+<!-- Vue globale -->
+<h3 style="margin-bottom:12px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">Vue globale</h3>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total services</div>
+        <div class="stat-value">87</div>
+        <div class="stat-sub">Depuis le début</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Nombre de missions</div>
+        <div class="stat-value">34</div>
+        <div class="stat-sub">Déploiements distincts</div>
+    </div>
+    <div class="stat-card accent-rouge">
+        <div class="stat-label">Total jours</div>
+        <div class="stat-value">62</div>
+        <div class="stat-sub">498h30 cumulés</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Moy. par jour travaillé</div>
+        <div class="stat-value">8h02</div>
+        <div class="stat-sub">Total heures ÷ jours d'emploi</div>
+    </div>
+    <div class="stat-card accent-or">
+        <div class="stat-label">Moy. jours / mois</div>
+        <div class="stat-value">2,1</div>
+        <div class="stat-sub">sur 30 mois d'activité</div>
+    </div>
+</div>
+
+<!-- Année courante vs même période précédente -->
+<h3 style="margin:20px 0 12px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Jan.–sept. 4 : 2026 vs 2025
+</h3>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Services 2026 (jan.–sept. 4)</div>
+        <div class="stat-value">22</div>
+        <div class="stat-sub">17 jours · 170h30</div>
+    </div>
+    <div class="stat-card accent-rouge">
+        <div class="stat-label">Services 2025 (même période)</div>
+        <div class="stat-value">18</div>
+        <div class="stat-sub">14 jours · 126h30</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Évolution</div>
+        <div class="stat-value" style="font-size:26px">+22,2 %</div>
+        <div class="stat-sub">4 services de différence</div>
+    </div>
+</div>
+
+<!-- Unité la + fréquentée -->
+<div class="card" style="margin-top:20px">
+    <div class="card-head"><div class="card-title">Unité la plus fréquentée</div></div>
+    <div class="card-body">
+        <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+            <a href="unites.html?action=detail&type=brigade&id=21" style="font-size:30px;font-weight:800;color:var(--bleu-texte);text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">Narbonne</a>
+            <span class="badge badge-bleu">BP</span>
+            <span class="badge">11</span>
+            <div style="font-size:18px;color:var(--gris-700)">
+                19 services
+            </div>
+            <a href="unites.html?action=detail&type=brigade&id=21" class="btn btn-sm btn-ghost" style="margin-left:auto">Voir le détail →</a>
+        </div>
+    </div>
+</div>
+
+<!-- Top 10 unités -->
+<div class="card">
+    <div class="card-head">
+        <div class="card-title">Top 10 des unités</div>
+    </div>
+    <div class="card-body">
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>#</th><th>Unité</th><th>Type</th><th>Dépt</th><th>Services</th><th>Heures</th></tr></thead>
+            <tbody>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=21'" style="cursor:pointer">
+                    <td><strong>1</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=21" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Narbonne</a></td>
+                    <td><span class="badge badge-bleu">BP</span></td>
+                    <td>11</td>
+                    <td><strong>19</strong></td>
+                    <td>152h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=11'" style="cursor:pointer">
+                    <td><strong>2</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=11" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Carcassonne</a></td>
+                    <td><span class="badge badge-bleu">BP</span></td>
+                    <td>11</td>
+                    <td><strong>17</strong></td>
+                    <td>136h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=srj&id=1'" style="cursor:pointer">
+                    <td><strong>3</strong></td>
+                    <td><a href="unites.html?action=detail&type=srj&id=1" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Service Réserve Jeunesse de Carcassonne</a></td>
+                    <td><span class="badge badge-bleu">SRJ</span></td>
+                    <td>11</td>
+                    <td><strong>12</strong></td>
+                    <td>84h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=pmo_bmo&id=1'" style="cursor:pointer">
+                    <td><strong>4</strong></td>
+                    <td><a href="unites.html?action=detail&type=pmo_bmo&id=1" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Peloton motorisé de Narbonne</a></td>
+                    <td><span class="badge badge-bleu">PMO</span></td>
+                    <td>11</td>
+                    <td><strong>11</strong></td>
+                    <td>88h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=32'" style="cursor:pointer">
+                    <td><strong>5</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=32" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Quillan</a></td>
+                    <td><span class="badge badge-bleu">BP</span></td>
+                    <td>11</td>
+                    <td><strong>9</strong></td>
+                    <td>72h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=psig&id=1'" style="cursor:pointer">
+                    <td><strong>6</strong></td>
+                    <td><a href="unites.html?action=detail&type=psig&id=1" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">PSIG de Carcassonne</a></td>
+                    <td><span class="badge badge-bleu">PSIG</span></td>
+                    <td>11</td>
+                    <td><strong>7</strong></td>
+                    <td>56h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=14'" style="cursor:pointer">
+                    <td><strong>7</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=14" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Castelnaudary</a></td>
+                    <td><span class="badge badge-bleu">BTA</span></td>
+                    <td>11</td>
+                    <td><strong>6</strong></td>
+                    <td>48h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=12'" style="cursor:pointer">
+                    <td><strong>8</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=12" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Trèbes</a></td>
+                    <td><span class="badge badge-bleu">BP</span></td>
+                    <td>11</td>
+                    <td><strong>5</strong></td>
+                    <td>40h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=23'" style="cursor:pointer">
+                    <td><strong>9</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=23" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Lézignan-Corbières</a></td>
+                    <td><span class="badge badge-bleu">BTA</span></td>
+                    <td>11</td>
+                    <td><strong>3</strong></td>
+                    <td>24h</td>
+                </tr>
+                <tr onclick="location.href='unites.html?action=detail&type=brigade&id=31'" style="cursor:pointer">
+                    <td><strong>10</strong></td>
+                    <td><a href="unites.html?action=detail&type=brigade&id=31" style="color:var(--bleu-texte);font-weight:500;text-decoration:none">Limoux</a></td>
+                    <td><span class="badge badge-bleu">BP</span></td>
+                    <td>11</td>
+                    <td><strong>2</strong></td>
+                    <td>16h</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+<!-- Répartitions côte à côte -->
+<div class="stats-split-grid" style="margin-top:20px">
+
+    <div class="card" style="margin-top:0">
+        <div class="card-head"><div class="card-title">Par type d'unité</div></div>
+        <div class="card-body">
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>BP</span>
+                        <strong>52</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--bleu);height:100%;width:100.0%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>SRJ</span>
+                        <strong>12</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--bleu);height:100%;width:23.076923076923077%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>PMO/BMO</span>
+                        <strong>11</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--bleu);height:100%;width:21.153846153846153%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>PSIG</span>
+                        <strong>7</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--bleu);height:100%;width:13.461538461538462%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>BTA</span>
+                        <strong>5</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--bleu);height:100%;width:9.615384615384617%;transition:width .4s"></div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:0">
+        <div class="card-head"><div class="card-title">Par département</div></div>
+        <div class="card-body">
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span><strong>11</strong> · Aude</span>
+                        <strong>79</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--rouge);height:100%;width:100.0%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span><strong>34</strong> · Hérault</span>
+                        <strong>5</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--rouge);height:100%;width:6.329113924050633%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span><strong>66</strong> · Pyrénées-Orientales</span>
+                        <strong>3</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:var(--rouge);height:100%;width:3.79746835443038%;transition:width .4s"></div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:0">
+        <div class="card-head"><div class="card-title">Missions par type</div></div>
+        <div class="card-body">
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Renfort</span>
+                        <strong>24</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#22c55e;height:100%;width:100.0%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Formation</span>
+                        <strong>6</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#8b5cf6;height:100%;width:25.0%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Cérémonie</span>
+                        <strong>4</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#f59e0b;height:100%;width:16.666666666666664%;transition:width .4s"></div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:0">
+        <div class="card-head">
+            <div class="card-title">Interventions par type</div>
+            <span class="badge badge-bleu">68 au total</span>
+        </div>
+        <div class="card-body">
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Contrôle routier</span>
+                        <strong>31</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#9333ea;height:100%;width:100.0%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Assistance</span>
+                        <strong>18</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#9333ea;height:100%;width:58.06451612903226%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Interpellation</span>
+                        <strong>9</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#9333ea;height:100%;width:29.03225806451613%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Accident</span>
+                        <strong>6</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#9333ea;height:100%;width:19.35483870967742%;transition:width .4s"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                        <span>Différend</span>
+                        <strong>4</strong>
+                    </div>
+                    <div style="background:var(--gris-100);height:8px;border-radius:4px;overflow:hidden">
+                        <div style="background:#9333ea;height:100%;width:12.903225806451612%;transition:width .4s"></div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Statistiques avancées ("stats de nerd") -->
+<h3 style="margin:20px 0 12px;color:var(--gris-700);font-size:13px;text-transform:uppercase;letter-spacing:.05em">
+    Statistiques avancées
+</h3>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Service le plus long</div>
+        <div class="stat-value" style="font-size:22px">12h</div>
+        <div class="stat-sub">Narbonne</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Mission la plus longue</div>
+        <div class="stat-value">5 j</div>
+        <div class="stat-sub"><a href="missions.html?action=edit&id=205" style="color:inherit">Voir la mission →</a></div>
+    </div>
+    <div class="stat-card accent-or">
+        <div class="stat-label">Journée la plus chargée</div>
+        <div class="stat-value">2 services</div>
+        <div class="stat-sub">22/08/2026</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Départements visités</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">sur toute l'activité</div>
+    </div>
+    <div class="stat-card accent-rouge">
+        <div class="stat-label">Services de nuit</div>
+        <div class="stat-value">23%</div>
+        <div class="stat-sub">20 services débutant 20h–6h</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Services le week-end</div>
+        <div class="stat-value">41%</div>
+        <div class="stat-sub">36 services samedi/dimanche</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Heure de prise de service la + fréquente</div>
+        <div class="stat-value">14h</div>
+        <div class="stat-sub">29 services à cette heure</div>
+    </div>
+    <div class="stat-card accent-or">
+        <div class="stat-label">Plus longue série active</div>
+        <div class="stat-value">9 mois</div>
+        <div class="stat-sub">consécutifs avec au moins 1 service</div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+        integrity="sha256-s4B2di9zY7yekStouOA0gmeY213ya7YfAA7C56MTe8c="
+        crossorigin="anonymous"></script>
+
+<!-- 1. Activité mensuelle — toutes les années -->
+<div class="card" style="margin-top:20px">
+    <div class="card-head">
+        <div class="card-title">Activité mensuelle — toutes les années</div>
+        <span style="font-size:12px;color:var(--gris-500)">Barres = 2026 · Courbes = années précédentes</span>
+    </div>
+    <div class="card-body">
+        <canvas id="chart-mensuel" style="max-height:300px"></canvas>
+    </div>
+</div>
+<script>
+(function() {
+    const datasets = [
+        {
+            type: 'line',
+            label: '2024',
+            data: [0, 1, 2, 1, 3, 2, 4, 5, 2, 3, 1, 2],
+            borderColor: '#64748b',
+            backgroundColor: 'transparent',
+            pointBackgroundColor: '#64748b',
+            fill: false, tension: 0.35, pointRadius: 3, borderWidth: 2,
+            order: 1,
+        },
+        {
+            type: 'line',
+            label: '2025',
+            data: [1, 2, 3, 2, 4, 3, 6, 7, 3, 4, 2, 3],
+            borderColor: '#0891b2',
+            backgroundColor: 'transparent',
+            pointBackgroundColor: '#0891b2',
+            fill: false, tension: 0.35, pointRadius: 3, borderWidth: 2,
+            order: 2,
+        },
+        {
+            type: 'bar',
+            label: '2026',
+            data: [0, 2, 3, 5, 0, 0, 5, 2, 3, 2, 0, 0],
+            backgroundColor: 'rgba(0,35,149,0.75)',
+            borderRadius: 4,
+            order: 99,
+        },
+    ];
+    new Chart(document.getElementById('chart-mensuel'), {
+        data: { labels: ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."], datasets },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { font: { family: 'Inter', size: 12 } } } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0, font: { family: 'Inter', size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } },
+                x: { ticks: { font: { family: 'Inter', size: 11 } } }
+            }
+        }
+    });
+})();
+</script>
+
+<!-- 2. Évolution cumulative par année -->
+<div class="card" style="margin-top:20px">
+    <div class="card-head">
+        <div class="card-title">Progression cumulative</div>
+        <span style="font-size:12px;color:var(--gris-500)">Total de services cumulés mois par mois</span>
+    </div>
+    <div class="card-body">
+        <canvas id="chart-cumul" style="max-height:260px"></canvas>
+    </div>
+</div>
+<script>
+(function() {
+    const datasets = [
+        {
+            label: '2024',
+            data: [0, 1, 3, 4, 7, 9, 13, 18, 20, 23, 24, 26],
+            borderColor: '#64748b',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.35, pointRadius: 3, borderWidth: 1.5,
+            borderDash: [4,3],
+        },
+        {
+            label: '2025',
+            data: [1, 3, 6, 8, 12, 15, 21, 28, 31, 35, 37, 40],
+            borderColor: '#0891b2',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.35, pointRadius: 3, borderWidth: 1.5,
+            borderDash: [4,3],
+        },
+        {
+            label: '2026',
+            data: [0, 2, 5, 10, 10, 10, 15, 17, 20, 22, 22, 22],
+            borderColor: '#002395',
+            backgroundColor: 'rgba(0,35,149,0.07)',
+            fill: true,
+            tension: 0.35, pointRadius: 3, borderWidth: 2.5,
+        },
+    ];
+    new Chart(document.getElementById('chart-cumul'), {
+        type: 'line',
+        data: { labels: ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."], datasets },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: { position: 'top', labels: { font: { family: 'Inter', size: 12 } } } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0, font: { family: 'Inter', size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } },
+                x: { ticks: { font: { family: 'Inter', size: 11 } } }
+            }
+        }
+    });
+})();
+</script>
+
+<!-- 3 & 4. Jour de semaine + Durée moyenne côte à côte -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;margin-top:20px;align-items:start">
+    <div class="card" style="margin-top:0">
+        <div class="card-head">
+            <div class="card-title">Services par jour de la semaine</div>
+            <span style="font-size:12px;color:var(--gris-500)">Toutes périodes confondues</span>
+        </div>
+        <div class="card-body">
+            <canvas id="chart-dow" style="max-height:230px"></canvas>
+        </div>
+    </div>
+    <div class="card" style="margin-top:0">
+        <div class="card-head">
+            <div class="card-title">Durée moyenne des patrouilles</div>
+            <span style="font-size:12px;color:var(--gris-500)">2026 — par mois, en minutes</span>
+        </div>
+        <div class="card-body">
+            <canvas id="chart-duree" style="max-height:230px"></canvas>
+        </div>
+    </div>
+</div>
+</main>
+<script>
+(function() {
+    // Jour de semaine
+    new Chart(document.getElementById('chart-dow'), {
+        type: 'bar',
+        data: {
+            labels: ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'],
+            datasets: [{
+                label: 'Services',
+                data: [10, 8, 5, 8, 12, 17, 13],
+                backgroundColor: ['#002395','#1d4ed8','#0891b2','#15803d','#b45309','#ED2939','#7c3aed'],
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0, font: { family: 'Inter', size: 11 } }, grid: { color: 'rgba(0,0,0,.05)' } },
+                x: { ticks: { font: { family: 'Inter', size: 11 } } }
+            }
+        }
+    });
+
+    // Durée moyenne
+    new Chart(document.getElementById('chart-duree'), {
+        type: 'bar',
+        data: {
+            labels: ["Janv.", "Févr.", "Mars", "Avr.", "Mai", "Juin", "Juil.", "Août", "Sept.", "Oct.", "Nov.", "Déc."],
+            datasets: [{
+                label: 'Durée moy. (min)',
+                data: [null, 480, 480, 486, null, null, 402, 480, 490, 480, null, null],
+                backgroundColor: 'rgba(8,145,178,0.75)',
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => {
+                            const v = ctx.raw;
+                            if (v === null) return 'Aucune donnée';
+                            const h = Math.floor(v/60), m = v%60;
+                            return `${h}h${String(m).padStart(2,'0')}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { font: { family: 'Inter', size: 11 }, callback: v => { const h=Math.floor(v/60),m=v%60; return h+'h'+(m?String(m).padStart(2,'0'):''); } }, grid: { color: 'rgba(0,0,0,.05)' } },
+                x: { ticks: { font: { family: 'Inter', size: 11 } } }
+            }
+        }
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Journal des Opérations - CVL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; }
+
+        /* Styles spécifiques à la Timeline */
+        .timeline-list { padding-left: 0; list-style: none; }
+        .timeline-item { position: relative; padding-left: 50px; margin-bottom: 20px; }
+
+        /* Icône circulaire */
+        .timeline-icon {
+            position: absolute; left: 0; top: 0;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: white; font-size: 1.1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Code couleur sémantique */
+        .bg-creation { background-color: #0d6efd; }      /* Bleu : Commande */
+        .bg-payment { background-color: #198754; }       /* Vert : Argent */
+        .bg-preparation { background-color: #fd7e14; }   /* Orange : Logistique */
+        .bg-distribution { background-color: #dc3545; }  /* Rouge : Finalité */
+
+        /* Barre de progression dans le tableau global */
+        .progress-slim { height: 6px; width: 100px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-4 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mt-2"><i class="fas fa-clipboard-list me-2"></i>Journal des Opérations</h2>
+            <p class="text-muted mb-0">Suivi de l'activité commerciale et logistique.</p>
+        </div>
+        <div class="btn-group shadow-sm">
+            <a href="#" class="btn btn-dark" id="btn-global"><i class="fas fa-table me-1"></i> Vue Globale</a>
+            <a href="#" class="btn btn-outline-dark" id="btn-timeline"><i class="fas fa-stream me-1"></i> Chronologie</a>
+            <a href="audit_logs.html" class="btn btn-outline-danger ms-2 border-start" title="Logs techniques">
+                <i class="fas fa-shield-alt me-1"></i> Audit Technique
+            </a>
+        </div>
+    </div>
+
+    <!-- ===================== VUE GLOBALE ===================== -->
+    <div id="view-global">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">ID</th>
+                                <th>Date Création</th>
+                                <th>Acheteur</th>
+                                <th>État Paiement</th>
+                                <th>Encaissé par</th>
+                                <th>Avancement Livraison</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0143</td>
+                                <td class="small text-muted">13/02 12:41</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Emma GIRARD</td>
+                                <td><span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i> En attente</span></td>
+                                <td><span class="text-muted">-</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0142</td>
+                                <td class="small text-muted">13/02 12:05</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Chloé BONNET</td>
+                                <td><span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i> En attente</span></td>
+                                <td><span class="text-muted">-</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/2</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0141</td>
+                                <td class="small text-muted">13/02 11:20</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Maxime AUBERT</td>
+                                <td>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i> Payé</span>
+                                    <div class="small text-muted mt-1">13/02 11:35</div>
+                                </td>
+                                <td><span class="fw-bold text-primary small">Théo</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-success" style="width: 100%"></div></div>
+                                        <small class="text-muted">1/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0140</td>
+                                <td class="small text-muted">13/02 10:58</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Julie MERCIER</td>
+                                <td>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i> Payé</span>
+                                    <div class="small text-muted mt-1">13/02 11:12</div>
+                                </td>
+                                <td><span class="fw-bold text-primary small">Chloé</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/2</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0139</td>
+                                <td class="small text-muted">12/02 16:22</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Thomas FABRE</td>
+                                <td>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i> Payé</span>
+                                    <div class="small text-muted mt-1">12/02 16:40</div>
+                                </td>
+                                <td><span class="fw-bold text-primary small">Théo</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0138</td>
+                                <td class="small text-muted">12/02 12:14</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Inès CHEVALIER</td>
+                                <td>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i> Payé</span>
+                                    <div class="small text-muted mt-1">12/02 12:30</div>
+                                </td>
+                                <td><span class="fw-bold text-primary small">Maxime</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0137</td>
+                                <td class="small text-muted">11/02 15:47</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Rayan MOREAU</td>
+                                <td>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i> Payé</span>
+                                    <div class="small text-muted mt-1">11/02 16:02</div>
+                                </td>
+                                <td><span class="fw-bold text-primary small">Chloé</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0136</td>
+                                <td class="small text-muted">11/02 09:33</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Théo MARESCAL</td>
+                                <td><span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half me-1"></i> En attente</span></td>
+                                <td><span class="text-muted">-</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0135</td>
+                                <td class="small text-muted">10/02 13:05</td>
+                                <td><i class="fas fa-user-circle text-secondary me-1"></i> Théo MARESCAL</td>
+                                <td>
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i> Payé</span>
+                                    <div class="small text-muted mt-1">10/02 13:20</div>
+                                </td>
+                                <td><span class="fw-bold text-primary small">Maxime</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress progress-slim me-2"><div class="progress-bar bg-warning" style="width: 0%"></div></div>
+                                        <small class="text-muted">0/1</small>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== CHRONOLOGIE ===================== -->
+    <div id="view-timeline" class="d-none">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <ul class="timeline-list mb-0">
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-distribution"><i class="fas fa-paper-plane"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Rose remise à Marie SANTOS (TG3)</span>
+                                            <small class="text-muted font-monospace">13/02 12:58</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Théo MARESCAL</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-preparation"><i class="fas fa-box-open"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Bouquet préparé pour Manon PETIT (1G2)</span>
+                                            <small class="text-muted font-monospace">13/02 12:55</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Inès CHEVALIER</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-preparation"><i class="fas fa-box-open"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Bouquet préparé pour Hugo BERTRAND (TG3)</span>
+                                            <small class="text-muted font-monospace">13/02 12:51</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Inès CHEVALIER</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-preparation"><i class="fas fa-box-open"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Bouquet préparé pour Nathan COLIN (TG3)</span>
+                                            <small class="text-muted font-monospace">13/02 12:44</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Rayan MOREAU</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-payment"><i class="fas fa-check"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Paiement de la commande #0141 validé (2.00 €)</span>
+                                            <small class="text-muted font-monospace">13/02 11:35</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Théo MARESCAL</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-creation"><i class="fas fa-cart-plus"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Commande #0141 créée par Maxime AUBERT</span>
+                                            <small class="text-muted font-monospace">13/02 11:20</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Maxime AUBERT</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-payment"><i class="fas fa-check"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Paiement de la commande #0140 validé (6.00 €)</span>
+                                            <small class="text-muted font-monospace">13/02 11:12</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Chloé BONNET</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="timeline-item">
+                                <div class="timeline-icon bg-creation"><i class="fas fa-cart-plus"></i></div>
+                                <div class="card border-light bg-light">
+                                    <div class="card-body py-2 px-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold text-dark">Commande #0140 créée par Julie MERCIER</span>
+                                            <small class="text-muted font-monospace">13/02 10:58</small>
+                                        </div>
+                                        <div class="small text-muted mt-1"><i class="fas fa-user-tag me-1"></i> Acteur : <strong>Julie MERCIER</strong></div>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var btnGlobal = document.getElementById('btn-global');
+    var btnTimeline = document.getElementById('btn-timeline');
+
+    function setView(v) {
+        document.getElementById('view-global').classList.toggle('d-none', v !== 'global');
+        document.getElementById('view-timeline').classList.toggle('d-none', v !== 'timeline');
+        btnGlobal.className = 'btn ' + (v === 'global' ? 'btn-dark' : 'btn-outline-dark');
+        btnTimeline.className = 'btn ' + (v === 'timeline' ? 'btn-dark' : 'btn-outline-dark');
+    }
+
+    btnGlobal.addEventListener('click', function (e) { e.preventDefault(); setView('global'); });
+    btnTimeline.addEventListener('click', function (e) { e.preventDefault(); setView('timeline'); });
+});
+</script>
+</body>
+</html>

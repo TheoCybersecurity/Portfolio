@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Annuaire Élèves &amp; Classes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; }
+        .cursor-pointer { cursor: pointer; }
+        .hover-shadow:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-4 mb-5">
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-info"><i class="fas fa-address-book text-info"></i> Annuaire du Lycée</h2>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <div class="btn-group">
+                <a href="#" class="btn btn-primary" id="btn-list"><i class="fas fa-list"></i> Liste Élèves</a>
+                <a href="#" class="btn btn-outline-primary" id="btn-classes"><i class="fas fa-users"></i> Par Classe</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form class="row g-2" id="dir-form">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" id="dir-search" class="form-control" placeholder="Rechercher un nom, prénom, classe, ID...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-dark w-100">Chercher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================== VUE LISTE ===================== -->
+    <div id="view-list">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Résultats : <span id="result-count">19</span> élèves affichés</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Classe</th>
+                            <th>ID Classe</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-rows"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== VUE PAR CLASSE ===================== -->
+    <div id="view-classes" class="d-none">
+        <div class="accordion" id="accordionClasses"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="studentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Fiche Élève</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="studentModalBody">
+                <div class="text-center py-5"><div class="spinner-border text-info"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================================
+   Annuaire du lycée — copie statique.
+   Le site réel lit les tables `recipients`, `classes` et `schedules`
+   (colonnes h08…h17) ; la fiche élève est chargée en AJAX.
+   ========================================================================= */
+
+var CLASSES = [
+    { id: 21,  name: '2TSCIEL' },
+    { id: 7,   name: '1G2' },
+    { id: 12,  name: '205' },
+    { id: 3,   name: 'TG3' },
+    { id: 98,  name: 'TASSP2' },
+    { id: 99,  name: 'Titre Pro AIS' },
+    { id: 100, name: 'Profs / Personnels' }
+];
+
+/* Emplois du temps du vendredi 13 février (h08 → h17). */
+var STUDENTS = [
+    { id: 18, nom: 'AUBERT',    prenom: 'Maxime',    classId: 3,  sched: ['A101', null, 'B204', 'B204', null, 'CDI', 'CDI', null, null, null] },
+    { id: 1,  nom: 'BERTRAND',  prenom: 'Hugo',      classId: 3,  sched: [null, null, 'B204', 'B204', null, 'B204', 'Gymnase', null, null, null] },
+    { id: 2,  nom: 'BONNET',    prenom: 'Chloé',     classId: 7,  sched: ['B102', 'B102', null, 'A203', null, null, 'A203', 'A203', null, null] },
+    { id: 3,  nom: 'CHEVALIER', prenom: 'Inès',      classId: 7,  sched: [null, 'A203', 'A203', null, null, 'B102', 'B102', null, null, null] },
+    { id: 4,  nom: 'COLIN',     prenom: 'Nathan',    classId: 3,  sched: ['Ateliers 2', null, null, 'Ateliers 2', null, null, 'A101', 'A101', null, null] },
+    { id: 5,  nom: 'DUPONT',    prenom: 'Alexandre', classId: 7,  sched: ['B102', null, 'B102', 'A203', null, null, 'A203', 'A203', null, null] },
+    { id: 6,  nom: 'FABRE',     prenom: 'Thomas',    classId: 12, sched: ['C201', 'C201', null, null, null, 'Gymnase', 'C201', null, null, null] },
+    { id: 7,  nom: 'GIRARD',    prenom: 'Emma',      classId: 21, sched: [null, 'Ateliers 1', 'Ateliers 1', null, null, 'C305', 'C305', null, null, null] },
+    { id: 8,  nom: 'VARLIN',    prenom: 'Lenny',     classId: 21, sched: [null, 'C305', null, 'C305', null, null, null, null, 'C201', null] },
+    { id: 9,  nom: 'LEROY',     prenom: 'Camille',   classId: 21, sched: [null, 'Ateliers 1', 'Ateliers 1', null, null, 'C305', 'C305', null, null, null] },
+    { id: 19, nom: 'MARESCAL',  prenom: 'Théo',      classId: 99, sched: ['Ateliers 2', 'Ateliers 2', null, 'A101', null, 'A101', null, 'CDI', 'CDI', null] },
+    { id: 10, nom: 'MARTIN',    prenom: 'Lucas',     classId: 3,  sched: ['A101', 'A101', 'B204', 'CDI', null, 'Ateliers 2', 'Gymnase', 'A101', null, null] },
+    { id: 11, nom: 'MERCIER',   prenom: 'Julie',     classId: 12, sched: ['C201', 'C201', null, null, null, 'Gymnase', 'C201', null, null, null] },
+    { id: 12, nom: 'MOREAU',    prenom: 'Rayan',     classId: 3,  sched: [null, 'B204', 'B204', null, null, 'CDI', 'CDI', 'A101', null, null] },
+    { id: 13, nom: 'PETIT',     prenom: 'Manon',     classId: 7,  sched: [null, null, null, null, null, null, null, null, null, null] },
+    { id: 14, nom: 'RUELLE',    prenom: 'Manon',     classId: 98, sched: ['A203', null, 'A203', null, null, 'B102', null, null, 'B102', null] },
+    { id: 15, nom: 'ROUSSEAU',  prenom: 'Léa',       classId: 12, sched: ['C201', null, null, 'C201', null, null, null, 'CDI', null, null] },
+    { id: 16, nom: 'ROUX',      prenom: 'Sarah',     classId: 12, sched: [null, 'C201', 'C201', null, null, 'Gymnase', 'C201', null, null, null] },
+    { id: 17, nom: 'SANTOS',    prenom: 'Marie',     classId: 3,  sched: [null, 'A101', 'B204', 'B204', null, null, null, null, null, null] },
+
+    /* --- Personnel enseignant (Profs / Personnels) --- */
+    { id: 50, nom: 'DUBREUIL',  prenom: 'Sandrine',  classId: 100, sched: ['A101', 'A101', null, 'B204', null, null, 'A203', 'A203', null, null] },
+    { id: 51, nom: 'FONTAINE',  prenom: 'Marc',      classId: 100, sched: [null, 'Ateliers 1', 'Ateliers 1', null, null, 'Ateliers 2', 'Ateliers 2', null, null, null] },
+    { id: 52, nom: 'LEGRAND',   prenom: 'Nadia',     classId: 100, sched: ['C201', null, 'C201', 'C201', null, null, null, 'C305', 'C305', null] },
+    { id: 53, nom: 'PASCAL',    prenom: 'Julien',    classId: 100, sched: [null, null, 'B102', 'B102', null, 'Gymnase', 'Gymnase', null, null, null] }
+];
+
+/* Roses reçues, par identifiant d'élève. */
+var GIFTS = {
+    10: [{ order: 143, paid: false, anon: false, buyer: 'Emma GIRARD', roses: [{ q: 2, name: 'Rose Rouge' }], msg: 'Ceci est une tentative de drague ;)', state: 'wait' }],
+    5:  [{ order: 142, paid: false, anon: false, buyer: 'Chloé BONNET', roses: [{ q: 3, name: 'Rose Rouge' }], msg: "Je t'aime <3", state: 'wait' }],
+    9:  [{ order: 142, paid: false, anon: true,  buyer: 'Chloé BONNET', roses: [{ q: 1, name: 'Rose Rose' }], msg: 'Admirateur secret...', state: 'wait' }],
+    17: [{ order: 141, paid: true,  anon: true,  buyer: 'Maxime AUBERT', roses: [{ q: 1, name: 'Rose Rouge' }], msg: '', state: 'done', at: '13/02 12:58' }],
+    4:  [{ order: 140, paid: true,  anon: false, buyer: 'Julie MERCIER', roses: [{ q: 2, name: 'Rose Rose' }], msg: "Je t'aime <3", state: 'ready' }],
+    16: [{ order: 140, paid: true,  anon: false, buyer: 'Julie MERCIER', roses: [{ q: 1, name: 'Rose Blanche' }], msg: "Merci d'être là pour moi :)", state: 'wait' }],
+    15: [{ order: 139, paid: true,  anon: false, buyer: 'Thomas FABRE', roses: [{ q: 1, name: 'Rose Blanche' }], msg: 'Tu gères, change rien B-)', state: 'wait' }],
+    1:  [{ order: 138, paid: true,  anon: false, buyer: 'Inès CHEVALIER', roses: [{ q: 3, name: 'Rose Rouge' }], msg: 'Juste pour te voir sourire :)', state: 'ready' }],
+    13: [{ order: 137, paid: true,  anon: false, buyer: 'Rayan MOREAU', roses: [{ q: 1, name: 'Rose Rouge' }, { q: 1, name: 'Rose Rose' }], msg: "Merci d'être là pour moi :)", state: 'ready' }],
+    8:  [{ order: 136, paid: false, anon: true,  buyer: 'Théo MARESCAL', roses: [{ q: 1, name: 'Rose Rose' }], msg: '', state: 'wait' }],
+    14: [{ order: 135, paid: true,  anon: false, buyer: 'Théo MARESCAL', roses: [{ q: 2, name: 'Rose Rouge' }], msg: "Je t'aime <3", state: 'wait' }]
+};
+
+var view = 'list';
+
+function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function className(id) {
+    var c = CLASSES.filter(function (x) { return x.id === id; })[0];
+    return c ? c.name : null;
+}
+
+function matches(stu, q) {
+    if (!q) return true;
+    var hay = (stu.nom + ' ' + stu.prenom + ' ' + stu.id + ' ' + (className(stu.classId) || '')).toLowerCase();
+    return hay.indexOf(q) !== -1;
+}
+
+function renderList(q) {
+    var rows = STUDENTS.filter(function (s) { return matches(s, q); });
+    document.getElementById('result-count').textContent = rows.length;
+
+    document.getElementById('student-rows').innerHTML = rows.map(function (s) {
+        var cn = className(s.classId);
+        return ''
+        + '<tr class="cursor-pointer hover-shadow" onclick="openStudentModal(' + s.id + ')">'
+        +   '<td><span class="badge bg-secondary">' + s.id + '</span></td>'
+        +   '<td class="fw-bold">' + esc(s.nom) + '</td>'
+        +   '<td>' + esc(s.prenom) + '</td>'
+        +   '<td>' + (cn ? '<span class="badge bg-primary">' + esc(cn) + '</span>' : '<span class="text-muted small">Sans classe</span>') + '</td>'
+        +   '<td class="small text-muted">#' + s.classId + '</td>'
+        +   '<td class="text-end"><button class="btn btn-sm btn-outline-info"><i class="fas fa-eye"></i> Détails</button></td>'
+        + '</tr>';
+    }).join('') || '<tr><td colspan="6" class="text-center text-muted py-4">Aucun élève trouvé.</td></tr>';
+}
+
+function renderClasses(q) {
+    var list = CLASSES.filter(function (c) {
+        return !q || c.name.toLowerCase().indexOf(q) !== -1 || String(c.id).indexOf(q) !== -1;
+    });
+
+    document.getElementById('accordionClasses').innerHTML = list.map(function (c) {
+        var students = STUDENTS.filter(function (s) { return s.classId === c.id; });
+        var items = students.map(function (s) {
+            return ''
+            + '<li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center cursor-pointer" onclick="openStudentModal(' + s.id + ')">'
+            +   '<div><span class="badge bg-light text-dark border me-2">#' + s.id + '</span>'
+            +     '<strong>' + esc(s.nom) + '</strong> ' + esc(s.prenom) + '</div>'
+            +   '<i class="fas fa-chevron-right text-muted small"></i>'
+            + '</li>';
+        }).join('') || '<li class="list-group-item text-muted fst-italic">Aucun élève dans cette classe.</li>';
+
+        return ''
+        + '<div class="accordion-item mb-2 shadow-sm border-0">'
+        +   '<h2 class="accordion-header">'
+        +     '<button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' + c.id + '">'
+        +       '<span class="badge bg-primary me-2">' + esc(c.name) + '</span>'
+        +       '<span class="small text-muted me-auto">ID Classe: ' + c.id + '</span>'
+        +       '<span class="badge bg-secondary rounded-pill">' + students.length + ' élèves</span>'
+        +     '</button>'
+        +   '</h2>'
+        +   '<div id="collapse' + c.id + '" class="accordion-collapse collapse" data-bs-parent="#accordionClasses">'
+        +     '<div class="accordion-body p-0"><ul class="list-group list-group-flush">' + items + '</ul></div>'
+        +   '</div>'
+        + '</div>';
+    }).join('') || '<div class="alert alert-warning">Aucune classe trouvée.</div>';
+}
+
+function refresh() {
+    var q = document.getElementById('dir-search').value.trim().toLowerCase();
+    if (view === 'list') renderList(q); else renderClasses(q);
+}
+
+/* ---------- Fiche élève ---------- */
+function openStudentModal(id) {
+    var body = document.getElementById('studentModalBody');
+    body.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-info"></div></div>';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('studentModal')).show();
+
+    setTimeout(function () {
+        var s = STUDENTS.filter(function (x) { return x.id === id; })[0];
+        var hasSchedule = s.sched.some(function (r) { return r !== null; });
+
+        var html = ''
+            + '<div class="text-center mb-4">'
+            +   '<h3 class="fw-bold text-primary mb-0">' + esc(s.prenom + ' ' + s.nom) + '</h3>'
+            +   '<span class="badge bg-secondary">ID Élève: ' + s.id + '</span> '
+            +   '<span class="badge bg-dark">Classe: ' + esc(className(s.classId) || 'Inconnue') + '</span>'
+            + '</div>'
+            + '<h5 class="border-bottom pb-2 mb-3 text-info"><i class="fas fa-calendar-alt"></i> Localisation (Vendredi 13 Février)</h5>';
+
+        if (hasSchedule) {
+            html += '<div class="table-responsive mb-4"><table class="table table-bordered table-sm text-center">'
+                  + '<thead class="table-light"><tr>'
+                  + '<th>08h</th><th>09h</th><th>10h</th><th>11h</th><th>12h</th><th>13h</th><th>14h</th><th>15h</th><th>16h</th><th>17h</th>'
+                  + '</tr></thead><tbody><tr>'
+                  + s.sched.map(function (r) {
+                        return '<td>' + (r ? '<strong class="text-primary">' + esc(r) + '</strong>' : '<span class="text-muted small">-</span>') + '</td>';
+                    }).join('')
+                  + '</tr></tbody></table></div>';
+        } else {
+            html += '<div class="alert alert-warning py-2 mb-4"><i class="fas fa-exclamation-triangle"></i> Aucun emploi du temps enregistré pour cet élève.</div>';
+        }
+
+        html += '<h5 class="border-bottom pb-2 mb-3"><i class="fas fa-gift"></i> Historique des Roses Reçues</h5>';
+
+        var gifts = GIFTS[id];
+        if (!gifts) {
+            html += '<div class="alert alert-info text-center">Cet élève n\'a reçu aucune rose pour le moment.</div>';
+        } else {
+            html += '<div class="table-responsive"><table class="table table-sm table-bordered">'
+                  + '<thead class="table-light"><tr><th>Cmd</th><th>De la part de</th><th>Contenu</th><th>Statut</th></tr></thead><tbody>';
+
+            gifts.forEach(function (g) {
+                var from = g.anon
+                    ? '<span class="badge bg-dark" title="Vrai nom : ' + esc(g.buyer) + '"><i class="fas fa-user-secret"></i> Anonyme</span>'
+                      + '<div class="small text-muted fst-italic mt-1">' + esc(g.buyer) + '</div>'
+                    : esc(g.buyer);
+
+                var roses = '<ul class="list-unstyled mb-1 small">'
+                    + g.roses.map(function (r) { return '<li>' + r.q + ' × ' + esc(r.name) + '</li>'; }).join('')
+                    + '</ul>';
+                if (g.msg) {
+                    roses += '<div class="alert alert-secondary p-1 mb-0 small"><i class="fas fa-quote-left"></i> <em>' + esc(g.msg) + '</em></div>';
+                }
+
+                var status = g.state === 'done'
+                    ? '<span class="badge bg-success">Distribué</span><div class="small text-muted">' + esc(g.at) + '</div>'
+                    : (g.state === 'ready' ? '<span class="badge bg-info text-dark">Prêt</span>' : '<span class="badge bg-secondary">En attente</span>');
+
+                html += '<tr>'
+                      + '<td class="fw-bold">#' + ('000' + g.order).slice(-4)
+                      + (!g.paid ? '<div class="mt-1"><span class="badge bg-warning text-dark" title="Commande non payée">⚠️ Impayé</span></div>' : '')
+                      + '</td>'
+                      + '<td>' + from + '</td>'
+                      + '<td>' + roses + '</td>'
+                      + '<td>' + status + '</td>'
+                      + '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+        }
+
+        body.innerHTML = html;
+    }, 300);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    refresh();
+
+    document.getElementById('dir-form').addEventListener('submit', function (e) { e.preventDefault(); refresh(); });
+    document.getElementById('dir-search').addEventListener('input', refresh);
+
+    document.getElementById('btn-list').addEventListener('click', function (e) {
+        e.preventDefault();
+        view = 'list';
+        this.className = 'btn btn-primary';
+        document.getElementById('btn-classes').className = 'btn btn-outline-primary';
+        document.getElementById('view-list').classList.remove('d-none');
+        document.getElementById('view-classes').classList.add('d-none');
+        refresh();
+    });
+
+    document.getElementById('btn-classes').addEventListener('click', function (e) {
+        e.preventDefault();
+        view = 'classes';
+        this.className = 'btn btn-primary';
+        document.getElementById('btn-list').className = 'btn btn-outline-primary';
+        document.getElementById('view-classes').classList.remove('d-none');
+        document.getElementById('view-list').classList.add('d-none');
+        refresh();
+    });
+});
+</script>
+</body>
+</html>

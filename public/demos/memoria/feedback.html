@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Feedback — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Feedback</h1>
+        <div class="page-subtitle">Retours d'expérience et signalements de bugs — tes envois précédents et leur suivi.</div>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('gn-feedback-modal').classList.add('open')">+ Nouveau retour</button>
+</div>
+
+<div class="card"><div class="card-body">
+    <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="border:1px solid var(--gris-200);border-radius:var(--radius-lg);padding:14px 18px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+                <div>
+                    <span class="badge" style="background:#fef2f2;color:#991b1b;margin-right:6px">
+                        🐛 Bug
+                    </span>
+                    <strong>Le calendrier ne garde pas la vue « Année »</strong>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                    <span class="badge" style="background:#dcfce7;color:#15803d">Résolu</span>
+                    <small style="color:var(--gris-400)">21/08/2026</small>
+                </div>
+            </div>
+            <p style="font-size:14px;color:var(--gris-700);white-space:pre-wrap;margin-bottom:10px">Quand je choisis la vue Année et que je change de mois, ça revient sur Mois au rechargement.</p>
+            <div style="background:var(--gris-50);border-radius:8px;padding:10px 14px;margin-top:6px">
+                <div style="font-size:11px;font-weight:700;color:var(--gris-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Réponse</div>
+                <div style="font-size:14px;color:var(--gris-700);white-space:pre-wrap">Corrigé : la vue par défaut est désormais un réglage du profil (Préférences).</div>
+            </div>
+        </div>
+        <div style="border:1px solid var(--gris-200);border-radius:var(--radius-lg);padding:14px 18px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+                <div>
+                    <span class="badge" style="background:#eff6ff;color:#1d4ed8;margin-right:6px">
+                        💬 Retour
+                    </span>
+                    <strong>Super pratique pour le suivi des paiements</strong>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                    <span class="badge" style="background:#eff6ff;color:#1d4ed8">Lu</span>
+                    <small style="color:var(--gris-400)">02/07/2026</small>
+                </div>
+            </div>
+            <p style="font-size:14px;color:var(--gris-700);white-space:pre-wrap;margin-bottom:0">Le badge « Non payée » après un mois est vraiment utile, ça m&#39;a permis de relancer deux bulletins.</p>
+        </div>
+        <div style="border:1px solid var(--gris-200);border-radius:var(--radius-lg);padding:14px 18px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+                <div>
+                    <span class="badge" style="background:#fef2f2;color:#991b1b;margin-right:6px">
+                        🐛 Bug
+                    </span>
+                    <strong>Carte lente sur mobile avec les compétences</strong>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                    <span class="badge" style="background:#fef9c3;color:#a16207">En cours</span>
+                    <small style="color:var(--gris-400)">14/06/2026</small>
+                </div>
+            </div>
+            <p style="font-size:14px;color:var(--gris-700);white-space:pre-wrap;margin-bottom:10px">Sur téléphone, l&#39;affichage des compétences territoriales met une dizaine de secondes.</p>
+            <div style="background:var(--gris-50);border-radius:8px;padding:10px 14px;margin-top:6px">
+                <div style="font-size:11px;font-weight:700;color:var(--gris-500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Réponse</div>
+                <div style="font-size:14px;color:var(--gris-700);white-space:pre-wrap">Les polygones sont maintenant simplifiés côté serveur et rendus en canvas. Encore un peu lent sur les très gros départements.</div>
+            </div>
+        </div>
+    </div>
+</div></div>
+</main>
+</body>
+</html>

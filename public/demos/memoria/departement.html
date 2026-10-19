@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Mon département — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Mon département</h1>
+        <div class="page-subtitle">En réserve, tu peux être appelé dans toutes les unités de ton département. Si tu déménages, transfère ton affectation ici.</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head"><div class="card-title">Affectation courante</div></div>
+    <div class="card-body">
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+            <div style="font-size:46px;font-weight:800;color:var(--bleu-texte);background:rgba(0,35,149,.06);padding:14px 22px;border-radius:14px">
+                11
+            </div>
+            <div>
+                <div style="font-size:22px;font-weight:700">Aude</div>
+                <div style="color:var(--gris-500)">Occitanie</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head"><div class="card-title">Transférer mon dossier (déménagement)</div></div>
+    <div class="card-body">
+        <p style="margin-bottom:14px;color:var(--gris-700)">
+            Le transfert clôture l'affectation actuelle la veille de la date choisie et ouvre une nouvelle affectation.
+            <strong>Tes lieux et missions existants restent intacts</strong> — ils gardent leur département d'origine.
+        </p>
+        <form onsubmit="return gnDemoBlock('Transfert de département')">
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="departement_code">Nouveau département</label>
+                    <select name="departement_code" id="departement_code">
+                        <option value="09">09 — Ariège</option>
+                        <option value="31">31 — Haute-Garonne</option>
+                        <option value="34">34 — Hérault</option>
+                        <option value="66">66 — Pyrénées-Orientales</option>
+                        <option value="81">81 — Tarn</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="date_effet">Date d'effet du transfert</label>
+                    <input type="date" id="date_effet" name="date_effet" value="2026-09-04">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">
+                    Effectuer le transfert
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head"><div class="card-title">Historique des affectations</div></div>
+    <div class="card-body">
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>Département</th><th>Région</th><th>Du</th><th>Au</th><th>Statut</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><strong>11</strong> — Aude</td>
+                    <td>Occitanie</td>
+                    <td>01/03/2024</td>
+                    <td>—</td>
+                    <td><span class="badge badge-vert">En cours</span></td>
+                </tr>
+                <tr>
+                    <td><strong>34</strong> — Hérault</td>
+                    <td>Occitanie</td>
+                    <td>15/09/2023</td>
+                    <td>29/02/2024</td>
+                    <td><span class="badge">Terminée</span></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+</main>
+</body>
+</html>

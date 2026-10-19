@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Missions — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Mes missions</h1>
+        <div class="page-subtitle">Chaque mission couvre une unité et une plage de jours ; le détail (horaires, contenu) se saisit par service.</div>
+    </div>
+    <a href="missions.html?action=add" class="btn btn-primary">+ Nouvelle mission</a>
+</div>
+
+        <!-- ═══ Vue « cartes » — écrans étroits (≤ 720 px), voir .missions-cards dans style.css ═══ -->
+        <div class="missions-cards">
+            <div class="mm-card" data-mid="103">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">03/10/2026 → 04/10/2026</span>
+                        <span class="mm-dur">(2 j)</span>
+                        <span class="mm-state avenir">À venir</span>
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">BTA</span>
+                        <a href="unites.html#u-bta-castelnaudary">Castelnaudary</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>2 services</span>
+                        <span class="mm-pay"><span style="color:var(--gris-400);font-size:12px">—</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(104)">
+                            <div class="mm-svc-h">
+                                <span>03/10/2026</span>
+                                <span>06h00–14h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort brigade — surveillance générale.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(105)">
+                            <div class="mm-svc-h">
+                                <span>04/10/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort brigade — interventions et patrouilles.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=103">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="102">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">21/09/2026</span>
+                        
+                        <span class="mm-state avenir">À venir</span>
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">SRJ</span>
+                        <a href="unites.html#u-srj-carcassonne">Service Réserve Jeunesse de Carcassonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#8b5cf6;color:#fff">Formation</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>1 service</span>
+                        <span class="mm-pay"><span class="badge" style="background:var(--gris-100);color:var(--gris-600)">Bénévole</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(103)">
+                            <div class="mm-svc-h">
+                                <span>21/09/2026</span>
+                                <span>08h30–17h00</span>
+                                <span class="mm-svc-dur">8h30</span>
+                            </div>
+                            <div class="mm-svc-c">Formation continue — actualisation des techniques d&#39;intervention.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=102">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="101">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">14/09/2026 → 16/09/2026</span>
+                        <span class="mm-dur">(3 j)</span>
+                        <span class="mm-state avenir">À venir</span>
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">BP</span>
+                        <a href="unites.html#u-bp-carcassonne">Carcassonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>2 services</span>
+                        <span class="mm-pay"><span style="color:var(--gris-400);font-size:12px">—</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(101)">
+                            <div class="mm-svc-h">
+                                <span>14/09/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Patrouille de sécurisation en centre-ville, marché hebdomadaire. RAS, effectif complet.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(102)">
+                            <div class="mm-svc-h">
+                                <span>15/09/2026</span>
+                                <span>20h00–04h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Service de nuit — contrôles routiers RD118.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=101">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="201">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">21/08/2026 → 22/08/2026</span>
+                        <span class="mm-dur">(2 j)</span>
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">BP</span>
+                        <a href="unites.html#u-bp-narbonne">Narbonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>2 services</span>
+                        <span class="mm-pay"><span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(202)">
+                            <div class="mm-svc-h">
+                                <span>21/08/2026</span>
+                                <span>06h00–14h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Patrouille littoral — plages et parkings, forte affluence.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(201)">
+                            <div class="mm-svc-h">
+                                <span>22/08/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Sécurisation du festival — dispositif estival, deux interpellations pour ivresse publique. Bonne coordination avec la police municipale.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=201">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="202">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">19/07/2026</span>
+                        
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">BP</span>
+                        <a href="unites.html#u-bp-trebes">Trèbes</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>1 service</span>
+                        <span class="mm-pay"><span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(203)">
+                            <div class="mm-svc-h">
+                                <span>19/07/2026</span>
+                                <span>20h00–02h00</span>
+                                <span class="mm-svc-dur">6h</span>
+                            </div>
+                            <div class="mm-svc-c">Dispositif fête locale — surveillance abords et sorties de bal.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=202">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="203">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">14/07/2026</span>
+                        
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">SRJ</span>
+                        <a href="unites.html#u-srj-carcassonne">Service Réserve Jeunesse de Carcassonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#f59e0b;color:#fff">Cérémonie</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>1 service</span>
+                        <span class="mm-pay"><span class="badge" style="background:var(--gris-100);color:var(--gris-600)">Bénévole</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(204)">
+                            <div class="mm-svc-h">
+                                <span>14/07/2026</span>
+                                <span>09h00–12h30</span>
+                                <span class="mm-svc-dur">3h30</span>
+                            </div>
+                            <div class="mm-svc-c">Cérémonie du 14 juillet — service d&#39;honneur.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=203">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="204">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">03/07/2026 → 05/07/2026</span>
+                        <span class="mm-dur">(3 j)</span>
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">BP</span>
+                        <a href="unites.html#u-bp-narbonne">Narbonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>3 services</span>
+                        <span class="mm-pay"><span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(205)">
+                            <div class="mm-svc-h">
+                                <span>03/07/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort estival — patrouilles pédestres centre-ville.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(206)">
+                            <div class="mm-svc-h">
+                                <span>04/07/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort estival — marché nocturne.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(207)">
+                            <div class="mm-svc-h">
+                                <span>05/07/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort estival — patrouilles pédestres centre-ville.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=204">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="205">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">21/04/2026 → 25/04/2026</span>
+                        <span class="mm-dur">(5 j)</span>
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">PMO</span>
+                        <a href="unites.html#u-pmo-narbonne">Peloton motorisé de Narbonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>4 services</span>
+                        <span class="mm-pay"><span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(208)">
+                            <div class="mm-svc-h">
+                                <span>21/04/2026</span>
+                                <span>08h00–16h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Surveillance autoroutière A61 — contrôles de vitesse.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(209)">
+                            <div class="mm-svc-h">
+                                <span>22/04/2026</span>
+                                <span>08h00–16h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Surveillance autoroutière A61 — accident matériel, régulation.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(210)">
+                            <div class="mm-svc-h">
+                                <span>24/04/2026</span>
+                                <span>08h00–16h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Escorte convoi exceptionnel.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(211)">
+                            <div class="mm-svc-h">
+                                <span>25/04/2026</span>
+                                <span>08h00–16h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Contrôles routiers RD6113.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=205">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="206">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">02/04/2026</span>
+                        
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">SRJ</span>
+                        <a href="unites.html#u-srj-carcassonne">Service Réserve Jeunesse de Carcassonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#8b5cf6;color:#fff">Formation</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>1 service</span>
+                        <span class="mm-pay"><span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(212)">
+                            <div class="mm-svc-h">
+                                <span>02/04/2026</span>
+                                <span>08h30–17h00</span>
+                                <span class="mm-svc-dur">8h30</span>
+                            </div>
+                            <div class="mm-svc-c">Formation — recueil de plainte et procédure simplifiée.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=206">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="207">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">14/03/2026 → 16/03/2026</span>
+                        <span class="mm-dur">(3 j)</span>
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">BP</span>
+                        <a href="unites.html#u-bp-quillan">Quillan</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>3 services</span>
+                        <span class="mm-pay"><span class="badge" style="background:#fff7ed;color:#c2410c;border:1px solid #fed7aa">⚠ Non payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(213)">
+                            <div class="mm-svc-h">
+                                <span>14/03/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort week-end — secteur haute vallée.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(214)">
+                            <div class="mm-svc-h">
+                                <span>15/03/2026</span>
+                                <span>14h00–22h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort week-end — patrouilles secteur rural.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(215)">
+                            <div class="mm-svc-h">
+                                <span>16/03/2026</span>
+                                <span>06h00–14h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Renfort — surveillance générale.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=207">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mm-card" data-mid="208">
+                <div class="mm-card-head" onclick="mmToggleCard(this, event)">
+                    <div class="mm-row1">
+                        <span class="mm-dates">01/02/2026 → 02/02/2026</span>
+                        <span class="mm-dur">(2 j)</span>
+                        
+                    </div>
+                    <div class="mm-unit">
+                        <span class="badge badge-bleu">PSIG</span>
+                        <a href="unites.html#u-psig-carcassonne">PSIG de Carcassonne</a>
+                    </div>
+                    <div class="mm-meta">
+                        <span class="badge" style="background:#22c55e;color:#fff">Renfort</span>
+                        <span class="badge">11</span>
+                        <span class="mm-svc-toggle"><span class="mm-chevron">▸</span>2 services</span>
+                        <span class="mm-pay"><span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span></span>
+                    </div>
+                </div>
+                <div class="mm-services">
+                        <div class="mm-svc" onclick="openServiceDetail(216)">
+                            <div class="mm-svc-h">
+                                <span>01/02/2026</span>
+                                <span>20h00–04h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Patrouille de nuit — secteur périurbain.</div>
+                        </div>
+                        <div class="mm-svc" onclick="openServiceDetail(217)">
+                            <div class="mm-svc-h">
+                                <span>02/02/2026</span>
+                                <span>20h00–04h00</span>
+                                <span class="mm-svc-dur">8h</span>
+                            </div>
+                            <div class="mm-svc-c">Patrouille de nuit — contrôles et surveillance.</div>
+                        </div>
+                </div>
+                <div class="mm-actions">
+                    <a class="btn btn-sm" href="missions.html?action=edit&id=208">Détail / modifier</a>
+                    <form onsubmit="return gnDemoBlock('Suppression de mission')" class="mission-delete-form">
+                        <button type="submit" class="btn btn-sm btn-danger">Suppr.</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Vue tableau — écrans larges ═══ -->
+        <div class="card missions-table">
+        <div class="card-body">
+            <div class="table-wrap">
+            <table class="data-table rt-skip">
+                <thead>
+                    <tr><th>Date(s)</th><th>Unité</th><th>Type</th><th>Dépt</th><th>Services</th><th>Paiement</th><th class="actions">Actions</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="mission-row" data-mid="103" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>03/10/2026</strong>
+                            <span style="color:var(--gris-500)"> → 04/10/2026</span>
+                            <small style="color:var(--gris-400)">(2 jours)</small>
+                             <span class="badge" style="background:var(--bleu);color:#fff;font-size:10px">À venir</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">BTA</span>
+                            <a href="unites.html#u-bta-castelnaudary"
+                               style="font-weight:500;color:inherit;text-decoration:none">Castelnaudary</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-103" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            2 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span style="color:var(--gris-400);font-size:12px">—</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=103">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-103" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="104" style="cursor:pointer">
+                                            <td>03/10/2026</td>
+                                            <td>06h00 – 14h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort brigade — surveillance générale.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="105" style="cursor:pointer">
+                                            <td>04/10/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort brigade — interventions et patrouilles.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="102" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>21/09/2026</strong>
+                            
+                            
+                             <span class="badge" style="background:var(--bleu);color:#fff;font-size:10px">À venir</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">SRJ</span>
+                            <a href="unites.html#u-srj-carcassonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Service Réserve Jeunesse de Carcassonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#8b5cf6;color:#fff">Formation</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-102" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            1 service
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:var(--gris-100);color:var(--gris-600)">Bénévole</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=102">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-102" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="103" style="cursor:pointer">
+                                            <td>21/09/2026</td>
+                                            <td>08h30 – 17h00</td>
+                                            <td>8h30</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Formation continue — actualisation des techniques d&#39;intervention.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="101" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>14/09/2026</strong>
+                            <span style="color:var(--gris-500)"> → 16/09/2026</span>
+                            <small style="color:var(--gris-400)">(3 jours)</small>
+                             <span class="badge" style="background:var(--bleu);color:#fff;font-size:10px">À venir</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">BP</span>
+                            <a href="unites.html#u-bp-carcassonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Carcassonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-101" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            2 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span style="color:var(--gris-400);font-size:12px">—</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=101">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-101" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="101" style="cursor:pointer">
+                                            <td>14/09/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Patrouille de sécurisation en centre-ville, marché hebdomadaire. RAS, effectif c…</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="102" style="cursor:pointer">
+                                            <td>15/09/2026<br><small>→ 16/09/2026</small></td>
+                                            <td>20h00 – 04h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Service de nuit — contrôles routiers RD118.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="201" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>21/08/2026</strong>
+                            <span style="color:var(--gris-500)"> → 22/08/2026</span>
+                            <small style="color:var(--gris-400)">(2 jours)</small>
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">BP</span>
+                            <a href="unites.html#u-bp-narbonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Narbonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-201" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            2 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=201">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-201" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="202" style="cursor:pointer">
+                                            <td>21/08/2026</td>
+                                            <td>06h00 – 14h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Patrouille littoral — plages et parkings, forte affluence.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="201" style="cursor:pointer">
+                                            <td>22/08/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Sécurisation du festival — dispositif estival, deux interpellations pour ivresse…</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="202" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>19/07/2026</strong>
+                            
+                            
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">BP</span>
+                            <a href="unites.html#u-bp-trebes"
+                               style="font-weight:500;color:inherit;text-decoration:none">Trèbes</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-202" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            1 service
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=202">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-202" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="203" style="cursor:pointer">
+                                            <td>19/07/2026<br><small>→ 20/07/2026</small></td>
+                                            <td>20h00 – 02h00</td>
+                                            <td>6h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Dispositif fête locale — surveillance abords et sorties de bal.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="203" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>14/07/2026</strong>
+                            
+                            
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">SRJ</span>
+                            <a href="unites.html#u-srj-carcassonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Service Réserve Jeunesse de Carcassonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#f59e0b;color:#fff">Cérémonie</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-203" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            1 service
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:var(--gris-100);color:var(--gris-600)">Bénévole</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=203">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-203" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="204" style="cursor:pointer">
+                                            <td>14/07/2026</td>
+                                            <td>09h00 – 12h30</td>
+                                            <td>3h30</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Cérémonie du 14 juillet — service d&#39;honneur.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="204" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>03/07/2026</strong>
+                            <span style="color:var(--gris-500)"> → 05/07/2026</span>
+                            <small style="color:var(--gris-400)">(3 jours)</small>
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">BP</span>
+                            <a href="unites.html#u-bp-narbonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Narbonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-204" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            3 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=204">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-204" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="205" style="cursor:pointer">
+                                            <td>03/07/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort estival — patrouilles pédestres centre-ville.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="206" style="cursor:pointer">
+                                            <td>04/07/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort estival — marché nocturne.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="207" style="cursor:pointer">
+                                            <td>05/07/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort estival — patrouilles pédestres centre-ville.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="205" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>21/04/2026</strong>
+                            <span style="color:var(--gris-500)"> → 25/04/2026</span>
+                            <small style="color:var(--gris-400)">(5 jours)</small>
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">PMO</span>
+                            <a href="unites.html#u-pmo-narbonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Peloton motorisé de Narbonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-205" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            4 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=205">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-205" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="208" style="cursor:pointer">
+                                            <td>21/04/2026</td>
+                                            <td>08h00 – 16h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Surveillance autoroutière A61 — contrôles de vitesse.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="209" style="cursor:pointer">
+                                            <td>22/04/2026</td>
+                                            <td>08h00 – 16h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Surveillance autoroutière A61 — accident matériel, régulation.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="210" style="cursor:pointer">
+                                            <td>24/04/2026</td>
+                                            <td>08h00 – 16h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Escorte convoi exceptionnel.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="211" style="cursor:pointer">
+                                            <td>25/04/2026</td>
+                                            <td>08h00 – 16h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Contrôles routiers RD6113.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="206" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>02/04/2026</strong>
+                            
+                            
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">SRJ</span>
+                            <a href="unites.html#u-srj-carcassonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">Service Réserve Jeunesse de Carcassonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#8b5cf6;color:#fff">Formation</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-206" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            1 service
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=206">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-206" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="212" style="cursor:pointer">
+                                            <td>02/04/2026</td>
+                                            <td>08h30 – 17h00</td>
+                                            <td>8h30</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Formation — recueil de plainte et procédure simplifiée.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="207" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>14/03/2026</strong>
+                            <span style="color:var(--gris-500)"> → 16/03/2026</span>
+                            <small style="color:var(--gris-400)">(3 jours)</small>
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">BP</span>
+                            <a href="unites.html#u-bp-quillan"
+                               style="font-weight:500;color:inherit;text-decoration:none">Quillan</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-207" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            3 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#fff7ed;color:#c2410c;border:1px solid #fed7aa">⚠ Non payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=207">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-207" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="213" style="cursor:pointer">
+                                            <td>14/03/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort week-end — secteur haute vallée.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="214" style="cursor:pointer">
+                                            <td>15/03/2026</td>
+                                            <td>14h00 – 22h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort week-end — patrouilles secteur rural.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="215" style="cursor:pointer">
+                                            <td>16/03/2026</td>
+                                            <td>06h00 – 14h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Renfort — surveillance générale.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr class="mission-row" data-mid="208" style="cursor:pointer">
+                        <td style="white-space:nowrap">
+                            <strong>01/02/2026</strong>
+                            <span style="color:var(--gris-500)"> → 02/02/2026</span>
+                            <small style="color:var(--gris-400)">(2 jours)</small>
+                            
+                        </td>
+                        <td>
+                            <span class="badge badge-bleu" style="margin-right:6px">PSIG</span>
+                            <a href="unites.html#u-psig-carcassonne"
+                               style="font-weight:500;color:inherit;text-decoration:none">PSIG de Carcassonne</a>
+                        </td>
+                        <td><span class="badge" style="background:#22c55e;color:#fff">Renfort</span></td>
+                        <td><span class="badge">11</span></td>
+                        <td>
+                            <span id="chevron-208" style="display:inline-block;transition:transform .15s;color:var(--gris-400)">▸</span>
+                            2 services
+                        </td>
+                        <td style="white-space:nowrap">
+                            <span class="badge" style="background:#dcfce7;color:#15803d;border:1px solid #bbf7d0">✓ Payée</span>
+                        </td>
+                        <td class="actions">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                                <a class="btn btn-sm" style="justify-content:center" href="missions.html?action=edit&amp;id=208">Détail</a>
+                                <form onsubmit="return gnDemoBlock('Suppression de mission')" style="display:flex" class="mission-delete-form">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="flex:1;justify-content:center">Suppr.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="services-row-208" style="display:none">
+                        <td colspan="7" style="background:var(--gris-50);padding:12px 16px 16px 40px">
+                                <table class="data-table rt-skip" style="background:transparent">
+                                    <thead><tr><th>Date</th><th>Horaires</th><th>Durée</th><th>Contenu</th></tr></thead>
+                                    <tbody>
+                                        <tr class="service-row" data-svc-id="216" style="cursor:pointer">
+                                            <td>01/02/2026<br><small>→ 02/02/2026</small></td>
+                                            <td>20h00 – 04h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Patrouille de nuit — secteur périurbain.</td>
+                                        </tr>
+                                        <tr class="service-row" data-svc-id="217" style="cursor:pointer">
+                                            <td>02/02/2026<br><small>→ 03/02/2026</small></td>
+                                            <td>20h00 – 04h00</td>
+                                            <td>8h</td>
+                                            <td style="max-width:300px;color:var(--gris-700);font-size:13px">Patrouille de nuit — contrôles et surveillance.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </div>
+
+    <script>
+    function toggleServices(id) {
+        const row     = document.getElementById('services-row-' + id);
+        const chevron = document.getElementById('chevron-' + id);
+        if (!row) return;
+        const isOpen = row.style.display !== 'none';
+        row.style.display = isOpen ? 'none' : 'table-row';
+        if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(90deg)';
+    }
+
+    function mmToggleCard(head, e) {
+        if (e && e.target.closest('a, button, form')) return;
+        head.closest('.mm-card').classList.toggle('open');
+    }
+
+    var missionsTable = document.querySelector('.missions-table .data-table');
+    if (missionsTable) missionsTable.addEventListener('click', function (e) {
+        if (e.target.closest('a, button, form, input')) return;
+
+        const missionRow = e.target.closest('tr.mission-row');
+        if (missionRow) { toggleServices(missionRow.dataset.mid); return; }
+
+        const serviceRow = e.target.closest('tr.service-row');
+        if (serviceRow) { openServiceDetail(parseInt(serviceRow.dataset.svcId, 10)); }
+    });
+    </script>
+
+<!-- Modale détail service (lecture seule) -->
+<div class="modal-overlay" id="service-detail-modal">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title">Détail du service</span>
+            <button class="modal-close" type="button" onclick="closeServiceDetail()">×</button>
+        </div>
+        <div class="modal-body" id="service-detail-body">…</div>
+        <div class="modal-footer">
+            <a id="service-detail-edit-link" class="btn btn-primary" href="#">✎ Modifier</a>
+            <button class="btn" type="button" onclick="closeServiceDetail()">Fermer</button>
+        </div>
+    </div>
+</div>
+</main>
+<script>
+/* DÉMO : le site réel appelle GET /api/missions?id=… ; le JSON est ici figé et
+   rendu par exactement le même code que sur le site. */
+const GN_SERVICES = {
+"104": {
+"id": 104,
+"mission_id": 103,
+"debut": "2026-10-03 06:00:00",
+"fin": "2026-10-03 14:00:00",
+"lieu_nom": "Castelnaudary",
+"lieu_type": "BTA",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort brigade — surveillance générale.",
+"interventions": []
+},
+"105": {
+"id": 105,
+"mission_id": 103,
+"debut": "2026-10-04 14:00:00",
+"fin": "2026-10-04 22:00:00",
+"lieu_nom": "Castelnaudary",
+"lieu_type": "BTA",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort brigade — interventions et patrouilles.",
+"interventions": []
+},
+"103": {
+"id": 103,
+"mission_id": 102,
+"debut": "2026-09-21 08:30:00",
+"fin": "2026-09-21 17:00:00",
+"lieu_nom": "Service Réserve Jeunesse de Carcassonne",
+"lieu_type": "SRJ",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Formation",
+"type_couleur": "#8b5cf6",
+"contenu": "Formation continue — actualisation des techniques d'intervention.",
+"interventions": []
+},
+"101": {
+"id": 101,
+"mission_id": 101,
+"debut": "2026-09-14 14:00:00",
+"fin": "2026-09-14 22:00:00",
+"lieu_nom": "Carcassonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Patrouille de sécurisation en centre-ville, marché hebdomadaire.\nRAS, effectif complet.",
+"interventions": []
+},
+"102": {
+"id": 102,
+"mission_id": 101,
+"debut": "2026-09-15 20:00:00",
+"fin": "2026-09-16 04:00:00",
+"lieu_nom": "Carcassonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Service de nuit — contrôles routiers RD118.",
+"interventions": []
+},
+"202": {
+"id": 202,
+"mission_id": 201,
+"debut": "2026-08-21 06:00:00",
+"fin": "2026-08-21 14:00:00",
+"lieu_nom": "Narbonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Patrouille littoral — plages et parkings, forte affluence.",
+"interventions": [
+{
+"type": "Contrôle routier",
+"contenu": "RD168 — 22 véhicules contrôlés, 2 amendes."
+}
+]
+},
+"201": {
+"id": 201,
+"mission_id": 201,
+"debut": "2026-08-22 14:00:00",
+"fin": "2026-08-22 22:00:00",
+"lieu_nom": "Narbonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Sécurisation du festival — dispositif estival, deux interpellations pour ivresse publique.\nBonne coordination avec la police municipale.",
+"interventions": [
+{
+"type": "Interpellation",
+"contenu": "Ivresse publique manifeste, conduite au poste."
+},
+{
+"type": "Assistance",
+"contenu": "Personne égarée raccompagnée."
+}
+]
+},
+"203": {
+"id": 203,
+"mission_id": 202,
+"debut": "2026-07-19 20:00:00",
+"fin": "2026-07-20 02:00:00",
+"lieu_nom": "Trèbes",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Dispositif fête locale — surveillance abords et sorties de bal.",
+"interventions": []
+},
+"204": {
+"id": 204,
+"mission_id": 203,
+"debut": "2026-07-14 09:00:00",
+"fin": "2026-07-14 12:30:00",
+"lieu_nom": "Service Réserve Jeunesse de Carcassonne",
+"lieu_type": "SRJ",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Cérémonie",
+"type_couleur": "#f59e0b",
+"contenu": "Cérémonie du 14 juillet — service d'honneur.",
+"interventions": []
+},
+"205": {
+"id": 205,
+"mission_id": 204,
+"debut": "2026-07-03 14:00:00",
+"fin": "2026-07-03 22:00:00",
+"lieu_nom": "Narbonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort estival — patrouilles pédestres centre-ville.",
+"interventions": []
+},
+"206": {
+"id": 206,
+"mission_id": 204,
+"debut": "2026-07-04 14:00:00",
+"fin": "2026-07-04 22:00:00",
+"lieu_nom": "Narbonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort estival — marché nocturne.",
+"interventions": []
+},
+"207": {
+"id": 207,
+"mission_id": 204,
+"debut": "2026-07-05 14:00:00",
+"fin": "2026-07-05 22:00:00",
+"lieu_nom": "Narbonne",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort estival — patrouilles pédestres centre-ville.",
+"interventions": []
+},
+"208": {
+"id": 208,
+"mission_id": 205,
+"debut": "2026-04-21 08:00:00",
+"fin": "2026-04-21 16:00:00",
+"lieu_nom": "Peloton motorisé de Narbonne",
+"lieu_type": "PMO",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Surveillance autoroutière A61 — contrôles de vitesse.",
+"interventions": []
+},
+"209": {
+"id": 209,
+"mission_id": 205,
+"debut": "2026-04-22 08:00:00",
+"fin": "2026-04-22 16:00:00",
+"lieu_nom": "Peloton motorisé de Narbonne",
+"lieu_type": "PMO",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Surveillance autoroutière A61 — accident matériel, régulation.",
+"interventions": [
+{
+"type": "Accident",
+"contenu": "Accident matériel PK 42, régulation du trafic pendant 40 min."
+}
+]
+},
+"210": {
+"id": 210,
+"mission_id": 205,
+"debut": "2026-04-24 08:00:00",
+"fin": "2026-04-24 16:00:00",
+"lieu_nom": "Peloton motorisé de Narbonne",
+"lieu_type": "PMO",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Escorte convoi exceptionnel.",
+"interventions": []
+},
+"211": {
+"id": 211,
+"mission_id": 205,
+"debut": "2026-04-25 08:00:00",
+"fin": "2026-04-25 16:00:00",
+"lieu_nom": "Peloton motorisé de Narbonne",
+"lieu_type": "PMO",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Contrôles routiers RD6113.",
+"interventions": []
+},
+"212": {
+"id": 212,
+"mission_id": 206,
+"debut": "2026-04-02 08:30:00",
+"fin": "2026-04-02 17:00:00",
+"lieu_nom": "Service Réserve Jeunesse de Carcassonne",
+"lieu_type": "SRJ",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Formation",
+"type_couleur": "#8b5cf6",
+"contenu": "Formation — recueil de plainte et procédure simplifiée.",
+"interventions": []
+},
+"213": {
+"id": 213,
+"mission_id": 207,
+"debut": "2026-03-14 14:00:00",
+"fin": "2026-03-14 22:00:00",
+"lieu_nom": "Quillan",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort week-end — secteur haute vallée.",
+"interventions": []
+},
+"214": {
+"id": 214,
+"mission_id": 207,
+"debut": "2026-03-15 14:00:00",
+"fin": "2026-03-15 22:00:00",
+"lieu_nom": "Quillan",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort week-end — patrouilles secteur rural.",
+"interventions": []
+},
+"215": {
+"id": 215,
+"mission_id": 207,
+"debut": "2026-03-16 06:00:00",
+"fin": "2026-03-16 14:00:00",
+"lieu_nom": "Quillan",
+"lieu_type": "BP",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Renfort — surveillance générale.",
+"interventions": []
+},
+"216": {
+"id": 216,
+"mission_id": 208,
+"debut": "2026-02-01 20:00:00",
+"fin": "2026-02-02 04:00:00",
+"lieu_nom": "PSIG de Carcassonne",
+"lieu_type": "PSIG",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Patrouille de nuit — secteur périurbain.",
+"interventions": []
+},
+"217": {
+"id": 217,
+"mission_id": 208,
+"debut": "2026-02-02 20:00:00",
+"fin": "2026-02-03 04:00:00",
+"lieu_nom": "PSIG de Carcassonne",
+"lieu_type": "PSIG",
+"dept_code": "11",
+"dept_nom": "Aude",
+"type_nom": "Renfort",
+"type_couleur": "#22c55e",
+"contenu": "Patrouille de nuit — contrôles et surveillance.",
+"interventions": []
+}
+};
+
+function gnEsc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function gnParseDT(s) { return new Date(s.replace(' ', 'T')); }
+function gnPad(n) { return String(n).padStart(2, '0'); }
+function gnFmtTime(d) { return gnPad(d.getHours()) + 'h' + gnPad(d.getMinutes()); }
+
+function openServiceDetail(id) {
+    const s = GN_SERVICES[id];
+    if (!s || !s.id) return;
+    const d = gnParseDT(s.debut), f = gnParseDT(s.fin);
+    const dur = (f - d) / 60000, dh = Math.floor(dur / 60), dm = dur % 60;
+    const ivHtml = (s.interventions && s.interventions.length)
+        ? s.interventions.map(iv => `
+            <div style="border:1px solid var(--gris-200);border-radius:var(--radius);padding:8px 10px;margin-bottom:8px">
+                <span class="badge badge-bleu" style="font-size:11px">${gnEsc(iv.type)}</span>
+                ${iv.contenu ? `<div style="font-size:13px;color:var(--gris-700);margin-top:4px;white-space:pre-wrap">${gnEsc(iv.contenu)}</div>` : ''}
+            </div>`).join('')
+        : '<p style="color:var(--gris-400);font-size:13px;margin:0">Aucune intervention enregistrée.</p>';
+    document.getElementById('service-detail-body').innerHTML = `
+        <p style="margin-bottom:8px"><strong>Unité :</strong> ${gnEsc(s.lieu_nom)} <span class="badge badge-bleu">${gnEsc(s.lieu_type)}</span></p>
+        <p style="margin-bottom:8px"><strong>Début :</strong> ${d.toLocaleDateString('fr-FR')} à ${gnFmtTime(d)}</p>
+        <p style="margin-bottom:8px"><strong>Fin :</strong> ${f.toLocaleDateString('fr-FR')} à ${gnFmtTime(f)}</p>
+        <p style="margin-bottom:12px"><strong>Durée :</strong> ${dh}h${dm ? String(dm).padStart(2, '0') : ''}</p>
+        <p style="margin-bottom:4px"><strong>Contenu :</strong></p>
+        <p style="white-space:pre-wrap;background:var(--gris-50);padding:12px;border-radius:8px;font-size:14px;margin-bottom:16px">${s.contenu ? gnEsc(s.contenu) : '<em>Aucun contenu renseigné</em>'}</p>
+        <p style="margin-bottom:8px"><strong>Interventions ${s.interventions && s.interventions.length ? '(' + s.interventions.length + ')' : ''} :</strong></p>
+        ${ivHtml}
+    `;
+    document.getElementById('service-detail-edit-link').href = 'missions.html?action=edit&id=' + s.mission_id + '&edit_service=' + s.id;
+    document.getElementById('service-detail-modal').classList.add('open');
+}
+function closeServiceDetail() {
+    document.getElementById('service-detail-modal').classList.remove('open');
+}
+document.getElementById('service-detail-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeServiceDetail();
+});
+</script>
+</body>
+</html>

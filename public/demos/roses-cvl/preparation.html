@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Preparation - CVL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à l'interface de préparation */
+        body { background: #f0f2f5; padding-bottom: 50px; overflow-x: hidden; }
+        .class-header { background: #4a4e69; color: white; padding: 10px 15px; border-radius: 8px 8px 0 0; margin-top: 30px; font-weight: bold; letter-spacing: 1px; }
+        .class-header.history { background: #6c757d; }
+        .student-card { background: white; border: none; border-left: 5px solid #d63384; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .student-card.done { border-left-color: #198754; opacity: 0.9; }
+        .badge-id { font-family: monospace; font-size: 0.9em; background: #e9ecef; color: #333; border: 1px solid #ccc; }
+        .rose-item { border-bottom: 1px dashed #eee; padding: 8px 0; }
+        .rose-item:last-child { border-bottom: none; }
+
+        /* Badges couleurs des roses */
+        .badge-rose-rouge { background-color: #dc3545; color: white; }
+        .badge-rose-blanche { background-color: #ffffff; color: #212529; border: 1px solid #ced4da; }
+        .badge-rose-pink { background-color: #ffc2d1; color: #880e4f; }
+
+        /* Navigation par onglets */
+        .nav-tabs .nav-link { color: #495057; font-weight: bold; cursor: pointer; }
+        .nav-tabs .nav-link.active { color: #d63384; border-bottom: 3px solid #d63384; background: transparent; }
+
+        /* Scroll horizontal pour filtres mobiles */
+        .scroll-container {
+            overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 5px;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .scroll-container::-webkit-scrollbar { display: none; }
+
+        /* Menu PDF personnalisé */
+        .pdf-dropdown-menu {
+            background-color: #fff !important; border: 1px solid rgba(0,0,0,.15); border-radius: 0.375rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .pdf-dropdown-menu .dropdown-item { color: #212529 !important; transition: background-color 0.2s; }
+        .pdf-dropdown-menu .dropdown-item:hover { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+<script src="assets/js/demo.js"></script>
+
+<div class="container my-4">
+
+    <div class="row mb-4 align-items-center">
+       <div class="col-md-7">
+            <a href="manage_orders.html" class="text-decoration-none text-muted">
+                <i class="fas fa-arrow-left"></i> Retour Tableau de bord
+            </a>
+
+            <h2 class="fw-bold text-warning mt-2"><i class="fas fa-boxes"></i> Préparation</h2>
+
+            <p class="text-muted" id="todo-caption">Reste à faire : <strong id="rose-count">4</strong> roses.</p>
+            <p class="text-muted d-none" id="done-caption">Déjà préparées : <strong id="done-count">8</strong> roses.</p>
+        </div>
+        <div class="col-md-5 text-end">
+            <div class="dropdown d-inline-block">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-print"></i> Télécharger PDF
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end pdf-dropdown-menu">
+                    <li><a class="dropdown-item" href="#" onclick="return demoNotice('Étiquettes PDF — Secondes');">Secondes</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="return demoNotice('Étiquettes PDF — Premières');">Premières</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="return demoNotice('Étiquettes PDF — Terminales');">Terminales</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="return demoNotice('Étiquettes PDF — Autres');">Autres</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item fw-bold" href="#" onclick="return demoNotice('Étiquettes PDF — tous niveaux');">TOUT IMPRIMER</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-3" id="prep-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#" data-view="todo"><i class="fas fa-clipboard-list"></i> À FAIRE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-view="done"><i class="fas fa-history"></i> TERMINÉES</a>
+        </li>
+    </ul>
+
+    <div class="d-flex justify-content-center justify-content-md-end mb-3">
+        <form class="d-flex" style="max-width: 350px; width: 100%;" id="prep-search-form">
+            <div class="input-group shadow-sm">
+                <input type="text" id="prep-search" class="form-control rounded-start-pill border-end-0 ps-3 bg-white"
+                       placeholder="Chercher (Nom, Classe...)">
+                <a href="#" class="btn btn-white bg-white border border-start-0 border-end-0 text-danger d-none" id="prep-search-clear" title="Effacer"><i class="fas fa-times"></i></a>
+                <button class="btn btn-primary rounded-end-pill px-3" type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="scroll-container mb-4">
+        <div class="btn-group shadow-sm w-100" style="min-width: max-content;" id="level-filter">
+            <a href="#" class="btn btn-light active fw-bold border-primary" data-level="all">Tout</a>
+            <a href="#" class="btn btn-light" data-level="2nde">Secondes</a>
+            <a href="#" class="btn btn-light" data-level="1ere">Premières</a>
+            <a href="#" class="btn btn-light" data-level="term">Terminales</a>
+            <a href="#" class="btn btn-light" data-level="autre">Autres</a>
+        </div>
+    </div>
+
+    <!-- ===================== VUE « À FAIRE » ===================== -->
+    <div id="view-todo">
+
+        <div class="class-group-wrapper" data-level="autre" data-class="TASSP2">
+            <div class="class-header">
+                <i class="fas fa-users me-2"></i> TASSP2
+                <span class="badge bg-light text-dark float-end student-count">1 élèves</span>
+            </div>
+            <div class="bg-white p-3 border rounded-bottom mb-4">
+                <div id="student-card-manon-ruelle" class="card student-card" data-search="manon ruelle tassp2" data-roses="2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Manon RUELLE</h5>
+                            </div>
+                            <form class="ajax-form" data-card="student-card-manon-ruelle" data-name="Manon RUELLE">
+                                <button type="submit" class="btn btn-success shadow-sm px-4"><i class="fas fa-check"></i> OK</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-rouge me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">2</span>🌹<span class="d-none d-sm-inline ms-1">Rose Rouge</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Théo</strong></small>
+                                </div>
+                                <span class="badge badge-id">#18</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="class-group-wrapper" data-level="2nde" data-class="205">
+            <div class="class-header">
+                <i class="fas fa-users me-2"></i> 205
+                <span class="badge bg-light text-dark float-end student-count">2 élèves</span>
+            </div>
+            <div class="bg-white p-3 border rounded-bottom mb-4">
+                <div id="student-card-sarah" class="card student-card" data-search="sarah roux 205" data-roses="1">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Sarah ROUX</h5>
+                            </div>
+                            <form class="ajax-form" data-card="student-card-sarah" data-name="Sarah ROUX">
+                                <button type="submit" class="btn btn-success shadow-sm px-4"><i class="fas fa-check"></i> OK</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-blanche me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">1</span>🤍<span class="d-none d-sm-inline ms-1">Rose Blanche</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Julie</strong></small>
+                                </div>
+                                <span class="badge badge-id">#13</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="student-card-lea" class="card student-card" data-search="léa rousseau 205" data-roses="1">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Léa ROUSSEAU</h5>
+                            </div>
+                            <form class="ajax-form" data-card="student-card-lea" data-name="Léa ROUSSEAU">
+                                <button type="submit" class="btn btn-success shadow-sm px-4"><i class="fas fa-check"></i> OK</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-blanche me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">1</span>🤍<span class="d-none d-sm-inline ms-1">Rose Blanche</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Thomas</strong></small>
+                                </div>
+                                <span class="badge badge-id">#14</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-secondary text-center py-5 rounded-3 shadow-sm d-none" id="todo-empty">
+            <h4><i class="fas fa-check-circle"></i> Tout est prêt !</h4>
+        </div>
+    </div>
+
+    <!-- ===================== VUE « TERMINÉES » ===================== -->
+    <div id="view-done" class="d-none">
+
+        <div class="class-group-wrapper" data-level="1ere" data-class="1G2">
+            <div class="class-header history">
+                <i class="fas fa-users me-2"></i> 1G2
+                <span class="badge bg-light text-dark float-end student-count">1 élèves</span>
+            </div>
+            <div class="bg-white p-3 border rounded-bottom mb-4">
+                <div class="card student-card done" data-search="manon petit 1g2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Manon PETIT</h5>
+                                <small class="text-muted" style="font-size: 0.8rem;"><i class="fas fa-check"></i> Fait le 13/02 12:55</small>
+                            </div>
+                            <form onsubmit="return demoNotice('Remise en attente');">
+                                <button type="submit" class="btn btn-outline-danger shadow-sm px-3"><i class="fas fa-undo"></i> ANNULER</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-rouge me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">1</span>🌹<span class="d-none d-sm-inline ms-1">Rose Rouge</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Rayan</strong></small>
+                                </div>
+                                <span class="badge badge-id">#16</span>
+                            </div>
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-pink me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">1</span>🌸<span class="d-none d-sm-inline ms-1">Rose Rose</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Rayan</strong></small>
+                                </div>
+                                <span class="badge badge-id">#17</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="class-group-wrapper" data-level="term" data-class="TG3">
+            <div class="class-header history">
+                <i class="fas fa-users me-2"></i> TG3
+                <span class="badge bg-light text-dark float-end student-count">3 élèves</span>
+            </div>
+            <div class="bg-white p-3 border rounded-bottom mb-4">
+
+                <div class="card student-card done" data-search="marie santos tg3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Marie SANTOS</h5>
+                                <small class="text-muted" style="font-size: 0.8rem;"><i class="fas fa-check"></i> Fait le 13/02 12:40</small>
+                            </div>
+                            <form onsubmit="return demoNotice('Remise en attente');">
+                                <button type="submit" class="btn btn-outline-danger shadow-sm px-3"><i class="fas fa-undo"></i> ANNULER</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-rouge me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">1</span>🌹<span class="d-none d-sm-inline ms-1">Rose Rouge</span>
+                                    </span>
+                                    <small class="text-muted"><i class="fas fa-user-secret"></i> Anonyme</small>
+                                </div>
+                                <span class="badge badge-id">#11</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card student-card done" data-search="nathan colin tg3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Nathan COLIN</h5>
+                                <small class="text-muted" style="font-size: 0.8rem;"><i class="fas fa-check"></i> Fait le 13/02 12:44</small>
+                            </div>
+                            <form onsubmit="return demoNotice('Remise en attente');">
+                                <button type="submit" class="btn btn-outline-danger shadow-sm px-3"><i class="fas fa-undo"></i> ANNULER</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-pink me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">2</span>🌸<span class="d-none d-sm-inline ms-1">Rose Rose</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Julie</strong></small>
+                                </div>
+                                <span class="badge badge-id">#12</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card student-card done" data-search="hugo bertrand tg3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h5 class="card-title fw-bold mb-0">Hugo BERTRAND</h5>
+                                <small class="text-muted" style="font-size: 0.8rem;"><i class="fas fa-check"></i> Fait le 13/02 12:51</small>
+                            </div>
+                            <form onsubmit="return demoNotice('Remise en attente');">
+                                <button type="submit" class="btn btn-outline-danger shadow-sm px-3"><i class="fas fa-undo"></i> ANNULER</button>
+                            </form>
+                        </div>
+                        <div class="bg-light p-2 rounded border">
+                            <div class="rose-item d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill badge-rose-rouge me-3 p-2" style="font-size: 0.95rem;">
+                                        <span class="fw-bold me-1">3</span>🌹<span class="d-none d-sm-inline ms-1">Rose Rouge</span>
+                                    </span>
+                                    <small class="text-muted">De : <strong>Inès</strong></small>
+                                </div>
+                                <span class="badge badge-id">#15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="alert alert-secondary text-center py-5 rounded-3 shadow-sm d-none" id="done-empty">
+            <h4><i class="fas fa-info-circle"></i> Historique vide.</h4>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================================
+   Logique du mode Préparation — copie statique.
+   Reproduit le marquage « Prêt » en AJAX : animation de sortie de la carte,
+   disparition du groupe de classe s'il devient vide, et toast Bootstrap
+   porteur d'un bouton « Annuler » (pattern Undo).
+   ========================================================================= */
+document.addEventListener('DOMContentLoaded', function () {
+
+    var currentView = 'todo';
+    var currentLevel = 'all';
+    var remaining = 4;
+
+    /* ---------- Marquage « Prêt » ---------- */
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form.classList.contains('ajax-form')) return;
+        e.preventDefault();
+
+        var card = document.getElementById(form.dataset.card);
+        var wrapper = card.closest('.class-group-wrapper');
+        var counter = wrapper.querySelector('.student-count');
+        var roses = parseInt(card.dataset.roses, 10);
+
+        /* Sauvegarde de l'état pour permettre l'annulation. */
+        var prevDisplay = card.style.display;
+
+        card.style.transition = 'all 0.4s ease';
+        card.style.transform = 'translateX(60px)';
+        card.style.opacity = '0';
+
+        setTimeout(function () {
+            card.style.display = 'none';
+
+            var left = wrapper.querySelectorAll('.student-card:not([style*="display: none"])').length;
+            counter.textContent = left + ' élèves';
+            if (left === 0) wrapper.classList.add('d-none');
+
+            remaining -= roses;
+            document.getElementById('rose-count').textContent = remaining;
+            refreshEmptyState();
+
+            showToast('Marqué comme "Préparé" — ' + form.dataset.name + '.', 'success', function undo() {
+                card.style.display = prevDisplay;
+                card.style.transform = 'translateX(0)';
+                card.style.opacity = '1';
+                wrapper.classList.remove('d-none');
+                counter.textContent = (left + 1) + ' élèves';
+                remaining += roses;
+                document.getElementById('rose-count').textContent = remaining;
+                refreshEmptyState();
+            });
+        }, 400);
+    });
+
+    /* ---------- Onglets À FAIRE / TERMINÉES ---------- */
+    document.querySelectorAll('#prep-tabs .nav-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            currentView = this.dataset.view;
+
+            document.querySelectorAll('#prep-tabs .nav-link').forEach(function (l) { l.classList.remove('active'); });
+            this.classList.add('active');
+
+            document.getElementById('view-todo').classList.toggle('d-none', currentView !== 'todo');
+            document.getElementById('view-done').classList.toggle('d-none', currentView !== 'done');
+            document.getElementById('todo-caption').classList.toggle('d-none', currentView !== 'todo');
+            document.getElementById('done-caption').classList.toggle('d-none', currentView !== 'done');
+
+            applyFilters();
+        });
+    });
+
+    /* ---------- Filtre par niveau ---------- */
+    document.querySelectorAll('#level-filter .btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            currentLevel = this.dataset.level;
+            document.querySelectorAll('#level-filter .btn').forEach(function (b) {
+                b.className = 'btn btn-light';
+            });
+            this.className = 'btn btn-light active fw-bold border-primary';
+            applyFilters();
+        });
+    });
+
+    /* ---------- Recherche ---------- */
+    var search = document.getElementById('prep-search');
+    var clear = document.getElementById('prep-search-clear');
+
+    document.getElementById('prep-search-form').addEventListener('submit', function (e) { e.preventDefault(); applyFilters(); });
+    search.addEventListener('input', applyFilters);
+    clear.addEventListener('click', function (e) { e.preventDefault(); search.value = ''; applyFilters(); });
+
+    function applyFilters() {
+        var q = search.value.trim().toLowerCase();
+        clear.classList.toggle('d-none', !q);
+
+        var root = document.getElementById(currentView === 'todo' ? 'view-todo' : 'view-done');
+        var anyVisible = false;
+
+        root.querySelectorAll('.class-group-wrapper').forEach(function (wrapper) {
+            var levelOk = (currentLevel === 'all') || (wrapper.dataset.level === currentLevel);
+            var visibleCards = 0;
+
+            wrapper.querySelectorAll('.student-card').forEach(function (card) {
+                if (card.style.display === 'none') return; // déjà préparé dans cette session
+                var match = !q || card.dataset.search.indexOf(q) !== -1;
+                card.classList.toggle('d-none', !(levelOk && match));
+                if (levelOk && match) visibleCards++;
+            });
+
+            wrapper.classList.toggle('d-none', visibleCards === 0);
+            if (visibleCards > 0) anyVisible = true;
+        });
+
+        document.getElementById('todo-empty').classList.toggle('d-none', !(currentView === 'todo' && !anyVisible));
+        document.getElementById('done-empty').classList.toggle('d-none', !(currentView === 'done' && !anyVisible));
+    }
+
+    function refreshEmptyState() { applyFilters(); }
+});
+</script>
+</body>
+</html>

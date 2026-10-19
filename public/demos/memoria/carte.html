@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Carte des missions</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+<script src="js/demo-api.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Carte des missions</h1>
+        <div class="page-subtitle">La taille des cercles est proportionnelle au nombre de missions réalisées.</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+        <div class="form-field" style="min-width:280px;position:relative">
+            <label for="address-search">Rechercher une adresse</label>
+            <input type="text" id="address-search" class="select-inline" style="width:100%"
+                   placeholder="Ex : 12 rue de la Mairie, Carcassonne" autocomplete="off">
+            <div id="address-search-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:1000;
+                 background:var(--surface);border:1.5px solid var(--gris-200);border-radius:var(--radius);
+                 margin-top:4px;max-height:260px;overflow-y:auto;box-shadow:var(--shadow-lg)"></div>
+        </div>
+        <div class="form-field" style="min-width:280px">
+            <label for="dept-filter">Département affiché</label>
+            <select id="dept-filter">
+                <option value="all">Tous les départements</option>
+                <option value="11" selected>11 — Aude</option>
+                <option value="31">31 — Haute-Garonne</option>
+                <option value="34">34 — Hérault</option>
+                <option value="66">66 — Pyrénées-Orientales</option>
+                <option value="09">09 — Ariège</option>
+            </select>
+        </div>
+        <div class="form-field">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;padding-bottom:2px">
+                <input type="checkbox" id="toggle-competence" style="width:16px;height:16px;accent-color:var(--bleu)">
+                Compétences territoriales
+            </label>
+            <span class="form-help">
+                <span class="gn-spinner" id="competence-spinner" style="display:none"></span><span id="competence-hint"></span>
+            </span>
+        </div>
+        <div id="color-mode-row" class="form-field" style="min-width:240px;visibility:hidden">
+            <label for="color-mode" style="font-size:12px">Coloration des zones</label>
+            <select id="color-mode">
+                <option value="brigade">Brigade officielle</option>
+                <option value="cob">Par COB / BTA</option>
+                <option value="cgd">Par Compagnie (CGD)</option>
+                <option value="ggd">Par Groupement (GGD)</option>
+            </select>
+        </div>
+        <div class="form-field">
+            <label style="font-size:14px;padding-bottom:2px;visibility:hidden">.</label>
+            <button type="button" id="geoloc-btn" class="btn geoloc-btn">📍 Me localiser</button>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body" style="padding:0">
+        <div id="map"></div>
+    </div>
+</div>
+
+<!-- Panneau itinéraire (masqué tant qu'aucun trajet n'est calculé) -->
+<div class="card" id="route-panel" style="margin-top:12px;display:none">
+    <div class="card-head">
+        <div class="card-title">Itinéraire</div>
+        <button type="button" class="btn btn-sm" onclick="gnCloseRoutePanel()" style="font-size:11px">Fermer</button>
+    </div>
+    <div class="card-body">
+        <div id="route-summary" style="font-size:14px;font-weight:600;margin-bottom:10px"></div>
+        <div id="route-steps" style="font-size:13px;color:var(--gris-600);max-height:220px;overflow-y:auto"></div>
+    </div>
+</div>
+
+<!-- Filtre des types d'unités -->
+<div class="card" style="margin-top:12px">
+    <div class="card-body" style="padding:12px 18px">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+            <span style="font-size:13px;font-weight:700;color:var(--gris-700);flex-shrink:0">Unités affichées :</span>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="ggd" checked style="width:14px;height:14px;accent-color:#1e3a8a">
+                <span style="background:#1e3a8a;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">GGD</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="srj" checked style="width:14px;height:14px;accent-color:#4338ca">
+                <span style="background:#4338ca;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">SRJ</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="pghm" checked style="width:14px;height:14px;accent-color:#78350f">
+                <span style="background:#78350f;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">PGHM</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="edcf" checked style="width:14px;height:14px;accent-color:#9333ea">
+                <span style="background:#9333ea;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">EDCF</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="pmo_bmo" checked style="width:14px;height:14px;accent-color:#c2410c">
+                <span style="background:#c2410c;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">PMO/BMO</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="bn" checked style="width:14px;height:14px;accent-color:#0d9488">
+                <span style="background:#0d9488;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">BN</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="cgd" checked style="width:14px;height:14px;accent-color:#0ea5e9">
+                <span style="background:#0ea5e9;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">CGD</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="brigade" checked style="width:14px;height:14px;accent-color:#22c55e">
+                <span style="background:#22c55e;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">BP</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;user-select:none">
+                <input type="checkbox" class="unit-type-cb" value="psig" checked style="width:14px;height:14px;accent-color:#f97316">
+                <span style="background:#f97316;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;font-weight:700">PSIG</span>
+            </label>
+            <button onclick="toggleAll(true)"  class="btn btn-sm btn-ghost" style="font-size:11px">Tout afficher</button>
+            <button onclick="toggleAll(false)" class="btn btn-sm btn-ghost" style="font-size:11px">Tout masquer</button>
+        </div>
+    </div>
+</div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+window.GN_HIERARCHY_API  = '/api/hierarchy';
+window.GN_COMPETENCE_API = '/api/competence';
+window.GN_DEPT_FILTER    = "11";
+window.GN_FOCUS_LAT      = null;
+window.GN_FOCUS_LNG      = null;
+window.GN_FOCUS_ZOOM     = 15;
+
+function toggleAll(state) {
+    document.querySelectorAll('.unit-type-cb').forEach(cb => {
+        if (cb.checked !== state) { cb.checked = state; cb.dispatchEvent(new Event('change')); }
+    });
+}
+</script>
+<script src="js/map.js"></script>
+</body>
+</html>

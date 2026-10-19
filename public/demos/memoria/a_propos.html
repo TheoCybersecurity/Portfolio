@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>À propos — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">À propos de Memoria</h1>
+        <div class="page-subtitle">Qui développe ce site, avec quelle stack, quelle infrastructure et quelles sécurités — dernière mise à jour : septembre 2026</div>
+    </div>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+    <a href="#presentation" class="btn btn-sm btn-ghost">L'auteur</a>
+    <a href="#genese" class="btn btn-sm btn-ghost">Genèse du projet</a>
+    <a href="#ia" class="btn btn-sm btn-ghost">Rôle de l'IA</a>
+    <a href="#apercu" class="btn btn-sm btn-ghost">Vue d'ensemble</a>
+    <a href="#infrastructure" class="btn btn-sm btn-ghost">Infrastructure</a>
+    <a href="#stack" class="btn btn-sm btn-ghost">Stack technique</a>
+    <a href="#apis-externes" class="btn btn-sm btn-ghost">Services externes</a>
+    <a href="#apis-internes" class="btn btn-sm btn-ghost">API internes</a>
+    <a href="#donnees" class="btn btn-sm btn-ghost">Modèle de données</a>
+    <a href="#securite" class="btn btn-sm btn-ghost">Sécurité</a>
+    <a href="#methodo" class="btn btn-sm btn-ghost">Méthodologie</a>
+    <a href="#performance" class="btn btn-sm btn-ghost">Performances</a>
+    <a href="#liens" class="btn btn-sm btn-ghost">Liens</a>
+</div>
+
+<div class="card" id="presentation" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">1. L'auteur</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:18px;flex-wrap:wrap">
+            <div style="width:64px;height:64px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bleu) 0%,#1d4ed8 100%);color:#fff;font-weight:800;font-size:22px;box-shadow:0 2px 8px rgba(0,35,149,.3)">TM</div>
+            <div>
+                <div style="font-weight:700;font-size:17px;color:var(--gris-900)">Théo Marescal</div>
+                <div style="font-size:13px;color:var(--bleu-texte);font-weight:600">Réserviste opérationnel · Administrateur d'infrastructures sécurisées</div>
+                <div style="font-size:12px;color:var(--gris-500)">Carcassonne (11)</div>
+            </div>
+        </div>
+        <p>
+            Passionné d'informatique depuis le collège, j'ai obtenu le <strong>BTS CIEL</strong>
+            (Cybersécurité, Informatique et réseaux, Électronique) puis le Titre Professionnel
+            <strong>Administrateur d'Infrastructures Sécurisées</strong> au Lycée Jules Fil de Carcassonne. Je
+            poursuis aujourd'hui, dans ce même établissement, un Mastère <strong>Architecte Infrastructures
+            Cloud &amp; Industries Sécurisées (AICIS)</strong>, ponctué de stages en entreprise.
+        </p>
+        <p>
+            Lors de mon alternance à la Section Opérationnelle de Lutte contre la Cybercriminalité du
+            Groupement de Gendarmerie Départementale de l'Aude (SOLC du GGD&nbsp;11), j'ai conduit des projets
+            concrets : station blanche de décontamination USB, infrastructure réseau sécurisée pour
+            collectivités et PME, plateforme de simulation de phishing avec authentification unique (SSO)
+            intégrée.
+        </p>
+        <p style="margin-bottom:0">
+            Je suis également <strong>réserviste opérationnel de la Gendarmerie Nationale</strong> et
+            administrateur de ma propre infrastructure auto-hébergée sur Raspberry Pi. C'est de ce double
+            parcours — cybersécurité et gendarmerie — qu'est né Memoria.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="genese" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">2. Genèse du projet</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            La gendarmerie met déjà à disposition des réservistes plusieurs outils institutionnels :
+            <strong>Minotaur</strong> centralise notamment les convocations, <strong>Agorha</strong> suit
+            l'état des remboursements de frais, <strong>Gendform2</strong> gère la formation en ligne. Mais ce
+            sont des outils cloisonnés, chacun limité à son propre périmètre, et aucun ne permet de tenir un
+            véritable <strong>carnet personnel</strong> — consigner, mission par mission, ce qui s'est passé,
+            comment ça s'est déroulé, ce qu'il faut retenir pour la prochaine fois.
+        </p>
+        <p>
+            J'ai donc construit le mien, en partant de mes propres besoins de réserviste, avant de l'ouvrir à
+            d'autres. Memoria agrège en un seul endroit : les <strong>missions</strong> (déploiements) et leurs
+            <strong>services</strong> horodatés, les <strong>interventions</strong> réalisées, les
+            <strong>documents</strong> (convocations, bulletins de solde), le suivi des
+            <strong>remboursements FDCR</strong>, un <strong>calendrier</strong>, une <strong>carte</strong> de
+            la compétence territoriale, des <strong>statistiques</strong> détaillées et l'ensemble de la
+            <strong>hiérarchie des unités</strong> de la gendarmerie départementale.
+        </p>
+        <p style="margin-bottom:0">
+            Le point délicat est la <strong>sensibilité des données manipulées</strong> — identifiants
+            professionnels, comptes rendus de service, bulletins de solde — qui a orienté toute la
+            conception : chiffrement systématique, cloisonnement strict par utilisateur, traçabilité des
+            actions et vérification de l'appartenance réelle à la gendarmerie avant tout accès. Les règles
+            d'utilisation (dont l'interdiction d'y renseigner des informations sensibles ou de nommer des
+            personnes) sont détaillées dans les <a href="cgu.html">conditions générales d'utilisation</a>, et le
+            détail du traitement des données personnelles dans les
+            <a href="mentions_legales.html">mentions légales</a>.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="ia" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">3. Rôle de l'intelligence artificielle</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <div class="alert alert-info" style="margin-bottom:12px">
+            🤖 <strong>Développé en binôme avec l'IA.</strong> Ce site a été conçu avec l'assistance de
+            <strong>Claude Code</strong> (Anthropic).
+        </div>
+        <p style="margin-bottom:0">
+            J'ai piloté l'architecture, les choix techniques, la logique métier et chaque décision de
+            conception tout au long du projet. L'IA a servi de copilote pour accélérer l'écriture du code,
+            proposer des implémentations, mener des revues de sécurité, écrire les tests de non-régression et
+            documenter le tout au fil de l'eau. Chaque modification est relue, testée sur l'environnement réel
+            puis validée avant d'être conservée — rien n'est mis en ligne sans contrôle humain.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="apercu" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">4. Vue d'ensemble technique</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Memoria est une <strong>application web classique côté serveur</strong>, volontairement
+            <strong>sans framework</strong> : du PHP qui génère du HTML, une base de données relationnelle, et
+            juste ce qu'il faut de JavaScript pour les parties interactives (carte, calendrier, fenêtres
+            modales). Ce choix privilégie la simplicité de maintenance, la lisibilité et la légèreté — le site
+            doit rester fluide y compris sur un téléphone modeste ou une connexion lente.
+        </p>
+        <ul style="margin:0;padding-left:20px">
+            <li>Aucune étape de compilation (« build ») : le code déployé est le code exécuté.</li>
+            <li>Aucune dépendance JavaScript côté navigateur en dehors de deux bibliothèques de cartographie
+                et de graphiques (Leaflet, Chart.js), chargées avec vérification d'intégrité.</li>
+            <li>Chaque page suit le même squelette : vérification d'accès → connexion base de données → en-tête
+                commun → contenu → pied de page.</li>
+            <li>Les échanges dynamiques (carte, calendrier, recherche) passent par des <strong>API internes</strong>
+                qui répondent en JSON, toujours filtrées par l'utilisateur connecté.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" id="infrastructure" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">5. Infrastructure &amp; hébergement</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Le site est <strong>entièrement auto-hébergé</strong>, à domicile, sur un <strong>Raspberry
+            Pi</strong> situé en France. Aucun hébergeur tiers (cloud public, VPS commercial) n'intervient dans
+            le stockage ou le traitement des données.
+        </p>
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Chaîne de service d'une requête</h3>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Étage</th><th>Rôle</th></tr></thead>
+                <tbody>
+                    <tr><td>Cloudflare</td><td>DNS, terminaison TLS en périphérie, protection anti-DDoS et pare-feu applicatif devant l'adresse résidentielle</td></tr>
+                    <tr><td>Nginx Proxy Manager</td><td>Reverse proxy à l'entrée du serveur : routage des sous-domaines, certificats HTTPS (Let's Encrypt), en-têtes</td></tr>
+                    <tr><td>Conteneur Apache + mod_php</td><td>Serveur web (Apache 2.4), exécution du PHP&nbsp;8.2, racine web commune à tous les projets</td></tr>
+                    <tr><td>Conteneur MariaDB</td><td>Base de données relationnelle (MariaDB&nbsp;10.6) — une base dédiée <code>Memoria</code>, compte applicatif à privilèges limités</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Isolation &amp; secrets</h3>
+        <ul style="margin:0;padding-left:20px">
+            <li>Chaque service tourne dans son propre <strong>conteneur Docker</strong> ; la base de données
+                n'est jamais exposée sur Internet, seul le serveur web lui parle sur le réseau interne.</li>
+            <li>Tous les <strong>secrets</strong> (mot de passe base de données, clé de chiffrement, secret de
+                signature des jetons, identifiants d'envoi de mail) sont stockés <strong>hors de la racine
+                web</strong>, dans un dossier de configuration jamais servi par le serveur et jamais versionné
+                dans le dépôt de code.</li>
+            <li>Les fichiers téléversés (PDF de convocation, bulletins) sont stockés <strong>chiffrés</strong>
+                dans un dossier dont l'accès web direct est <strong>totalement bloqué</strong> au niveau
+                serveur.</li>
+            <li><strong>Sauvegardes chiffrées</strong> régulières de la base et des fichiers, conservées hors
+                ligne, avec rotation.</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:20px 0 8px">Voisinage</h3>
+        <p style="margin-bottom:0">
+            Memoria partage l'infrastructure avec d'autres projets personnels (portail de connexion commun,
+            hub de projets, applications diverses) sous des sous-domaines de <code>projets.marescal.fr</code>.
+            L'ensemble est administré via des outils auto-hébergés (Portainer pour les conteneurs, Grafana
+            pour la supervision, Duplicati pour les sauvegardes).
+        </p>
+    </div>
+</div>
+
+<div class="card" id="stack" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">6. Stack technique</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Couche</th><th>Technologie</th><th>Détail</th></tr></thead>
+                <tbody>
+                    <tr><td>Serveur web</td><td>Apache 2.4 (mod_php)</td><td>Négociation de contenu (URL sans <code>.php</code>), compression gzip, cache long des ressources statiques</td></tr>
+                    <tr><td>Langage</td><td>PHP 8.2</td><td>Sans framework — inclusions manuelles, code procédural + fonctions utilitaires</td></tr>
+                    <tr><td>Base de données</td><td>MariaDB 10.6</td><td>34 tables, moteur InnoDB, jeu de caractères <code>utf8mb4</code>, fuseau Europe/Paris calculé dynamiquement</td></tr>
+                    <tr><td>Front-end</td><td>HTML / CSS / JavaScript « vanilla »</td><td>Aucun build, design system maison (variables CSS aux couleurs du drapeau), police Inter</td></tr>
+                    <tr><td>Cartographie</td><td>Leaflet.js 1.9.4</td><td>Fond de carte OpenStreetMap, rendu <code>canvas</code>, regroupement de marqueurs, couche de compétence territoriale</td></tr>
+                    <tr><td>Graphiques</td><td>Chart.js 4.4.4</td><td>Statistiques : activité mensuelle, progression cumulative, répartitions</td></tr>
+                    <tr><td>Envoi de mail</td><td>PHPMailer</td><td>SMTP authentifié (OVH, STARTTLS) via une boîte dédiée — codes de vérification d'identité</td></tr>
+                    <tr><td>Authentification</td><td>Firebase JWT (PHP)</td><td>Jetons signés HS256, vérifiés à chaque requête</td></tr>
+                    <tr><td>Dépendances PHP</td><td>Composer</td><td>Uniquement Firebase JWT et PHPMailer, mutualisées entre projets, hors racine web</td></tr>
+                    <tr><td>Conteneurisation</td><td>Docker</td><td>Un conteneur par service, réseau interne isolé</td></tr>
+                    <tr><td>Gestion de version</td><td>Git</td><td>Mono-dépôt, un commit par modification</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px">
+            <span class="badge badge-bleu">PHP 8.2</span>
+            <span class="badge badge-bleu">MariaDB 10.6</span>
+            <span class="badge badge-bleu">Apache 2.4</span>
+            <span class="badge badge-bleu">Docker</span>
+            <span class="badge badge-bleu">JWT HS256</span>
+            <span class="badge badge-rouge">AES-256-CBC</span>
+            <span class="badge badge-bleu">Leaflet.js</span>
+            <span class="badge badge-bleu">Chart.js</span>
+            <span class="badge badge-bleu">PHPMailer</span>
+            <span class="badge">Cloudflare</span>
+            <span class="badge">Nginx Proxy Manager</span>
+        </div>
+    </div>
+</div>
+
+<div class="card" id="apis-externes" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">7. Services &amp; API externes</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            <strong>Principe :</strong> tout appel à un service tiers qui manipule une donnée (géocodage,
+            itinéraire, contours géographiques) passe par un <strong>proxy PHP côté serveur</strong> — jamais
+            directement depuis ton navigateur. Seuls le fond de carte, les polices et les deux bibliothèques
+            front sont chargés directement par le navigateur.
+        </p>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Service</th><th>Usage dans Memoria</th><th>Accès</th></tr></thead>
+                <tbody>
+                    <tr><td>Base Adresse Nationale (BAN)</td><td>Géocodage d'adresses et autocomplétion (carte, import d'unités)</td><td>Proxy serveur, résultats mis en cache</td></tr>
+                    <tr><td>Nominatim (OpenStreetMap)</td><td>Géocodage de repli quand la BAN ne trouve rien</td><td>Proxy serveur, limité à 1 req/s</td></tr>
+                    <tr><td>OSRM</td><td>Calcul d'itinéraire routier vers une adresse ou une brigade</td><td>Proxy serveur</td></tr>
+                    <tr><td>geo.api.gouv.fr</td><td>Contours géographiques des communes et départements</td><td>Proxy serveur, cache 7 jours</td></tr>
+                    <tr><td>Tuiles OpenStreetMap</td><td>Fond de carte</td><td>Navigateur, autorisé explicitement dans la CSP</td></tr>
+                    <tr><td>data.gouv.fr</td><td>Compétence territoriale gendarmerie/police</td><td>Import ponctuel en ligne de commande</td></tr>
+                    <tr><td>CDN jsDelivr &amp; unpkg</td><td>Chart.js et Leaflet</td><td>Navigateur, vérification d'intégrité (SRI)</td></tr>
+                    <tr><td>Google Fonts</td><td>Police Inter</td><td>Navigateur</td></tr>
+                    <tr><td>SMTP OVH</td><td>Envoi des codes de vérification d'identité</td><td>Serveur, STARTTLS</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="margin-bottom:0">
+            Aucun de ces services ne reçoit de donnée personnelle au-delà de ce qui est strictement
+            nécessaire à la requête. Aucun outil de mesure d'audience, de publicité ou de traçage n'est
+            présent sur le site.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="apis-internes" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">8. API internes</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>
+            Les parties interactives du site dialoguent avec des points d'entrée internes qui répondent en
+            JSON. <strong>Tous</strong> vérifient d'abord l'authentification et filtrent systématiquement les
+            résultats sur l'utilisateur connecté (<code>WHERE user_id = ?</code>).
+        </p>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Point d'entrée</th><th>Rôle</th></tr></thead>
+                <tbody>
+                    <tr><td><code>/api/missions</code></td><td>Services d'une plage de dates ou détail d'un service — contenu déchiffré à la volée</td></tr>
+                    <tr><td><code>/api/document_download</code></td><td>Téléchargement d'un PDF, déchiffré en flux, après vérification de propriété</td></tr>
+                    <tr><td><code>/api/hierarchy</code></td><td>Toutes les unités géolocalisées et le nombre de services associés</td></tr>
+                    <tr><td><code>/api/competence</code></td><td>Contours communaux enrichis de la brigade/compagnie/groupement compétent</td></tr>
+                    <tr><td><code>/api/geocode</code>, <code>/api/address_search</code></td><td>Proxy de géocodage et d'autocomplétion</td></tr>
+                    <tr><td><code>/api/brigade_lookup</code>, <code>/api/route</code></td><td>Brigade compétente, calcul d'itinéraire</td></tr>
+                    <tr><td><code>/api/unites_search</code>, <code>/api/mission_units</code></td><td>Recherche d'unités au fil de la frappe</td></tr>
+                    <tr><td><code>/api/import_intranet</code></td><td>Import de la hiérarchie complète (réservé admin)</td></tr>
+                    <tr><td><code>/api/export_donnees</code></td><td>Archive ZIP de toutes tes données (droit RGPD)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="margin-bottom:0">
+            Ces réponses émettent des en-têtes de sécurité stricts et ne sont jamais mises en cache par un
+            intermédiaire.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="donnees" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">9. Modèle de données</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Activité de réserve — trois niveaux</h3>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>Mission</strong> — un déploiement : une unité, une plage de jours, un type, un statut
+                de paiement, des documents rattachés, le suivi du remboursement FDCR.</li>
+            <li><strong>Service</strong> — une patrouille ou une formation datée et horodatée à l'intérieur de
+                la plage de sa mission, avec un contenu (compte rendu) chiffré.</li>
+            <li><strong>Intervention</strong> — 0 à n interventions réalisées au cours d'un service, chacune
+                d'un type prédéfini et avec son propre contenu chiffré.</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Hiérarchie de la gendarmerie</h3>
+        <p>
+            L'annuaire couvre <strong>neuf types d'unités</strong> de la gendarmerie départementale
+            (groupement, compagnie, escadron départemental, brigades COB/BTA et leurs brigades de proximité,
+            PSIG, brigade nautique, pelotons de montagne, sections réserve jeunesse). Une mission pointe vers
+            son unité par une <strong>référence polymorphe</strong> (type + identifiant) plutôt qu'une clé
+            étrangère figée, ce qui permet de gérer les réorganisations d'unités sans casser l'historique
+            (une unité supprimée qui porte des missions est <strong>archivée</strong>, pas effacée).
+        </p>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Multi-département &amp; historisation</h3>
+        <p>
+            Chaque affectation départementale est datée : un changement de département (déménagement) clôture
+            l'ancienne affectation et en ouvre une nouvelle, les missions passées gardant leur département
+            d'origine.
+        </p>
+        <h3 style="font-size:14px;font-weight:700;margin:16px 0 8px">Évolution du schéma</h3>
+        <p style="margin-bottom:0">
+            Le schéma de la base évolue par <strong>migrations idempotentes</strong>, versionnées et rejouées
+            une seule fois par version grâce à un fichier-témoin — pas de rejeu à chaque page.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="securite" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">10. Sécurité</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Authentification &amp; accès</h3>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>Portail de connexion mutualisé</strong> — jeton signé (JWT, HS256) d'1 heure, renouvelé
+                silencieusement.</li>
+            <li><strong>Cookie de session durci</strong> — <code>Secure</code>, <code>HttpOnly</code>,
+                <code>SameSite=Lax</code>.</li>
+            <li><strong>Accréditation par projet</strong> — colonne d'autorisation dédiée à Memoria vérifiée à
+                chaque requête ; sinon, 403.</li>
+            <li><strong>Vérification d'identité obligatoire</strong> — adresse professionnelle
+                <code>@gendarmerie.interieur.gouv.fr</code> confirmée par code à 6 chiffres.</li>
+            <li><strong>Acceptation des CGU</strong> — bloquante elle aussi, à la première connexion et à
+                chaque évolution substantielle du texte.</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Chiffrement</h3>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>AES-256-CBC</strong> — vecteur d'initialisation aléatoire par enregistrement, clé de
+                256 bits hors du code.</li>
+            <li><strong>Champs chiffrés en base</strong> — NIGEND, RIO, grade, date d'entrée en réserve, mails,
+                contenu des services et interventions, retours, libellés de documents.</li>
+            <li><strong>Fichiers chiffrés sur disque</strong> — PDF stockés sous un nom aléatoire, déchiffrés
+                en flux au téléchargement, après contrôle de propriété.</li>
+            <li>La clé de chiffrement <strong>ne change jamais</strong> et n'est jamais présente dans le
+                dépôt de code.</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Cloisonnement des données</h3>
+        <p style="margin:0 0 16px">
+            <strong>100 % des requêtes</strong> qui lisent des données personnelles comportent une condition
+            <code>AND user_id = ?</code> — pas de faille dite « IDOR ».
+        </p>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Contre les injections &amp; le XSS</h3>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>Requêtes préparées partout</strong> — aucune injection SQL possible.</li>
+            <li><strong>Échappement systématique à l'affichage</strong>, côté serveur et côté navigateur (le
+                surlignage de recherche est construit par manipulation de l'arbre du document, jamais par
+                remplacement de chaîne).</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Contre le CSRF</h3>
+        <p style="margin:0 0 16px">
+            Jeton anti-CSRF aléatoire de 256 bits par session, vérifié en <strong>temps constant</strong> avant
+            toute action de modification.
+        </p>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">En-têtes HTTP de sécurité</h3>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>Content-Security-Policy</strong> restrictive, exceptions listées une par une.</li>
+            <li><strong>X-Frame-Options: SAMEORIGIN</strong> — anti-clickjacking.</li>
+            <li><strong>X-Content-Type-Options: nosniff</strong>.</li>
+            <li><strong>Referrer-Policy: strict-origin-when-cross-origin</strong>.</li>
+            <li><strong>Permissions-Policy</strong> — micro et caméra désactivés.</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Intégrité, validation &amp; robustesse</h3>
+        <ul style="margin:0 0 16px;padding-left:20px">
+            <li><strong>Subresource Integrity</strong> sur Leaflet et Chart.js.</li>
+            <li><strong>Validation stricte des entrées</strong> — dates bornées, formats imposés (NIGEND 6
+                chiffres, RIO 7 chiffres, domaine du mail pro verrouillé), type réel des fichiers vérifié.</li>
+            <li><strong>Limitation de débit</strong> sur le géocodage.</li>
+            <li><strong>Erreurs jamais affichées</strong> en production, tout est journalisé côté serveur.</li>
+        </ul>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Traçabilité</h3>
+        <p style="margin:0 0 16px">
+            Chaque action de modification est enregistrée dans un <strong>journal d'audit</strong> (utilisateur,
+            action, objets concernés, IP, navigateur, horodatage) — jamais de contenu libre ni de donnée
+            sensible dans ce journal.
+        </p>
+        <h3 style="font-size:14px;font-weight:700;margin:0 0 8px">Audit externe</h3>
+        <p style="margin-bottom:0">
+            Audit de sécurité par revue de code exhaustive (OWASP Top 10 et ASVS) en mai 2026 : 26 points
+            identifiés, dont 21 corrigés dans la foulée.
+        </p>
+    </div>
+</div>
+
+<div class="card" id="methodo" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">11. Développement &amp; méthodologie</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <ul style="margin:0;padding-left:20px">
+            <li><strong>Mono-dépôt Git</strong> — un commit par modification fonctionnelle, message explicite.</li>
+            <li><strong>Aucune mise en production automatique</strong> — chaque changement est testé sur
+                l'environnement réel avant d'être conservé.</li>
+            <li><strong>Documentation vivante</strong> — document technique détaillé, tenu à jour à chaque
+                évolution.</li>
+            <li><strong>Anti-cache automatique</strong> — CSS/JS versionnés selon leur date de modification.</li>
+            <li><strong>Migrations idempotentes</strong> — le schéma se met à jour tout seul au déploiement.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" id="performance" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">12. Performances</div></div>
+    <div class="card-body" style="font-size:14px;line-height:1.8;color:var(--gris-700)">
+        <p>Le site est optimisé pour rester fluide sur un téléphone ancien ou une connexion faible :</p>
+        <ul style="margin:0;padding-left:20px">
+            <li><strong>Compression gzip</strong> de tout le HTML, CSS, JS et JSON.</li>
+            <li><strong>Cache navigateur long</strong> et immuable pour les ressources statiques versionnées.</li>
+            <li><strong>Migrations de schéma jouées une seule fois</strong> par version.</li>
+            <li><strong>Carte en rendu <code>canvas</code></strong> — dizaines de milliers de zones affichables.</li>
+            <li><strong>Listes bornées</strong> — annuaire affiché par défaut sur le seul département de
+                l'utilisateur, grands tableaux transformés en cartes empilées sur petit écran.</li>
+            <li><strong>Cache arrière/avant du navigateur réactivé</strong> — retour en arrière instantané.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card" id="liens" style="margin-bottom:16px;scroll-margin-top:90px">
+    <div class="card-head"><div class="card-title">13. Liens</div></div>
+    <div class="card-body">
+        <div style="display:grid;gap:10px">
+            <a href="https://theo.marescal.fr" target="_blank" rel="noopener noreferrer" class="official-link">
+                <span class="official-link-icon" style="font-size:18px">🌐</span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Portfolio</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Tous mes projets et mon infrastructure — theo.marescal.fr</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+            <a href="https://www.linkedin.com/in/theo-marescal" target="_blank" rel="noopener noreferrer" class="official-link">
+                <span class="official-link-icon" style="font-size:18px">💼</span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">LinkedIn</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Mon profil professionnel</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+            <a href="mentions_legales.html" class="official-link">
+                <span class="official-link-icon" style="font-size:18px">📜</span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Mentions légales &amp; protection des données</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Éditeur, hébergement, RGPD, sécurité, tes droits</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+            <a href="cgu.html" class="official-link">
+                <span class="official-link-icon" style="font-size:18px">📋</span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Conditions générales d'utilisation</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Règles d'usage et responsabilité quant aux données saisies</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+        </div>
+        <p style="text-align:center;font-size:12px;color:var(--gris-400);margin-top:22px;font-style:italic">
+            © 2026 Théo Marescal — Développé avec passion et beaucoup de rigueur.
+        </p>
+    </div>
+</div>
+
+<p style="text-align:center;margin:28px 0">
+    <a href="profil.html" class="btn btn-ghost">← Retour à mon profil</a>
+</p>
+</main>
+</body>
+</html>

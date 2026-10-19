@@ -1,0 +1,87 @@
+import type { Experience } from './types'
+
+export const experiences: Experience[] = [
+  {
+    id: 'mastere-aicis',
+    role: 'Mastère AICIS',
+    roleUrl: 'https://aicis.lyceejulesfil.fr/',
+    organization: 'Lycée Jules Fil',
+    location: 'Carcassonne (11)',
+    startDate: '2026-11-01',
+    endDate: '2027-09-01',
+    descriptions: [
+      "Mastère Architecte Infrastructures Cloud & Industries Sécurisées (AICIS), au sein du Lycée Jules Fil de Carcassonne, en formation initiale.",
+      "Formation ponctuée de 3 stages en entreprise sur l'année, dont le contenu sera précisé et mis à jour au fil des missions réalisées.",
+    ],
+    tags: ['Cloud', 'Infrastructures Sécurisées', 'Cybersécurité'],
+    type: 'etudes',
+  },
+  {
+    id: 'titre-pro-ais',
+    role: 'Titre Pro AIS — Alternance',
+    roleUrl: 'https://jules-fil.mon-ent-occitanie.fr/lectureFichiergw.do?ID_FICHIER=127599',
+    organization: 'GRETA CFA / Lycée Jules Fil & SOLC du GGD Aude',
+    location: 'Carcassonne (11)',
+    startDate: '2025-10-01',
+    endDate: '2026-09-01',
+    descriptions: [
+      "Titre Professionnel Administrateur d'Infrastructures Sécurisées, en alternance au sein de la Section Opérationnelle de Lutte contre les Cybermenaces (SOLC) du Groupement de Gendarmerie Départementale de l'Aude (GGD11). Formation assurée par le GRETA CFA de l'Aude et des Pyrénées Orientales (1166) au sein du Lycée Jules Fil de Carcassonne.",
+      "Réalisations : conception d'une station blanche, proposition d'une infrastructure réseau sécurisée pour PME/collectivités, campagne de phishing sur les personnels de la gendarmerie de l'Aude.",
+    ],
+    tags: [
+      'KVM', 'Proxmox', 'Docker', 'ZyXEL', 'Allied-Telesis', 'OpenLDAP', 'Kerberos',
+      'OMV', 'LAM', 'Bind9', 'MariaDB', 'Apache2', 'Ansible', 'Graylog', 'Wazuh',
+      'CISO Assistant', 'Suricata', 'Teleport', 'AWS', 'Stormshield', 'Cisco', 'Nagios',
+      'Gophish', 'pfSense', 'Python', 'IA', 'Windows Serveur', 'PowerShell',
+    ],
+    type: 'alternance',
+  },
+  {
+    id: 'reserviste',
+    role: 'Gendarme de réserve — Réserviste opérationnel',
+    organization: 'Gendarmerie Nationale',
+    location: 'Aude (11)',
+    startDate: '2024-11-01',
+    endDate: null,
+    descriptions: [
+      "Engagement dans la réserve opérationnelle de la Gendarmerie Nationale. Participation aux missions de maintien de l'ordre public et de sécurisation du territoire.",
+    ],
+    tags: ['Réserve opérationnelle', 'Sécurité publique'],
+    type: 'reserve',
+  },
+  {
+    id: 'bts-ciel',
+    role: 'BTS CIEL',
+    roleUrl: 'https://jules-fil.mon-ent-occitanie.fr/lectureFichiergw.do?ID_FICHIER=104181',
+    organization: 'Lycée Jules Fil',
+    location: 'Carcassonne (11)',
+    startDate: '2023-09-01',
+    endDate: '2025-07-01',
+    descriptions: [
+      "Formation couvrant les grands concepts de l'informatique : conception de réseaux informatiques, mise en place de solutions sécurisées, programmation, cloud, cybersécurité et objets connectés.",
+      "Stage à la SOLC du GGD11 : déploiement de Suricata pour la surveillance et la détection d'intrusions réseau.",
+      "Projet de BTS avec la SOLC — Projet PRISM : démonstration d'attaques variées (ARP spoofing, scan réseau, exploitation de services) sur une infrastructure réseau non sécurisée, pour sensibiliser aux enjeux de cybersécurité.",
+    ],
+    tags: [
+      'Adressage IP', 'Switchs', 'Routeurs', 'Windows Serveur', 'Raspberry Pi',
+      'Pare-Feu', 'Stormshield', 'Cisco', 'Packet-Tracer', 'GLPI', 'PHP', 'C++',
+      'Cloud AWS', 'RGPD', 'Pentest', 'Veille technologique', 'Maltego', 'Socket',
+      'MySQL', 'Android', 'Swift', 'Node-RED', 'VirtualBox',
+    ],
+    type: 'etudes',
+  },
+  {
+    id: 'bac',
+    role: 'Baccalauréat Général',
+    organization: 'Lycée Jules Fil',
+    location: 'Carcassonne (11)',
+    startDate: '2020-09-01',
+    endDate: '2023-07-01',
+    descriptions: [
+      'Baccalauréat général — spécialités Mathématiques et Physique-Chimie.',
+      'Options : Mathématiques Expertes et Musique.',
+    ],
+    tags: ['Maths', 'Physique-Chimie', 'Maths Expertes', 'Musique'],
+    type: 'etudes',
+  },
+]

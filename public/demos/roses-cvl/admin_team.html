@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Gestion Equipe - Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        .role-badge { width: 100px; text-align: center; }
+        .avatar-initials {
+            width: 40px; height: 40px;
+            background-color: #e9ecef;
+            color: #495057;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; font-weight: bold;
+            margin-right: 15px;
+        }
+        .bg-superadmin { background-color: #ffc107; color: #000; }
+    </style>
+</head>
+<body class="bg-light">
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="admin.html" class="text-decoration-none text-muted"><i class="fas fa-arrow-left"></i> Retour Hub</a>
+            <h2 class="fw-bold mt-2">👮 Gestion de l'équipe</h2>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2"></i>Membres ayant accès</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Membre</th>
+                                <th>Rôle</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">TM</div>
+                                        <div>
+                                            <div class="fw-bold">Théo MARESCAL</div>
+                                            <small class="text-success fst-italic">C'est vous</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-warning text-dark role-badge"><i class="fas fa-crown"></i> BOSS</span></td>
+                                <td class="text-end pe-4"><button class="btn btn-sm btn-secondary" disabled>Retirer</button></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">CB</div>
+                                        <div>
+                                            <div class="fw-bold">Chloé BONNET</div>
+                                            <small class="text-muted">ID: 42</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-danger role-badge">ADMIN</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirmRemove(this);"><i class="fas fa-trash-alt"></i> Retirer</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">MA</div>
+                                        <div>
+                                            <div class="fw-bold">Maxime AUBERT</div>
+                                            <small class="text-muted">ID: 57</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info text-dark role-badge">CVL</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirmRemove(this);"><i class="fas fa-trash-alt"></i> Retirer</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">IC</div>
+                                        <div>
+                                            <div class="fw-bold">Inès CHEVALIER</div>
+                                            <small class="text-muted">ID: 63</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info text-dark role-badge">CVL</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirmRemove(this);"><i class="fas fa-trash-alt"></i> Retirer</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">RM</div>
+                                        <div>
+                                            <div class="fw-bold">Rayan MOREAU</div>
+                                            <small class="text-muted">ID: 71</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info text-dark role-badge">CVL</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirmRemove(this);"><i class="fas fa-trash-alt"></i> Retirer</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">JM</div>
+                                        <div>
+                                            <div class="fw-bold">Julie MERCIER</div>
+                                            <small class="text-muted">ID: 88</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info text-dark role-badge">CVL</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirmRemove(this);"><i class="fas fa-trash-alt"></i> Retirer</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-initials">EG</div>
+                                        <div>
+                                            <div class="fw-bold">Emma GIRARD</div>
+                                            <small class="text-muted">ID: 94</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info text-dark role-badge">CVL</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="return confirmRemove(this);"><i class="fas fa-trash-alt"></i> Retirer</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px; z-index: 900;">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>Donner un accès</h5>
+                </div>
+                <div class="card-body">
+                    <form onsubmit="return demoNotice('Ajout d\'un membre à l\'équipe CVL');">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">1. Sélectionner l'élève</label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Rechercher dans la liste...</option>
+                                <option>Hugo BERTRAND</option>
+                                <option>Nathan COLIN</option>
+                                <option>Alexandre DUPONT</option>
+                                <option>Thomas FABRE</option>
+                                <option>Lenny VARLIN</option>
+                                <option>Camille LEROY</option>
+                                <option>Lucas MARTIN</option>
+                                <option>Manon PETIT</option>
+                                <option>Manon RUELLE</option>
+                                <option>Léa ROUSSEAU</option>
+                                <option>Sarah ROUX</option>
+                                <option>Marie SANTOS</option>
+                            </select>
+                            <div class="form-text">Seuls les élèves connectés au moins une fois apparaissent ici.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">2. Choisir le rôle</label>
+                            <div class="d-grid gap-2">
+                                <input type="radio" class="btn-check" name="role" id="role_cvl" value="cvl" checked>
+                                <label class="btn btn-outline-info" for="role_cvl">Membre CVL (Limité)</label>
+
+                                <input type="radio" class="btn-check" name="role" id="role_admin" value="admin">
+                                <label class="btn btn-outline-danger" for="role_admin">Administrateur (Total)</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark w-100 py-2">
+                            <i class="fas fa-check-circle me-2"></i>Valider l'ajout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function confirmRemove(el) {
+    if (confirm("Êtes-vous sûr de vouloir retirer les droits d'accès à cette personne ?")) {
+        demoNotice('Retrait des droits');
+    }
+    return false;
+}
+</script>
+</body>
+</html>

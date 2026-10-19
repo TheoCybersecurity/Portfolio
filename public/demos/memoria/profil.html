@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Mon profil — Memoria</title>
+    <link rel="icon" href="img/Logo_Reserve_Gendarmerie.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/demo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<script src="js/layout.js"></script>
+
+<div class="page-head">
+    <div>
+        <h1 class="page-title">Mon profil</h1>
+        <div class="page-subtitle">Informations personnelles · Données stockées chiffrées (AES-256)</div>
+    </div>
+    <div style="background:var(--bleu);color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600">
+        2 ans et 6 mois dans la réserve
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  Informations personnelles — vue lecture                  -->
+<!-- ========================================================= -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-head">
+        <div class="card-title">Informations personnelles</div>
+        <span style="font-size:12px;color:var(--gris-400)">Chiffré AES-256</span>
+    </div>
+    <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-bottom:4px">
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">NIGEND</div>
+                <div style="font-size:22px;font-weight:800;color:#0f172a;font-family:monospace;letter-spacing:.04em">123456</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">RIO</div>
+                <div style="font-size:22px;font-weight:800;color:#0f172a;font-family:monospace;letter-spacing:.04em">1234567</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Mail pro</div>
+                <div style="font-size:15px;font-weight:700;color:#0f172a;word-break:break-all">prenom.nom@gendarmerie.interieur.gouv.fr</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Mail de contact</div>
+                <div style="font-size:15px;font-weight:700;color:#0f172a;word-break:break-all">contact@exemple.fr</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Grade actuel</div>
+                <div id="gn-grade-display" style="font-size:28px;font-weight:800;color:var(--bleu-texte);line-height:1;cursor:pointer">GND</div>
+                <script>
+                (function () {
+                    var el = document.getElementById('gn-grade-display');
+                    var count = 0, resetTimer = null;
+                    el.addEventListener('click', function () {
+                        count++;
+                        clearTimeout(resetTimer);
+                        resetTimer = setTimeout(function () { count = 0; }, 1200);
+                        if (count >= 3 && window.gnUnlockEgg) {
+                            count = 0;
+                            gnUnlockEgg('fierte_du_grade', '🎖️ Fier de ton grade, et on te comprend !', 3000);
+                        }
+                    });
+                })();
+                </script>
+                <div style="font-size:12px;color:#5b7aad;margin-top:4px;font-weight:500">Gendarme</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Dans la réserve depuis</div>
+                <div style="font-size:20px;font-weight:800;color:#0f172a">01/03/2024</div>
+                <div style="font-size:12px;color:#5b7aad;margin-top:4px;font-weight:600">2 ans et 6 mois</div>
+                <div style="font-size:11px;color:var(--gris-400);margin-top:1px">(917 jours)</div>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:16px">
+            <button class="btn btn-primary" onclick="document.getElementById('modal-profil').classList.add('open')">Modifier</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modale modification profil -->
+<div class="modal-overlay" id="modal-profil">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">Modifier les informations personnelles</div>
+            <button class="modal-close" type="button"
+                    onclick="document.getElementById('modal-profil').classList.remove('open')">×</button>
+        </div>
+        <form onsubmit="return gnDemoBlock('Enregistrement du profil')">
+            <div class="modal-body" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div class="form-field" style="grid-column:1/-1">
+                    <label>NIGEND <span style="color:var(--gris-400);font-weight:400">— 6 chiffres</span></label>
+                    <div class="digit-boxes">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="2">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="4">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="8">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="3">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="1">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="5">
+                    </div>
+                </div>
+                <div class="form-field" style="grid-column:1/-1">
+                    <label>RIO <span style="color:var(--gris-400);font-weight:400">— 7 chiffres</span></label>
+                    <div class="digit-boxes">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="1">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="1">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="0">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="4">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="8">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="2">
+                        <input class="digit-box" maxlength="1" inputmode="numeric" value="7">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="grade_actuel">Grade actuel</label>
+                    <select id="grade_actuel" name="grade_actuel">
+                        <option value="">— Sélectionner —</option>
+                        <option value="GND" selected>GND (Gendarme)</option>
+                        <option value="MDL">MDL (Maréchal des logis)</option>
+                        <option value="MDC">MDC (Maréchal des logis-chef)</option>
+                        <option value="ADJ">ADJ (Adjudant)</option>
+                        <option value="ADC">ADC (Adjudant-chef)</option>
+                        <option value="MAJ">MAJ (Major)</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="date_debut_contrat">Dans la réserve depuis</label>
+                    <input type="date" id="date_debut_contrat" name="date_debut_contrat" value="2024-03-01">
+                </div>
+                <div class="form-field" style="grid-column:1/-1">
+                    <label for="mail_pro_local">Mail pro</label>
+                    <div class="mail-suffix-field">
+                        <input type="text" id="mail_pro_local" name="mail_pro_local"
+                               value="theo.marescal"
+                               placeholder="prenom.nom" autocomplete="off">
+                        <span class="mail-suffix">@gendarmerie.interieur.gouv.fr</span>
+                    </div>
+                    <div class="form-help">Saisis uniquement l'identifiant (avant le @) ; le domaine est imposé.</div>
+                </div>
+                <div class="form-field" style="grid-column:1/-1">
+                    <label for="mail_contact">Mail de contact <span style="color:var(--gris-400);font-weight:400">— facultatif</span></label>
+                    <input type="email" id="mail_contact" name="mail_contact"
+                           value="contact@exemple.fr"
+                           placeholder="adresse personnelle — ex. prenom.nom@gmail.com"
+                           autocomplete="off">
+                    <div class="form-help">Adresse <strong>personnelle</strong> (pas @gendarmerie.interieur.gouv.fr) où tu es sûr de recevoir et lire les messages diffusés depuis le site.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="button" class="btn"
+                        onclick="document.getElementById('modal-profil').classList.remove('open')">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  Historique des grades                                     -->
+<!-- ========================================================= -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-head">
+        <div class="card-title">Historique des grades</div>
+        <span style="font-size:12px;color:var(--gris-400)">Chiffré AES-256</span>
+    </div>
+    <div class="card-body">
+        <div style="display:flex;flex-direction:column;margin-bottom:24px">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 0 4px 20px">
+            <div style="width:2px;min-height:14px;background:#c7d7f0;border-radius:1px;flex-shrink:0;align-self:stretch"></div>
+            <span style="font-size:11px;font-weight:700;color:#0f172a;background:#dbeafe;padding:3px 12px;border-radius:20px;white-space:nowrap">Dans le grade actuel depuis 1 an et 3 mois</span>
+        </div>
+        <div class="info-tile" style="display:flex;align-items:center;gap:16px;padding:14px 18px">
+            <div style="width:140px;flex-shrink:0">
+                <div style="font-size:26px;font-weight:800;color:var(--bleu-texte);line-height:1">GND</div>
+                <div style="font-size:11px;color:#5b7aad;font-weight:500;margin-top:3px">Gendarme</div>
+            </div>
+            <div style="width:1px;background:#c7d7f0;align-self:stretch;flex-shrink:0"></div>
+            <div style="flex:1">
+                <div style="font-size:15px;font-weight:600;color:#0f172a">Depuis le 01/06/2025</div>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:4px 0 4px 20px">
+            <div style="width:2px;min-height:14px;background:#c7d7f0;border-radius:1px;flex-shrink:0;align-self:stretch"></div>
+            <span style="font-size:11px;font-weight:700;color:#0f172a;background:#dbeafe;padding:3px 12px;border-radius:20px;white-space:nowrap">1 an et 3 mois</span>
+        </div>
+        <div class="info-tile" style="display:flex;align-items:center;gap:16px;padding:14px 18px">
+            <div style="width:140px;flex-shrink:0">
+                <div style="font-size:26px;font-weight:800;color:var(--bleu-texte);line-height:1">GAV</div>
+                <div style="font-size:11px;color:#5b7aad;font-weight:500;margin-top:3px">Gendarme adjoint volontaire</div>
+            </div>
+            <div style="width:1px;background:#c7d7f0;align-self:stretch;flex-shrink:0"></div>
+            <div style="flex:1">
+                <div style="font-size:15px;font-weight:600;color:#0f172a">Du 01/03/2024 au 31/05/2025</div>
+            </div>
+        </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" onclick="return gnDemoBlock('Ajout d\'un grade')">+ Ajouter un grade</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  Préférences                                                -->
+<!-- ========================================================= -->
+<div class="card" style="margin-bottom:20px">
+    <div class="card-head">
+        <div class="card-title">Préférences</div>
+        <span style="font-size:12px;color:var(--gris-400)">Personnalisation de l'expérience</span>
+    </div>
+    <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-bottom:16px">
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Tableau de bord — types exclus</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <span class="badge" style="background:#f59e0b;color:#fff">Cérémonie</span>
+                </div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Services affichés au tableau de bord</div>
+                <div style="font-size:22px;font-weight:800;color:#0f172a">5</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Vue par défaut du calendrier</div>
+                <div style="font-size:22px;font-weight:800;color:#0f172a">Mois</div>
+            </div>
+
+            <div class="info-tile">
+                <div style="font-size:10px;font-weight:700;color:#5b7aad;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Mode sombre</div>
+                <div style="font-size:22px;font-weight:800;color:#0f172a">Désactivé</div>
+            </div>
+
+        </div>
+        <div style="display:flex;justify-content:flex-end">
+            <button class="btn btn-primary" onclick="document.getElementById('modal-preferences').classList.add('open')">Modifier</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modale modification préférences -->
+<div class="modal-overlay" id="modal-preferences">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">Modifier les préférences</div>
+            <button class="modal-close" type="button"
+                    onclick="document.getElementById('modal-preferences').classList.remove('open')">×</button>
+        </div>
+        <form onsubmit="return gnDemoBlock('Enregistrement des préférences')">
+            <div class="modal-body" style="display:flex;flex-direction:column;gap:20px">
+                <div class="form-field">
+                    <label>Exclure ces types de mission des compteurs « Total services », « Total jours de réserve » et « Services 2026 » du tableau de bord</label>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:14px;cursor:pointer">
+                            <input type="checkbox" name="excluded_type_ids[]" value="1"> Renfort
+                        </label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:14px;cursor:pointer">
+                            <input type="checkbox" name="excluded_type_ids[]" value="2"> Formation
+                        </label>
+                        <label style="display:flex;align-items:center;gap:6px;font-weight:400;font-size:14px;cursor:pointer">
+                            <input type="checkbox" name="excluded_type_ids[]" value="3" checked> Cérémonie
+                        </label>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="dashboard_service_count">Nombre de services affichés (« Prochains services » / « Derniers services effectués »)</label>
+                    <select id="dashboard_service_count" name="dashboard_service_count">
+                        <option value="3">3</option>
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="calendar_default_view">Vue par défaut à l'ouverture du calendrier</label>
+                    <select id="calendar_default_view" name="calendar_default_view">
+                        <option value="jour">Jour</option>
+                        <option value="mois" selected>Mois</option>
+                        <option value="annee">Année</option>
+                        <option value="personnalisee">Personnalisée</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label style="display:flex;align-items:center;gap:8px;font-weight:400;cursor:pointer">
+                        <input type="checkbox" name="dark_mode" value="1"> Activer le mode sombre
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="button" class="btn"
+                        onclick="document.getElementById('modal-preferences').classList.remove('open')">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  Liens officiels                                           -->
+<!-- ========================================================= -->
+<div class="card">
+    <div class="card-head">
+        <div class="card-title">Liens officiels</div>
+    </div>
+    <div class="card-body">
+
+        <div class="republic-badge">
+            <div style="display:flex;height:44px;border-radius:5px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.18);flex-shrink:0">
+                <div style="width:15px;background:#002395"></div>
+                <div style="width:15px;background:#fff"></div>
+                <div style="width:15px;background:#ed2939"></div>
+            </div>
+            <div>
+                <div class="republic-badge-title">République Française</div>
+                <div class="republic-badge-sub">Liberté · Égalité · Fraternité</div>
+            </div>
+        </div>
+
+        <div style="display:grid;gap:10px">
+
+            <a href="https://www.gendarmerie.interieur.gouv.fr/"
+               target="_blank" rel="noopener noreferrer" class="official-link">
+                <span class="official-link-icon">
+                    <img src="img/logo_gendarmerie_nationale.svg" alt="" width="28" height="28" style="object-fit:contain">
+                </span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Gendarmerie Nationale</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Site Officiel de la Gendarmerie Nationale</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+
+            <a href="https://minotaur.sso.gendarmerie.interieur.gouv.fr/v2/reserviste"
+               target="_blank" rel="noopener noreferrer" class="official-link">
+                <span class="official-link-icon" style="overflow:hidden">
+                    <img src="img/logo_minotaur.jpg" alt="" width="28" height="28" style="object-fit:cover;border-radius:4px">
+                </span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Minotaur</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Gestion de la réserve opérationnelle</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+
+            <a href="https://gendform2.gendarmerie.interieur.gouv.fr/"
+               target="_blank" rel="noopener noreferrer" class="official-link">
+                <span class="official-link-icon">
+                    <img src="img/logo_gendform2.png" alt="" width="28" height="28" style="object-fit:contain">
+                </span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Gendform2</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Formation en ligne</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+
+            <a href="https://gendcom.gendarmerie.interieur.gouv.fr/"
+               target="_blank" rel="noopener noreferrer" class="official-link">
+                <span class="official-link-icon">
+                    <img src="img/logo_gendcom.png" alt="" width="28" height="28" style="object-fit:contain">
+                </span>
+                <div style="min-width:0">
+                    <div style="font-weight:600;font-size:14px" class="official-link-title">Gendcom</div>
+                    <div style="font-size:12px;color:var(--gris-500)">Forum interne de la gendarmerie</div>
+                </div>
+                <span style="margin-left:auto;color:var(--gris-300);font-size:18px;flex-shrink:0">→</span>
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  Mes données                                               -->
+<!-- ========================================================= -->
+<div class="card" style="margin-top:20px">
+    <div class="card-head">
+        <div class="card-title">Mes données</div>
+    </div>
+    <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="max-width:640px">
+            <div style="font-size:13px;color:var(--gris-600)">
+                Télécharge l'ensemble de tes données (profil, grades, affectations, missions, services,
+                interventions, documents, feedback, statistiques, préférences) dans une archive ZIP :
+                un fichier CSV par catégorie pour un usage tableur, plus une page <code>index.html</code>
+                autonome pour tout consulter hors ligne dans un navigateur.
+            </div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Export RGPD')" class="btn btn-primary" style="white-space:nowrap">⬇ Extraire mes données</a>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  Session                                                   -->
+<!-- ========================================================= -->
+<div class="card" style="margin-top:20px">
+    <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div>
+            <div style="font-weight:600;color:var(--gris-700)">Session</div>
+            <div style="font-size:13px;color:var(--gris-500)">Fermer la session sur cet appareil.</div>
+        </div>
+        <a href="#" onclick="return gnDemoBlock('Déconnexion')" class="btn btn-danger">⏻ Se déconnecter</a>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!--  À propos                                                  -->
+<!-- ========================================================= -->
+<div class="card" style="margin-top:20px">
+    <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div>
+            <div style="font-weight:600;color:var(--gris-700)">À propos de Memoria</div>
+            <div style="font-size:13px;color:var(--gris-500)">Qui développe ce site, avec quelle stack et quelles sécurités.</div>
+        </div>
+        <a href="a_propos.html" class="btn btn-ghost">En savoir plus →</a>
+    </div>
+</div>
+</main>
+<style>
+  .digit-boxes { display: flex; gap: 6px; flex-wrap: wrap; }
+  .digit-box {
+    width: 38px; height: 44px; text-align: center; font-size: 18px; font-weight: 700;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    border: 1px solid var(--gris-300); border-radius: var(--radius);
+    background: var(--surface); color: inherit; padding: 0;
+  }
+  .digit-box:focus { outline: 2px solid var(--bleu-texte); outline-offset: 1px; border-color: transparent; }
+  @media (max-width: 420px) { .digit-box { width: 32px; height: 40px; font-size: 16px; } }
+
+  .mail-suffix-field {
+    display: flex; align-items: stretch;
+    border: 1px solid var(--gris-300); border-radius: var(--radius);
+    background: var(--surface); overflow: hidden;
+  }
+  .mail-suffix-field input {
+    border: 0; background: transparent; color: inherit; font: inherit;
+    padding: 9px 10px; flex: 1 1 auto; min-width: 0;
+  }
+  .mail-suffix-field input:focus { outline: none; }
+  .mail-suffix-field:focus-within { outline: 2px solid var(--bleu-texte); outline-offset: 1px; }
+  .mail-suffix {
+    display: flex; align-items: center; padding: 0 10px; white-space: nowrap;
+    background: var(--gris-100); color: var(--gris-500);
+    font-size: 13px; border-left: 1px solid var(--gris-300);
+  }
+</style>
+</body>
+</html>

@@ -1,0 +1,138 @@
+import type { SkillCategory } from './types'
+
+export const skillCategories: SkillCategory[] = [
+  {
+    id: 'cybersecurite',
+    label: 'Cybersécurité & Pentest',
+    icon: 'Shield',
+    skills: [
+      { name: 'Kali Linux', slug: 'kalilinux' },
+      { name: 'Wireshark', imagePath: '/icons/wireshark.png' },
+      { name: 'Metasploit', imagePath: '/icons/metasploit.png' },
+      { name: 'Pentest (PTES/OWASP)', imagePath: '/icons/pentest.png' },
+      { name: 'VPN', imagePath: '/icons/vpn.png' },
+    ],
+  },
+  {
+    id: 'gouvernance',
+    label: 'Normes & Gouvernance',
+    icon: 'ClipboardList',
+    skills: [
+      { name: 'SMSI', imagePath: '/icons/smsi.png' },
+      { name: 'ISO 27001', imagePath: '/icons/iso27001.png' },
+      { name: 'NIS 2', imagePath: '/icons/nis2.png' },
+      { name: 'PSSI', imagePath: '/icons/pssi.png' },
+      { name: 'EBIOS RM', imagePath: '/icons/ebios-rm.png' },
+      { name: 'GRC', imagePath: '/icons/grc.png' },
+    ],
+  },
+  {
+    id: 'systemes',
+    label: 'Systèmes & Infrastructure',
+    icon: 'Server',
+    skills: [
+      { name: 'Linux', slug: 'linux' },
+      { name: 'Ubuntu', slug: 'ubuntu' },
+      { name: 'Proxmox', slug: 'proxmox' },
+      { name: 'Docker', slug: 'docker' },
+      { name: 'Ansible', slug: 'ansible' },
+      { name: 'Nginx', slug: 'nginx' },
+      { name: 'Apache', slug: 'apache' },
+      { name: 'Windows Server', imagePath: '/icons/windows_server.png' },
+      { name: 'Teleport (Bastion)', imagePath: '/icons/teleport.png' },
+      { name: 'OpenLDAP', imagePath: '/icons/openldap.png' },
+    ],
+  },
+  {
+    id: 'cloud',
+    label: 'Cloud & Monitoring',
+    icon: 'Cloud',
+    skills: [
+      { name: 'Prometheus', slug: 'prometheus' },
+      { name: 'Grafana', slug: 'grafana' },
+      { name: 'AWS', imagePath: '/icons/aws.png' },
+      { name: 'Suricata (IDS)', imagePath: '/icons/suricata.png' },
+      { name: 'Wazuh (SIEM)', imagePath: '/icons/wazuh.png' },
+      { name: 'Nagios', imagePath: '/icons/nagios.png' },
+      { name: 'Graylog', imagePath: '/icons/graylog.png' },
+    ],
+  },
+  {
+    id: 'reseaux',
+    label: 'Réseaux',
+    icon: 'Network',
+    skills: [
+      { name: 'Cisco', slug: 'cisco' },
+      { name: 'pfSense', slug: 'pfsense' },
+      { name: 'Stormshield', imagePath: '/icons/stormshield-petit.png' },
+      { name: 'VLAN', imagePath: '/icons/vlan.png' },
+      { name: 'Routage', imagePath: '/icons/routage.png' },
+      { name: 'ZyXEL', imagePath: '/icons/zyxel.png' },
+      { name: 'Allied-Telesis', imagePath: '/icons/allied-telesis.png' },
+    ],
+  },
+  {
+    id: 'bases-donnees',
+    label: 'Bases de données',
+    icon: 'Database',
+    skills: [
+      { name: 'MariaDB', slug: 'mariadb' },
+      { name: 'MySQL', slug: 'mysql' },
+    ],
+  },
+  {
+    id: 'programmation',
+    label: 'Programmation & Scripting',
+    icon: 'Code2',
+    skills: [
+      { name: 'Python', slug: 'python' },
+      { name: 'Bash', slug: 'gnubash' },
+      { name: 'C++', slug: 'cplusplus' },
+      { name: 'HTML', slug: 'html5' },
+      { name: 'Qt (PyQt6)', slug: 'qt' },
+      { name: 'PowerShell', imagePath: '/icons/powershell.png' },
+      { name: 'SQL', imagePath: '/icons/sql.png' },
+    ],
+  },
+  {
+    id: 'web',
+    label: 'Développement Web & CMS',
+    icon: 'Globe',
+    skills: [
+      { name: 'WordPress', slug: 'wordpress' },
+      { name: 'Node-RED', slug: 'nodered' },
+      { name: 'Node.js', slug: 'nodedotjs' },
+    ],
+  },
+  {
+    id: 'embarque',
+    label: 'Embarqué & IoT',
+    icon: 'Cpu',
+    skills: [
+      { name: 'Raspberry Pi', slug: 'raspberrypi' },
+      { name: 'ESP32', imagePath: '/icons/esp32.png' },
+      { name: 'ESP8266', imagePath: '/icons/esp8266.png' },
+      { name: 'Monitoring', imagePath: '/icons/monitoring.png' },
+    ],
+  },
+  {
+    id: 'support',
+    label: 'Support IT',
+    icon: 'Headphones',
+    skills: [
+      { name: 'GLPI', imagePath: '/icons/glpi.png' },
+      { name: 'HelpDesk', imagePath: '/icons/helpdesk.png' },
+    ],
+  },
+  {
+    id: 'crypto-ia',
+    label: 'Cryptographie & IA',
+    icon: 'Lock',
+    skills: [
+      { name: 'Cryptographie', imagePath: '/icons/cryptographie.png' },
+      { name: 'Stéganographie', imagePath: '/icons/steganographie.png' },
+      { name: 'Machine Learning', imagePath: '/icons/machine-learning.png' },
+      { name: 'Réseaux Neuronaux', imagePath: '/icons/reseaux-neuronaux.png' },
+    ],
+  },
+]

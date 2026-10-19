@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Admin - Saint Valentin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        .card-stat { border:none; border-radius: 15px; color: white; transition: transform 0.2s; }
+        .card-stat:hover { transform: translateY(-5px); }
+        .bg-money { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .bg-roses { background: linear-gradient(135deg, #ff512f, #dd2476); }
+        .bg-orders { background: linear-gradient(135deg, #4568DC, #B06AB3); }
+        .table-admin th { font-size: 0.85rem; text-transform: uppercase; background-color: #f8f9fa; }
+        .recipient-row { border-bottom: 1px dashed #dee2e6; padding: 10px 0; }
+        .recipient-row:last-child { border-bottom: none; }
+        .pulse-button { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); } 70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); } }
+        @media (max-width: 768px) {
+            .table-admin th:nth-child(1), .table-admin td:nth-child(1) { width: 50% !important; }
+            .table-admin th:nth-child(2), .table-admin td:nth-child(2) { width: 50% !important; }
+            .modal-xl { margin: 10px; }
+            .border-end-md { border-right: none !important; border-bottom: 1px solid #dee2e6; padding-bottom: 1rem; margin-bottom: 1rem; }
+        }
+        @media (min-width: 768px) { .border-end-md { border-right: 1px solid #dee2e6 !important; } }
+    </style>
+</head>
+<body class="bg-light">
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary mb-0">Tableau de bord CVL <i class="fas fa-clipboard-list ms-2"></i></h2>
+            <span class="text-muted small">Bienvenue, <strong>Théo</strong></span>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="stats.html" class="btn btn-outline-primary shadow-sm"><i class="fas fa-chart-pie me-2"></i>Stats</a>
+            <a href="admin.html" class="btn btn-dark shadow-sm"><i class="fas fa-cogs"></i></a>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #198754 0%, #20c997 100%); color: white;">
+                <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-1" style="font-size: 0.8rem;">Cagnotte Totale</h6>
+                        <h2 class="fw-bold mb-0" id="revenue-counter">24.00 €</h2>
+                    </div>
+                    <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;"><i class="fas fa-euro-sign fa-2x"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 bg-white">
+                <div class="card-body p-3 border-start border-5 border-warning">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <h6 class="text-muted text-uppercase mb-1" style="font-size: 0.8rem;">En attente paiement</h6>
+                            <h2 class="fw-bold mb-0 text-dark">
+                                <span id="unpaid-counter">3</span>
+                                <small class="text-muted fs-6">commandes</small>
+                            </h2>
+                        </div>
+                        <div class="text-warning"><i class="fas fa-exclamation-circle fa-2x"></i></div>
+                    </div>
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-success" id="paid-bar" style="width: 67%"></div>
+                        <div class="progress-bar bg-warning" id="unpaid-bar" style="width: 33%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%); color: white;">
+                <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-1" style="font-size: 0.8rem;">Volume Roses</h6>
+                        <h2 class="fw-bold mb-0">19 🌹</h2>
+                    </div>
+                    <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;"><i class="fas fa-box-open fa-2x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3 mb-4">
+        <a href="preparation.html" class="btn btn-lg btn-warning fw-bold shadow-sm flex-grow-1"><i class="fas fa-boxes"></i> Mode Préparation</a>
+        <a href="delivery.html" class="btn btn-lg btn-success fw-bold shadow-sm flex-grow-1"><i class="fas fa-truck"></i> Mode Distribution</a>
+    </div>
+
+    <ul class="nav nav-pills mb-3 gap-2" id="orderTabs">
+        <li class="nav-item">
+            <a class="nav-link active bg-dark" href="#" data-tab="all"><i class="fas fa-list me-1"></i> Tout</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link bg-white text-dark border" href="#" data-tab="unpaid"><i class="fas fa-hand-holding-usd me-1"></i> À Encaisser</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link bg-white text-dark border" href="#" data-tab="paid"><i class="fas fa-check-circle me-1"></i> Payés</a>
+        </li>
+    </ul>
+
+    <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <h5 class="mb-0 fw-bold text-primary">📦 Commandes &amp; Livraisons</h5>
+                <span class="badge bg-warning text-dark d-none" id="search-count"></span>
+            </div>
+            <form class="d-flex mt-2 mt-md-0" style="max-width: 350px;" id="search-form">
+                <div class="input-group">
+                    <input type="text" id="search-input" class="form-control rounded-start-pill border-end-0 bg-light" placeholder="Rechercher...">
+                    <a href="#" class="btn btn-light border border-start-0 border-end-0 text-danger d-none" id="search-clear"><i class="fas fa-times"></i></a>
+                    <button class="btn btn-primary rounded-end-pill px-3" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body p-3 bg-light position-relative" id="orders-container" style="transition: opacity 0.15s ease; min-height: 200px;">
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center bg-light" id="orders-loading" style="z-index: 5;">
+                <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div>
+            </div>
+            <div class="d-flex flex-column gap-4" id="orders-list">
+
+                <!-- ============ COMMANDE #0143 — Non payée ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="143" data-paid="0"
+                     data-search="0143 emma girard 2tsciel lucas martin tg3 rose rouge">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-143" class="p-3 bg-warning text-dark bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0143</span>
+                                    <small class="fw-bold">13/02 12:41</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Emma GIRARD</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">2TSCIEL</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">4.00 €</div>
+                                        <div id="payment-box-143">
+                                            <form class="ajax-form" data-order="143" data-amount="4.00">
+                                                <button type="submit" class="btn btn-danger w-100 fw-bold shadow-sm pulse-button">
+                                                    <i class="fas fa-hand-holding-dollar me-1"></i> Encaisser
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(143)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Lucas MARTIN</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>TG3</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-danger py-1 px-2 mb-0 small"><i class="fas fa-hand-holding-usd me-2"></i> À payer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-danger text-white me-2">2 🌹</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rouge</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Ceci est une tentative de drague ;)"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>8h</b> A101</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>9h</b> A101</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> B204</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> CDI</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>13h</b> Ateliers 2</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>14h</b> Gymnase</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>15h</b> A101</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0142 — Non payée, 2 destinataires ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="142" data-paid="0"
+                     data-search="0142 chloé bonnet 1g2 alexandre dupont camille leroy 2tsciel rose rouge rose rose">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-142" class="p-3 bg-warning text-dark bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0142</span>
+                                    <small class="fw-bold">13/02 12:05</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Chloé BONNET</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">1G2</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">8.00 €</div>
+                                        <div id="payment-box-142">
+                                            <form class="ajax-form" data-order="142" data-amount="8.00">
+                                                <button type="submit" class="btn btn-danger w-100 fw-bold shadow-sm pulse-button">
+                                                    <i class="fas fa-hand-holding-dollar me-1"></i> Encaisser
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(142)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3 border-bottom">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Alexandre DUPONT</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>1G2</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-danger py-1 px-2 mb-0 small"><i class="fas fa-hand-holding-usd me-2"></i> À payer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-danger text-white me-2">3 🌹</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rouge</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Je t'aime &lt;3"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>8h</b> B102</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> B102</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> A203</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>14h</b> A203</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>15h</b> A203</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Camille LEROY</span>
+                                            <span class="badge bg-dark" title="Anonyme"><i class="fas fa-user-secret"></i></span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>2TSCIEL</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-danger py-1 px-2 mb-0 small"><i class="fas fa-hand-holding-usd me-2"></i> À payer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill text-dark border me-2" style="background-color: #ffc0cb; color: #880e4f; border-color: #ffb6c1;">1 🌸</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rose</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Admirateur secret..."</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>9h</b> Ateliers 1</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> Ateliers 1</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>13h</b> C305</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>14h</b> C305</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0141 — Payée, distribuée ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="141" data-paid="1"
+                     data-search="0141 maxime aubert tg3 marie santos rose rouge anonyme">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-141" class="p-3 bg-success text-white bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0141</span>
+                                    <small class="fw-bold">13/02 11:20</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Maxime AUBERT</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">TG3</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">2.00 €</div>
+                                        <div id="payment-box-141">
+                                            <div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                <span>Payé le 13/02 11:35</span>
+                                            </div>
+                                            <form class="cancel-form" data-order="141" data-amount="2.00">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(141)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Marie SANTOS</span>
+                                            <span class="badge bg-dark" title="Anonyme"><i class="fas fa-user-secret"></i></span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>TG3</span></div>
+                                        <div class="status-label" data-prepared="1" data-distributed="1">
+                                            <div class="alert alert-success py-1 px-2 mb-0 small"><i class="fas fa-check-circle me-2"></i> Distribué</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-danger text-white me-2">1 🌹</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rouge</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>9h</b> A101</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> B204</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> B204</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0140 — Payée, 2 destinataires ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="140" data-paid="1"
+                     data-search="0140 julie mercier 205 nathan colin tg3 sarah roux rose rose rose blanche">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-140" class="p-3 bg-success text-white bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0140</span>
+                                    <small class="fw-bold">13/02 10:58</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Julie MERCIER</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">205</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">6.00 €</div>
+                                        <div id="payment-box-140">
+                                            <div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                <span>Payé le 13/02 11:12</span>
+                                            </div>
+                                            <form class="cancel-form" data-order="140" data-amount="6.00">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(140)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3 border-bottom">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Nathan COLIN</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>TG3</span></div>
+                                        <div class="status-label" data-prepared="1" data-distributed="0">
+                                            <div class="alert alert-info py-1 px-2 mb-0 small text-dark"><i class="fas fa-truck me-2"></i> Prêt</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill text-dark border me-2" style="background-color: #ffc0cb; color: #880e4f; border-color: #ffb6c1;">2 🌸</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rose</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Je t'aime &lt;3"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>8h</b> Ateliers 2</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> Ateliers 2</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>14h</b> A101</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>15h</b> A101</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Sarah ROUX</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>205</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-warning py-1 px-2 mb-0 small text-dark"><i class="fas fa-box-open me-2"></i> À préparer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-white text-dark border me-2">1 🤍</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Blanche</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Merci d'être là pour moi :)"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>9h</b> C201</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> C201</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>13h</b> Gymnase</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>14h</b> C201</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0139 — Payée ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="139" data-paid="1"
+                     data-search="0139 thomas fabre 205 léa rousseau rose blanche">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-139" class="p-3 bg-success text-white bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0139</span>
+                                    <small class="fw-bold">12/02 16:22</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Thomas FABRE</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">205</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">2.00 €</div>
+                                        <div id="payment-box-139">
+                                            <div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                <span>Payé le 12/02 16:40</span>
+                                            </div>
+                                            <form class="cancel-form" data-order="139" data-amount="2.00">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(139)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Léa ROUSSEAU</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>205</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-warning py-1 px-2 mb-0 small text-dark"><i class="fas fa-box-open me-2"></i> À préparer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-white text-dark border me-2">1 🤍</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Blanche</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Tu gères, change rien B-)"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>8h</b> C201</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> C201</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>15h</b> CDI</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0138 — Payée, prête ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="138" data-paid="1"
+                     data-search="0138 inès chevalier 1g2 hugo bertrand tg3 rose rouge">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-138" class="p-3 bg-success text-white bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0138</span>
+                                    <small class="fw-bold">12/02 12:14</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Inès CHEVALIER</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">1G2</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">6.00 €</div>
+                                        <div id="payment-box-138">
+                                            <div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                <span>Payé le 12/02 12:30</span>
+                                            </div>
+                                            <form class="cancel-form" data-order="138" data-amount="6.00">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(138)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Hugo BERTRAND</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>TG3</span></div>
+                                        <div class="status-label" data-prepared="1" data-distributed="0">
+                                            <div class="alert alert-info py-1 px-2 mb-0 small text-dark"><i class="fas fa-truck me-2"></i> Prêt</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-danger text-white me-2">3 🌹</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rouge</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Juste pour te voir sourire :)"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> B204</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> B204</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>13h</b> B204</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>14h</b> Gymnase</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0137 — Payée, destinataire absent ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="137" data-paid="1"
+                     data-search="0137 rayan moreau tg3 manon petit 1g2 rose rouge rose rose absent">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-137" class="p-3 bg-success text-white bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0137</span>
+                                    <small class="fw-bold">11/02 15:47</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Rayan MOREAU</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">TG3</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">4.00 €</div>
+                                        <div id="payment-box-137">
+                                            <div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                <span>Payé le 11/02 16:02</span>
+                                            </div>
+                                            <form class="cancel-form" data-order="137" data-amount="4.00">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(137)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Manon PETIT</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>1G2</span></div>
+                                        <div class="status-label" data-prepared="1" data-distributed="0">
+                                            <div class="alert alert-info py-1 px-2 mb-0 small text-dark"><i class="fas fa-truck me-2"></i> Prêt</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-danger text-white me-2">1 🌹</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rouge</span>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill text-dark border me-2" style="background-color: #ffc0cb; color: #880e4f; border-color: #ffb6c1;">1 🌸</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rose</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Merci d'être là pour moi :)"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="badge bg-info text-dark w-100 py-2"><i class="fas fa-user-slash me-1"></i> Absent(e)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0136 — Non payée ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="136" data-paid="0"
+                     data-search="0136 théo marescal titre pro ais lenny varlin 2tsciel rose rose anonyme">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-136" class="p-3 bg-warning text-dark bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0136</span>
+                                    <small class="fw-bold">11/02 09:33</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Théo MARESCAL</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">Titre Pro AIS</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">2.00 €</div>
+                                        <div id="payment-box-136">
+                                            <form class="ajax-form" data-order="136" data-amount="2.00">
+                                                <button type="submit" class="btn btn-danger w-100 fw-bold shadow-sm pulse-button">
+                                                    <i class="fas fa-hand-holding-dollar me-1"></i> Encaisser
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(136)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Lenny VARLIN</span>
+                                            <span class="badge bg-dark" title="Anonyme"><i class="fas fa-user-secret"></i></span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>2TSCIEL</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-danger py-1 px-2 mb-0 small"><i class="fas fa-hand-holding-usd me-2"></i> À payer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill text-dark border me-2" style="background-color: #ffc0cb; color: #880e4f; border-color: #ffb6c1;">1 🌸</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rose</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>9h</b> C305</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>11h</b> C305</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>16h</b> C201</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ COMMANDE #0135 — Payée ============ -->
+                <div class="card border-0 shadow-sm overflow-hidden order-card" data-order="135" data-paid="1"
+                     data-search="0135 théo marescal titre pro ais manon ruelle tassp2 rose rouge">
+                    <div class="row g-0 align-items-stretch">
+                        <div class="col-lg-3 col-12 bg-light border-end d-flex flex-column">
+                            <div id="order-header-135" class="p-3 bg-success text-white bg-opacity-10 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-dark">#0135</span>
+                                    <small class="fw-bold">10/02 13:05</small>
+                                </div>
+                            </div>
+                            <div class="p-3 flex-grow-1">
+                                <div class="mb-3">
+                                    <label class="small text-muted text-uppercase fw-bold">Acheteur</label>
+                                    <div class="fs-5 fw-bold text-dark lh-sm mb-1">Théo MARESCAL</div>
+                                    <span class="badge bg-white text-dark border shadow-sm">Titre Pro AIS</span>
+                                </div>
+                                <div class="card bg-white border mb-3">
+                                    <div class="card-body p-2 text-center">
+                                        <div class="small text-muted mb-1">Total à payer</div>
+                                        <div class="fs-4 fw-bold text-primary mb-2">4.00 €</div>
+                                        <div id="payment-box-135">
+                                            <div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                <span>Payé le 10/02 13:20</span>
+                                            </div>
+                                            <form class="cancel-form" data-order="135" data-amount="4.00">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-dark btn-sm w-100" onclick="openEdit(135)">
+                                    <i class="fas fa-pencil-alt me-1"></i> Modifier commande
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-9 col-12 bg-white d-flex flex-column justify-content-center">
+                            <div class="p-3">
+                                <div class="row g-3">
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <span class="fw-bold text-primary fs-5">Manon RUELLE</span>
+                                        </div>
+                                        <div class="mb-3"><span class="badge bg-info text-dark"><i class="fas fa-graduation-cap me-1"></i>TASSP2</span></div>
+                                        <div class="status-label" data-prepared="0" data-distributed="0">
+                                            <div class="alert alert-warning py-1 px-2 mb-0 small text-dark"><i class="fas fa-box-open me-2"></i> À préparer</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end-md d-flex flex-column justify-content-center">
+                                        <div class="d-flex flex-column gap-2 mb-2">
+                                            <div class="d-flex align-items-center justify-content-between p-1 border rounded bg-light">
+                                                <span class="badge rounded-pill bg-danger text-white me-2">2 🌹</span>
+                                                <span class="small fw-bold text-muted flex-grow-1">Rose Rouge</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted fst-italic border-start border-3 border-secondary">"Je t'aime &lt;3"</div>
+                                    </div>
+                                    <div class="col-md-4 d-flex flex-column justify-content-center">
+                                        <strong class="small text-uppercase text-muted d-block mb-2">📍 Localisation</strong>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <span class="badge bg-light text-dark border fw-normal"><b>8h</b> A203</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>10h</b> A203</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>13h</b> B102</span>
+                                            <span class="badge bg-light text-dark border fw-normal"><b>16h</b> B102</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center p-5 text-muted bg-white rounded shadow-sm d-none" id="empty-state">
+                <i class="fas fa-inbox fa-3x mb-3 opacity-25"></i><br>Aucune commande trouvée.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MODALE D'ÉDITION (modal-xl) ===================== -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><i class="fas fa-edit"></i> Éditer commande #<span id="edit-order-id"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form onsubmit="return demoNotice('Enregistrement des modifications');">
+                <div class="modal-body" id="edit-modal-body"></div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary fw-bold"><i class="fas fa-save me-1"></i> Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== TOAST DE VALIDATION DE PAIEMENT ===================== -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+    <div id="paymentToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header bg-success text-white">
+            <i class="fas fa-envelope me-2"></i>
+            <strong class="me-auto">Validation en cours</strong>
+            <small class="text-white-50">Juste un instant...</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body bg-white">
+            <p class="mb-2 text-dark">L'e-mail de confirmation sera envoyé dans <strong id="toastCountdown" class="text-primary fs-5">5</strong> secondes.</p>
+            <div class="progress mb-3" style="height: 5px;">
+                <div id="toastProgressBar" class="progress-bar bg-success" role="progressbar" style="width: 100%; transition: none;"></div>
+            </div>
+            <button type="button" id="toastCancelBtn" class="btn btn-outline-danger btn-sm w-100 fw-bold">
+                <i class="fas fa-undo me-1"></i> ANNULER L'ENVOI
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================================
+   Logique du tableau de bord — copie statique.
+   Les appels fetch() du site réel sont remplacés par des mises à jour
+   directes du DOM, à l'identique de ce que renvoie la réponse JSON.
+   ========================================================================= */
+
+var TOTAL_ORDERS = 9;
+var revenue = 24.00;
+var unpaid = 3;
+
+/* --- Jeu de données servant à peupler la modale d'édition --- */
+var ORDERS = {
+    143: { buyer: ['Emma', 'GIRARD', '2TSCIEL'], recipients: [
+        { prenom: 'Lucas', nom: 'MARTIN', classe: 'TG3', anon: false, roses: { rouge: 2, blanche: 0, rose: 0 }, msg: 'Ceci est une tentative de drague ;)' }
+    ]},
+    142: { buyer: ['Chloé', 'BONNET', '1G2'], recipients: [
+        { prenom: 'Alexandre', nom: 'DUPONT', classe: '1G2', anon: false, roses: { rouge: 3, blanche: 0, rose: 0 }, msg: "Je t'aime <3" },
+        { prenom: 'Camille', nom: 'LEROY', classe: '2TSCIEL', anon: true, roses: { rouge: 0, blanche: 0, rose: 1 }, msg: 'Admirateur secret...' }
+    ]},
+    141: { buyer: ['Maxime', 'AUBERT', 'TG3'], recipients: [
+        { prenom: 'Marie', nom: 'SANTOS', classe: 'TG3', anon: true, roses: { rouge: 1, blanche: 0, rose: 0 }, msg: '' }
+    ]},
+    140: { buyer: ['Julie', 'MERCIER', '205'], recipients: [
+        { prenom: 'Nathan', nom: 'COLIN', classe: 'TG3', anon: false, roses: { rouge: 0, blanche: 0, rose: 2 }, msg: "Je t'aime <3" },
+        { prenom: 'Sarah', nom: 'ROUX', classe: '205', anon: false, roses: { rouge: 0, blanche: 1, rose: 0 }, msg: "Merci d'être là pour moi :)" }
+    ]},
+    139: { buyer: ['Thomas', 'FABRE', '205'], recipients: [
+        { prenom: 'Léa', nom: 'ROUSSEAU', classe: '205', anon: false, roses: { rouge: 0, blanche: 1, rose: 0 }, msg: 'Tu gères, change rien B-)' }
+    ]},
+    138: { buyer: ['Inès', 'CHEVALIER', '1G2'], recipients: [
+        { prenom: 'Hugo', nom: 'BERTRAND', classe: 'TG3', anon: false, roses: { rouge: 3, blanche: 0, rose: 0 }, msg: 'Juste pour te voir sourire :)' }
+    ]},
+    137: { buyer: ['Rayan', 'MOREAU', 'TG3'], recipients: [
+        { prenom: 'Manon', nom: 'PETIT', classe: '1G2', anon: false, roses: { rouge: 1, blanche: 0, rose: 1 }, msg: "Merci d'être là pour moi :)" }
+    ]},
+    136: { buyer: ['Théo', 'MARESCAL', 'Titre Pro AIS'], recipients: [
+        { prenom: 'Lenny', nom: 'VARLIN', classe: '2TSCIEL', anon: true, roses: { rouge: 0, blanche: 0, rose: 1 }, msg: '' }
+    ]},
+    135: { buyer: ['Théo', 'MARESCAL', 'Titre Pro AIS'], recipients: [
+        { prenom: 'Manon', nom: 'RUELLE', classe: 'TASSP2', anon: false, roses: { rouge: 2, blanche: 0, rose: 0 }, msg: "Je t'aime <3" }
+    ]}
+};
+
+var CLASSES = ['205', '1G2', 'TG3', '2TSCIEL', 'Titre Pro AIS', 'TASSP2'];
+var MESSAGES = ["Je t'aime <3", "Merci d'être là pour moi :)", 'Admirateur secret...',
+                'Ceci est une tentative de drague ;)', 'Juste pour te voir sourire :)',
+                'Tu gères, change rien B-)'];
+
+function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function selectHtml(name, options, selected) {
+    var h = '<select class="' + name + '">';
+    options.forEach(function (o) {
+        h += '<option' + (o === selected ? ' selected' : '') + '>' + esc(o) + '</option>';
+    });
+    return h + '</select>';
+}
+
+/* Construit le corps de la modale — même structure que le site réel. */
+function openEdit(id) {
+    var o = ORDERS[id];
+    document.getElementById('edit-order-id').textContent = id;
+
+    var h = ''
+        + '<h6 class="text-primary fw-bold border-bottom pb-2">👤 Acheteur</h6>'
+        + '<div class="row g-3 mb-3">'
+        +   '<div class="col-md-4"><label class="form-label small">Prénom</label>'
+        +     '<input type="text" class="form-control" value="' + esc(o.buyer[0]) + '"></div>'
+        +   '<div class="col-md-4"><label class="form-label small">Nom</label>'
+        +     '<input type="text" class="form-control" value="' + esc(o.buyer[1]) + '"></div>'
+        +   '<div class="col-md-4"><label class="form-label small">Classe</label>'
+        +     selectHtml('form-select', CLASSES, o.buyer[2]) + '</div>'
+        + '</div>';
+
+    o.recipients.forEach(function (r, i) {
+        h += ''
+        + '<div class="card mb-3 bg-light border-0"><div class="card-body">'
+        +   '<div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">'
+        +     '<h6 class="text-danger fw-bold mb-0">❤️ Destinataire ' + (i + 1) + '</h6>'
+        +     '<button type="button" class="btn btn-sm btn-outline-danger" onclick="demoNotice(\'Suppression du destinataire\')"><i class="fas fa-trash-alt"></i></button>'
+        +   '</div>'
+        +   '<div class="row g-2 mb-3">'
+        +     '<div class="col-md-3"><label class="small">Prénom</label><input type="text" class="form-control form-control-sm" value="' + esc(r.prenom) + '"></div>'
+        +     '<div class="col-md-3"><label class="small">Nom</label><input type="text" class="form-control form-control-sm" value="' + esc(r.nom) + '"></div>'
+        +     '<div class="col-md-3"><label class="small">Classe</label>' + selectHtml('form-select form-select-sm', CLASSES, r.classe) + '</div>'
+        +     '<div class="col-md-3 pt-4"><div class="form-check form-switch">'
+        +       '<input class="form-check-input" type="checkbox"' + (r.anon ? ' checked' : '') + '><label class="small">Anonyme</label>'
+        +     '</div></div>'
+        +   '</div>'
+        +   '<div class="row g-2 mb-3">'
+        +     '<div class="col-md-6"><label class="small fw-bold">🌹 Roses</label><div class="row g-1">'
+        +       '<div class="col-4"><label class="text-muted" style="font-size:0.7rem;">Rose Rouge</label>'
+        +         '<input type="number" min="0" class="form-control form-control-sm" value="' + r.roses.rouge + '"></div>'
+        +       '<div class="col-4"><label class="text-muted" style="font-size:0.7rem;">Rose Blanche</label>'
+        +         '<input type="number" min="0" class="form-control form-control-sm" value="' + r.roses.blanche + '"></div>'
+        +       '<div class="col-4"><label class="text-muted" style="font-size:0.7rem;">Rose Rose</label>'
+        +         '<input type="number" min="0" class="form-control form-control-sm" value="' + r.roses.rose + '"></div>'
+        +     '</div></div>'
+        +     '<div class="col-md-6"><label class="small fw-bold">💬 Message prédéfini</label>'
+        +       selectHtml('form-select form-select-sm', ['-- Aucun message --'].concat(MESSAGES), r.msg || '-- Aucun message --')
+        +     '</div>'
+        +   '</div>'
+        + '</div></div>';
+    });
+
+    document.getElementById('edit-modal-body').innerHTML = h;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal')).show();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ---------- Rafraîchissement des compteurs d'en-tête ---------- */
+    function refreshCounters() {
+        var pct = Math.round(((TOTAL_ORDERS - unpaid) / TOTAL_ORDERS) * 100);
+        document.getElementById('revenue-counter').textContent = revenue.toFixed(2) + ' €';
+        document.getElementById('unpaid-counter').textContent = unpaid;
+        document.getElementById('paid-bar').style.width = pct + '%';
+        document.getElementById('unpaid-bar').style.width = (100 - pct) + '%';
+    }
+
+    /* ---------- Bascule visuelle payé / impayé d'une commande ---------- */
+    function setPaid(orderId, paid, amount) {
+        var card = document.querySelector('.order-card[data-order="' + orderId + '"]');
+        var header = document.getElementById('order-header-' + orderId);
+        var box = document.getElementById('payment-box-' + orderId);
+        card.dataset.paid = paid ? '1' : '0';
+
+        header.className = 'p-3 ' + (paid ? 'bg-success text-white' : 'bg-warning text-dark') + ' bg-opacity-10 border-bottom';
+
+        if (paid) {
+            var now = new Date();
+            var stamp = ('0' + now.getDate()).slice(-2) + '/' + ('0' + (now.getMonth() + 1)).slice(-2)
+                      + ' ' + ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+            box.innerHTML = ''
+                + '<div class="alert alert-success py-1 px-2 mb-2 small d-flex align-items-center justify-content-center">'
+                +   '<i class="fas fa-check-circle me-1"></i><span>Payé le ' + stamp + '</span>'
+                + '</div>'
+                + '<form class="cancel-form" data-order="' + orderId + '" data-amount="' + amount + '">'
+                +   '<button type="submit" class="btn btn-outline-danger btn-sm w-100" style="font-size: 0.8rem;">Annuler paiement</button>'
+                + '</form>';
+        } else {
+            box.innerHTML = ''
+                + '<form class="ajax-form" data-order="' + orderId + '" data-amount="' + amount + '">'
+                +   '<button type="submit" class="btn btn-danger w-100 fw-bold shadow-sm pulse-button">'
+                +     '<i class="fas fa-hand-holding-dollar me-1"></i> Encaisser'
+                +   '</button>'
+                + '</form>';
+        }
+
+        /* Recalcul des libellés de statut de chaque destinataire, selon la
+           même cascade de priorités que manage_orders.php. */
+        card.querySelectorAll('.status-label').forEach(function (el) {
+            if (!paid) {
+                el.innerHTML = '<div class="alert alert-danger py-1 px-2 mb-0 small"><i class="fas fa-hand-holding-usd me-2"></i> À payer</div>';
+            } else if (el.dataset.distributed === '1') {
+                el.innerHTML = '<div class="alert alert-success py-1 px-2 mb-0 small"><i class="fas fa-check-circle me-2"></i> Distribué</div>';
+            } else if (el.dataset.prepared === '1') {
+                el.innerHTML = '<div class="alert alert-info py-1 px-2 mb-0 small text-dark"><i class="fas fa-truck me-2"></i> Prêt</div>';
+            } else {
+                el.innerHTML = '<div class="alert alert-warning py-1 px-2 mb-0 small text-dark"><i class="fas fa-box-open me-2"></i> À préparer</div>';
+            }
+        });
+
+        applyFilters();
+    }
+
+    /* ---------- Encaissement : compte à rebours puis validation ---------- */
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+
+        if (form.classList.contains('ajax-form')) {
+            e.preventDefault();
+            var orderId = form.dataset.order;
+            var amount = form.dataset.amount;
+            var btn = form.querySelector('button');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-hourglass-half fa-spin"></i>';
+
+            startCountdown({
+                toastId: 'paymentToast',
+                progressId: 'toastProgressBar',
+                countdownId: 'toastCountdown',
+                cancelId: 'toastCancelBtn',
+                onComplete: function () {
+                    revenue += parseFloat(amount);
+                    unpaid--;
+                    setPaid(orderId, true, amount);
+                    refreshCounters();
+                    showToast('Paiement de la commande #' + ('000' + orderId).slice(-4) + ' validé. E-mail envoyé à l\'acheteur.', 'success');
+                },
+                onCancel: function () {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-hand-holding-dollar me-1"></i> Encaisser';
+                    showToast('Envoi annulé, la commande reste en attente de paiement.', 'warning');
+                }
+            });
+        }
+
+        if (form.classList.contains('cancel-form')) {
+            e.preventDefault();
+            if (!confirm('⚠️ Attention : Annuler le paiement ?')) return;
+            var oid = form.dataset.order;
+            revenue -= parseFloat(form.dataset.amount);
+            unpaid++;
+            setPaid(oid, false, form.dataset.amount);
+            refreshCounters();
+            showToast('Paiement de la commande #' + ('000' + oid).slice(-4) + ' annulé.', 'warning');
+        }
+    });
+
+    /* ---------- Onglets Tout / À Encaisser / Payés ---------- */
+    var activeTab = 'all';
+
+    document.querySelectorAll('#orderTabs .nav-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            activeTab = this.dataset.tab;
+
+            document.querySelectorAll('#orderTabs .nav-link').forEach(function (l) {
+                l.className = 'nav-link bg-white text-dark border';
+            });
+            if (activeTab === 'all')         this.className = 'nav-link active bg-dark';
+            else if (activeTab === 'unpaid') this.className = 'nav-link active bg-warning text-dark fw-bold';
+            else                             this.className = 'nav-link active bg-success';
+
+            /* Rafraîchissement partiel : seul ce bloc (le tableau des commandes)
+               se met à jour, à l'identique d'un fetch() ciblé côté site réel —
+               le reste de la page (stats, boutons de mode, recherche) ne bouge pas. */
+            var container = document.getElementById('orders-container');
+            var loading = document.getElementById('orders-loading');
+            container.style.opacity = '0.35';
+            loading.classList.remove('d-none');
+            loading.classList.add('d-flex');
+
+            setTimeout(function () {
+                applyFilters();
+                container.style.opacity = '1';
+                loading.classList.add('d-none');
+                loading.classList.remove('d-flex');
+            }, 220);
+        });
+    });
+
+    /* ---------- Recherche multi-champs ---------- */
+    var searchInput = document.getElementById('search-input');
+    var searchClear = document.getElementById('search-clear');
+    var searchCount = document.getElementById('search-count');
+
+    document.getElementById('search-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        applyFilters();
+    });
+    searchInput.addEventListener('input', applyFilters);
+    searchClear.addEventListener('click', function (e) {
+        e.preventDefault();
+        searchInput.value = '';
+        applyFilters();
+    });
+
+    function applyFilters() {
+        var q = searchInput.value.trim().toLowerCase();
+        var visible = 0;
+
+        document.querySelectorAll('.order-card').forEach(function (card) {
+            var paid = card.dataset.paid === '1';
+            var okTab = (activeTab === 'all') || (activeTab === 'paid' && paid) || (activeTab === 'unpaid' && !paid);
+            var okSearch = !q || card.dataset.search.indexOf(q) !== -1;
+            var show = okTab && okSearch;
+            card.classList.toggle('d-none', !show);
+            if (show) visible++;
+        });
+
+        document.getElementById('empty-state').classList.toggle('d-none', visible > 0);
+        searchClear.classList.toggle('d-none', !q);
+        searchCount.classList.toggle('d-none', !q);
+        if (q) searchCount.textContent = visible + ' résultat(s)';
+    }
+
+    window.applyFilters = applyFilters;
+});
+</script>
+</body>
+</html>

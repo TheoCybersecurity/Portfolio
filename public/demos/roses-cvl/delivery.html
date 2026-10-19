@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Livraison - St Valentin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/favicon.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; padding-bottom: 80px; }
+        /* Scroll horizontal pour les filtres sur mobile */
+        .scrolling-wrapper { overflow-x: auto; white-space: nowrap; padding: 5px 0; -webkit-overflow-scrolling: touch; }
+        .scrolling-wrapper::-webkit-scrollbar { display: none; }
+
+        .time-btn, .building-btn {
+            display: inline-block; padding: 8px 16px; margin-right: 8px;
+            border-radius: 20px; background: white; color: #555; text-decoration: none;
+            font-size: 0.9rem; font-weight: 600; border: 1px solid #dee2e6;
+        }
+        .building-btn { border-radius: 8px; background: #e9ecef; }
+        .time-btn.active { background: #dc3545; color: white; border-color: #dc3545; }
+        .building-btn.active { background: #0d6efd; color: white; border-color: #0d6efd; }
+
+        .floor-header { color: #495057; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #dee2e6; padding-bottom: 5px; }
+        .room-block { background: white; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e9ecef; }
+        .room-title { background: #f8f9fa; padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #e9ecef; display: flex; justify-content: space-between; }
+
+        .recipient-item { padding: 15px; border-bottom: 1px solid #f1f3f5; transition: background-color 0.3s, opacity 0.3s; }
+        .recipient-item.done { background-color: #f8fff9; opacity: 0.8; }
+        .recipient-item:last-child { border-bottom: none; }
+
+        .badge-rose-rouge { background-color: #dc3545; color: white; }
+        .badge-rose-blanche { background-color: #ffffff; color: #212529; border: 1px solid #ced4da; }
+        .badge-rose-pink { background-color: #ffc2d1; color: #880e4f; }
+
+        .order-detail-line { padding: 8px; background: #f8f9fa; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid #dee2e6; }
+        .order-detail-line:last-child { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+<script src="assets/js/demo.js"></script>
+
+<div class="container mt-3">
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-12">
+            <a href="manage_orders.html" class="text-decoration-none text-muted"><i class="fas fa-arrow-left"></i> Retour Tableau de bord</a>
+            <h2 class="fw-bold text-success mt-2"><i class="fas fa-truck"></i> Distribution</h2>
+            <p class="text-muted" id="delivery-caption"></p>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-3" id="delivery-tabs">
+        <li class="nav-item"><a class="nav-link active" href="#" data-view="todo"><i class="fas fa-truck"></i> À LIVRER</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" data-view="done"><i class="fas fa-history"></i> HISTORIQUE</a></li>
+    </ul>
+
+    <div class="d-flex justify-content-center justify-content-md-end mb-3">
+        <form class="d-flex" style="max-width: 350px; width: 100%;" id="delivery-search-form">
+            <div class="input-group shadow-sm">
+                <input type="text" id="delivery-search" class="form-control rounded-start-pill border-end-0 ps-3 bg-white" placeholder="Chercher (Nom...)">
+                <a href="#" class="btn btn-white bg-white border border-start-0 border-end-0 text-danger d-none" id="delivery-search-clear"><i class="fas fa-times"></i></a>
+                <button class="btn btn-primary rounded-end-pill px-3" type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <div id="filters">
+        <div class="mb-2">
+            <label class="small text-muted fw-bold ms-1">📍 BÂTIMENT</label>
+            <div class="scrolling-wrapper" id="building-filter"></div>
+        </div>
+        <div class="mb-3">
+            <label class="small text-muted fw-bold ms-1">🕒 HEURE</label>
+            <div class="scrolling-wrapper" id="hour-filter"></div>
+        </div>
+    </div>
+
+    <div id="delivery-list"></div>
+</div>
+
+<!-- ===================== TOAST DE LIVRAISON ===================== -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+    <div id="deliveryToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header bg-success text-white">
+            <i class="fas fa-truck me-2"></i> <strong class="me-auto">Livraison en cours</strong>
+            <small class="text-white-50">Validation groupée...</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body bg-white">
+            <p class="mb-2 text-dark">Les e-mails de confirmation partiront dans <strong id="toastCountdown" class="text-success fs-5">5</strong> secondes.</p>
+            <div class="progress mb-3" style="height: 5px;">
+                <div id="toastProgressBar" class="progress-bar bg-success" role="progressbar" style="width: 100%; transition: none;"></div>
+            </div>
+            <button type="button" id="toastCancelBtn" class="btn btn-outline-danger btn-sm w-100 fw-bold">
+                <i class="fas fa-undo me-1"></i> ANNULER
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================================
+   Logique du mode Distribution — copie statique.
+
+   Sur le site réel, le filtrage bâtiment/heure interroge la table
+   `schedules` (colonnes h08…h17) puis regroupe les destinataires par
+   étage > salle. On reproduit ici la même requête côté client à partir
+   des emplois du temps du jeu de données fictif.
+   ========================================================================= */
+
+/* --- Cartographie salles → bâtiment / étage (tables rooms/floors/buildings) --- */
+var ROOMS = {
+    'A101':       { building: 'Externat', floor: 'Rez-de-chaussée' },
+    'CDI':        { building: 'Externat', floor: 'Rez-de-chaussée' },
+    'B102':       { building: 'Externat', floor: '1er étage' },
+    'B204':       { building: 'Externat', floor: '1er étage' },
+    'A203':       { building: 'Externat', floor: '2ème étage' },
+    'Ateliers 1': { building: 'Ateliers', floor: 'Rez-de-chaussée' },
+    'Ateliers 2': { building: 'Ateliers', floor: 'Rez-de-chaussée' },
+    'Gymnase':    { building: 'Gymnase',  floor: 'Rez-de-chaussée' },
+    'C201':       { building: 'Internat', floor: '2ème étage' },
+    'C305':       { building: 'Internat', floor: '3ème étage' }
+};
+
+var BUILDINGS = ['Absent(e)', 'Ateliers', 'Externat', 'Gymnase', 'Internat'];
+
+/* --- Destinataires préparés, en attente de distribution --- */
+var TODO = [
+    {
+        id: 12, prenom: 'Nathan', nom: 'COLIN', classe: 'TG3', absent: false,
+        schedule: { 8: 'Ateliers 2', 11: 'Ateliers 2', 14: 'A101', 15: 'A101' },
+        orders: [{ roses: [{ q: 2, name: 'Rose Rose' }], anon: false, buyer: 'Julie MERCIER', msg: "Je t'aime <3" }]
+    },
+    {
+        id: 15, prenom: 'Hugo', nom: 'BERTRAND', classe: 'TG3', absent: false,
+        schedule: { 10: 'B204', 11: 'B204', 13: 'B204', 14: 'Gymnase' },
+        orders: [{ roses: [{ q: 3, name: 'Rose Rouge' }], anon: false, buyer: 'Inès CHEVALIER', msg: 'Juste pour te voir sourire :)' }]
+    },
+    {
+        id: 16, prenom: 'Manon', nom: 'PETIT', classe: '1G2', absent: true,
+        schedule: {},
+        orders: [{ roses: [{ q: 1, name: 'Rose Rouge' }, { q: 1, name: 'Rose Rose' }], anon: false, buyer: 'Rayan MOREAU', msg: "Merci d'être là pour moi :)" }]
+    }
+];
+
+/* --- Destinataires déjà distribués (onglet Historique) --- */
+var DONE = [
+    {
+        id: 11, prenom: 'Marie', nom: 'SANTOS', classe: 'TG3', absent: false,
+        distributedAt: '12:58',
+        schedule: { 9: 'A101', 10: 'B204', 11: 'B204' },
+        orders: [{ roses: [{ q: 1, name: 'Rose Rouge' }], anon: true, buyer: '', msg: '' }]
+    }
+];
+
+var view = 'todo';
+var selectedHour = 11;
+var selectedBuilding = 'all';
+var searchQuery = '';
+
+function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* Classe et emoji du badge selon la couleur — même logique que delivery.php. */
+function roseBadge(name) {
+    var lower = name.toLowerCase();
+    if (lower.indexOf('rouge') !== -1)   return { cls: 'badge-rose-rouge',  emoji: '🌹' };
+    if (lower.indexOf('blanche') !== -1) return { cls: 'badge-rose-blanche', emoji: '🤍' };
+    return { cls: 'badge-rose-pink', emoji: '🌸' };
+}
+
+/* Salle occupée par un destinataire à l'heure sélectionnée. */
+function roomOf(r) {
+    if (r.absent) return 'Absent(e)';
+    return r.schedule[selectedHour] || null;
+}
+
+function metaOf(room) {
+    if (room === 'Absent(e)') return { building: 'Absent(e)', floor: 'Absent(e)' };
+    return ROOMS[room] || { building: 'Externat', floor: 'Rez-de-chaussée' };
+}
+
+/* ---------- Rendu des filtres ---------- */
+function renderFilters() {
+    var bh = '<a href="#" class="building-btn' + (selectedBuilding === 'all' ? ' active' : '') + '" data-building="all">Tout</a>';
+    BUILDINGS.forEach(function (b) {
+        bh += '<a href="#" class="building-btn' + (selectedBuilding === b ? ' active' : '') + '" data-building="' + esc(b) + '">' + esc(b) + '</a>';
+    });
+    document.getElementById('building-filter').innerHTML = bh;
+
+    var hh = '';
+    for (var h = 8; h <= 17; h++) {
+        hh += '<a href="#" class="time-btn' + (selectedHour === h ? ' active' : '') + '" data-hour="' + h + '">' + h + 'h</a>';
+    }
+    document.getElementById('hour-filter').innerHTML = hh;
+}
+
+/* ---------- Rendu de la liste : étage > salle > destinataire ---------- */
+function render() {
+    var source = (view === 'todo' ? TODO : DONE);
+    var searching = searchQuery.length > 0;
+
+    /* En recherche, le site ignore les filtres bâtiment/heure. */
+    document.getElementById('filters').classList.toggle('d-none', searching);
+
+    var matched = source.filter(function (r) {
+        if (searching) {
+            return (r.prenom + ' ' + r.nom + ' ' + r.classe).toLowerCase().indexOf(searchQuery) !== -1;
+        }
+        var room = roomOf(r);
+        if (!room) return false;
+        if (selectedBuilding !== 'all' && metaOf(room).building !== selectedBuilding) return false;
+        return true;
+    });
+
+    /* Légende */
+    var caption = document.getElementById('delivery-caption');
+    if (searching) {
+        caption.innerHTML = 'Résultats : <strong>' + matched.length + '</strong> élève(s) trouvé(s).';
+    } else if (view === 'todo') {
+        caption.innerHTML = 'À livrer à <strong>' + selectedHour + 'h</strong> : <strong>' + matched.length + '</strong> élève(s).';
+    } else {
+        caption.innerHTML = 'Déjà livrés à <strong>' + selectedHour + 'h</strong> : <strong>' + matched.length + '</strong> élève(s).';
+    }
+
+    if (matched.length === 0) {
+        document.getElementById('delivery-list').innerHTML =
+            '<div class="text-center py-5"><h5 class="text-muted">'
+            + (view === 'todo' ? 'Aucune livraison ici à cette heure.' : 'Aucune livraison terminée.')
+            + '</h5></div>';
+        return;
+    }
+
+    /* Regroupement étage > salle */
+    var floors = {};
+    matched.forEach(function (r) {
+        var room = roomOf(r) || 'Absent(e)';
+        var meta = metaOf(room);
+        var floorKey = meta.building + ' - ' + meta.floor;
+        if (!floors[floorKey]) floors[floorKey] = {};
+        if (!floors[floorKey][room]) floors[floorKey][room] = [];
+        floors[floorKey][room].push(r);
+    });
+
+    var html = '';
+    Object.keys(floors).sort().forEach(function (floorName) {
+        html += '<div class="floor-header"><i class="fas fa-level-up-alt me-2"></i>' + esc(floorName) + '</div>';
+
+        Object.keys(floors[floorName]).sort().forEach(function (roomName) {
+            var list = floors[floorName][roomName];
+            html += ''
+                + '<div class="room-block">'
+                +   '<div class="room-title">'
+                +     '<span>' + esc(roomName) + '</span>'
+                +     '<span class="badge bg-secondary rounded-pill js-room-count">' + list.length + '</span>'
+                +   '</div>'
+                +   '<div>';
+
+            list.forEach(function (r) {
+                html += ''
+                + '<div class="recipient-item' + (view === 'done' ? ' done' : '') + '" id="recipient-row-' + r.id + '">'
+                +   '<div class="d-flex justify-content-between align-items-start mb-2">'
+                +     '<div>'
+                +       '<h5 class="fw-bold mb-0 text-dark">' + esc(r.prenom + ' ' + r.nom) + '</h5>'
+                +       '<div class="small text-muted">' + esc(r.classe) + '</div>'
+                +       (view === 'done' && r.distributedAt
+                            ? '<div class="small text-success"><i class="fas fa-check-double"></i> ' + esc(r.distributedAt) + '</div>' : '')
+                +     '</div>'
+                +     '<form class="ajax-delivery-form" data-id="' + r.id + '" data-name="' + esc(r.prenom + ' ' + r.nom) + '">'
+                +       (view === 'todo'
+                            ? '<button type="submit" class="btn btn-success rounded-pill px-3 py-2 shadow-sm btn-action fw-bold"><i class="fas fa-check me-1"></i> Livrer</button>'
+                            : '<button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 shadow-sm btn-action" onclick="demoNotice(\'Annulation de la livraison\')"><i class="fas fa-undo"></i> Annuler</button>')
+                +     '</form>'
+                +   '</div>'
+                +   '<div class="mt-2">';
+
+                r.orders.forEach(function (o) {
+                    html += '<div class="order-detail-line"><div class="mb-1">';
+                    o.roses.forEach(function (rose) {
+                        var b = roseBadge(rose.name);
+                        html += '<span class="badge rounded-pill ' + b.cls + ' me-1">' + rose.q + ' ' + b.emoji + ' ' + esc(rose.name) + '</span>';
+                    });
+                    html += '</div><div class="d-flex align-items-center gap-2 flex-wrap">';
+                    html += o.anon
+                        ? '<span class="badge bg-dark small" style="font-size: 0.7rem;">Anonyme</span>'
+                        : '<span class="small text-muted fst-italic">De : ' + esc(o.buyer) + '</span>';
+                    if (o.msg) {
+                        html += '<span class="text-secondary small ms-1">|</span>'
+                              + '<span class="small text-dark fw-bold">"' + esc(o.msg) + '"</span>';
+                    }
+                    html += '</div></div>';
+                });
+
+                html += '</div></div>';
+            });
+
+            html += '</div></div>';
+        });
+    });
+
+    document.getElementById('delivery-list').innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    renderFilters();
+    render();
+
+    /* ---------- Filtres bâtiment / heure ---------- */
+    document.getElementById('building-filter').addEventListener('click', function (e) {
+        var btn = e.target.closest('.building-btn');
+        if (!btn) return;
+        e.preventDefault();
+        selectedBuilding = btn.dataset.building;
+        renderFilters();
+        render();
+    });
+
+    document.getElementById('hour-filter').addEventListener('click', function (e) {
+        var btn = e.target.closest('.time-btn');
+        if (!btn) return;
+        e.preventDefault();
+        selectedHour = parseInt(btn.dataset.hour, 10);
+        renderFilters();
+        render();
+    });
+
+    /* ---------- Onglets À LIVRER / HISTORIQUE ---------- */
+    document.querySelectorAll('#delivery-tabs .nav-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            view = this.dataset.view;
+            document.querySelectorAll('#delivery-tabs .nav-link').forEach(function (l) { l.classList.remove('active'); });
+            this.classList.add('active');
+            render();
+        });
+    });
+
+    /* ---------- Recherche par nom ---------- */
+    var search = document.getElementById('delivery-search');
+    var clear = document.getElementById('delivery-search-clear');
+
+    document.getElementById('delivery-search-form').addEventListener('submit', function (e) { e.preventDefault(); });
+    search.addEventListener('input', function () {
+        searchQuery = search.value.trim().toLowerCase();
+        clear.classList.toggle('d-none', !searchQuery);
+        render();
+    });
+    clear.addEventListener('click', function (e) {
+        e.preventDefault();
+        search.value = '';
+        searchQuery = '';
+        clear.classList.add('d-none');
+        render();
+    });
+
+    /* ---------- Livraison : compte à rebours de 5 s puis retrait animé ---------- */
+    document.addEventListener('submit', function (e) {
+        var form = e.target;
+        if (!form.classList.contains('ajax-delivery-form')) return;
+        e.preventDefault();
+
+        var id = parseInt(form.dataset.id, 10);
+        var name = form.dataset.name;
+        var btn = form.querySelector('button');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-hourglass-half fa-spin"></i>';
+
+        startCountdown({
+            toastId: 'deliveryToast',
+            progressId: 'toastProgressBar',
+            countdownId: 'toastCountdown',
+            cancelId: 'toastCancelBtn',
+            onComplete: function () {
+                var row = document.getElementById('recipient-row-' + id);
+                var roomBlock = row ? row.closest('.room-block') : null;
+
+                slideOut(row, function () {
+                    /* Bascule du destinataire de la liste TODO vers l'historique. */
+                    var idx = TODO.findIndex(function (r) { return r.id === id; });
+                    if (idx !== -1) {
+                        var moved = TODO.splice(idx, 1)[0];
+                        var now = new Date();
+                        moved.distributedAt = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+                        DONE.push(moved);
+                    }
+                    render();
+                });
+
+                /* Mise à jour immédiate du compteur de salle, comme sur le site. */
+                if (roomBlock) {
+                    var badge = roomBlock.querySelector('.js-room-count');
+                    if (badge) badge.textContent = Math.max(0, parseInt(badge.textContent, 10) - 1);
+                }
+
+                showToast('Livraison confirmée pour ' + name + '. E-mail envoyé à l\'acheteur.', 'success');
+            },
+            onCancel: function () {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i> Livrer';
+                showToast('Livraison annulée, aucun e-mail envoyé.', 'warning');
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

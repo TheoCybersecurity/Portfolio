@@ -1,0 +1,32 @@
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portfolio-app
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      # IP autorisées à ouvrir /admin : adresses exactes ou plages CIDR séparées par des virgules,
+      # définies dans .env (non versionné) pour ne pas exposer l'infrastructure.
+      - ADMIN_IPS=${ADMIN_IPS:?ADMIN_IPS doit être défini dans .env}
+      - ANALYTICS_DB_PATH=/app/data/analytics.db
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+      - "SMTP_FROM=${SMTP_FROM:-Portfolio <theo@marescal.fr>}"
+      - SMTP_TO=${SMTP_TO:-theo@marescal.fr}
+    # 512 Mo : la base de géolocalisation locale (DB-IP) est chargée en mémoire (~130 Mo).
+    mem_limit: 512m
+    # Base SQLite des statistiques : hors du DocumentRoot Apache, incluse dans la sauvegarde Duplicati.
+    volumes:
+      - ../../portfolio_data:/app/data
+    networks:
+      - infra_default
+
+networks:
+  infra_default:
+    external: true
